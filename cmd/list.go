@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/dpecos/cmdbox/db"
+	"github.com/logrusorgru/aurora"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +17,7 @@ var listCmd = &cobra.Command{
 
 		cmds := db.List()
 		for _, cmd := range cmds {
-			fmt.Printf("%d - %s (%s)\n\n%s\n\n", cmd.ID, cmd.Title, cmd.CreatedAt, cmd.Cmd)
+			fmt.Printf("%d - %s - %s\n\n%s\n\n", aurora.Red(aurora.Bold(cmd.ID)), aurora.Blue(aurora.Bold(cmd.Title)), aurora.Green(cmd.CreatedAt), cmd.Cmd)
 		}
 	},
 }
