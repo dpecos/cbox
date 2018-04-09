@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/dpecos/cmdbox/db"
 	"github.com/logrusorgru/aurora"
@@ -19,7 +20,13 @@ var listCmd = &cobra.Command{
 
 		cmds := db.List()
 		for _, cmd := range cmds {
-			fmt.Printf("%d - %s - %s\n", aurora.Red(aurora.Bold(cmd.ID)), aurora.Blue(aurora.Bold(cmd.Title)), aurora.Green(cmd.CreatedAt))
+			if len(cmd.Tags) != 0 {
+				tags := strings.Join(cmd.Tags, ", ")
+				fmt.Printf("%d - (%s) %s - %s\n", aurora.Red(aurora.Bold(cmd.ID)), aurora.Brown(tags), aurora.Blue(aurora.Bold(cmd.Title)), aurora.Green(cmd.CreatedAt))
+			} else {
+				fmt.Printf("%d - %s - %s\n", aurora.Red(aurora.Bold(cmd.ID)), aurora.Blue(aurora.Bold(cmd.Title)), aurora.Green(cmd.CreatedAt))
+
+			}
 			if viewSnippet {
 				fmt.Printf("\n%s\n\n", cmd.Cmd)
 			}

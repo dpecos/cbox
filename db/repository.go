@@ -71,10 +71,51 @@ func List() []models.Cmd {
 		if err := rows.Scan(&item.ID, &item.Cmd, &item.Title, &item.Description, &item.URL, &item.UpdatedAt, &item.CreatedAt); err != nil {
 			log.Fatal(err)
 		}
+
+		item.Tags = Tags(item.ID)
+
 		cmds = append(cmds, item)
 	}
 
 	return cmds
+}
+
+func Tags(cmdID int) []string {
+	sqlStmt := `select tag from command_tags where command = $1`
+
+	rows, err := db.Query(sqlStmt, cmdID)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	var tags []string
+	for rows.Next() {
+		var tag string
+		if err := rows.Scan(&tag); err != nil {
+			log.Fatal(err)
+		}
+
+		tags = append(tags, tag)
+	}
+
+	return tags
+}
+
+func AssignTag(cmdID int, tag string) {
+	sqlStmt := `insert or ignore into tags(name) values ($1)`
+
+	_, err := db.Exec(sqlStmt, tag)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	sqlStmt = `insert or ignore into command_tags(command, tag) values ($1, $2)`
+
+	_, err = db.Exec(sqlStmt, cmdID, tag)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func updateSchema(dbPath string) {
@@ -87,7 +128,7 @@ func updateSchema(dbPath string) {
 		log.Fatal(err)
 	}
 	err = m.Up()
-	if err != nil {
+	if err != nil && err != migrate.ErrNoChange {
 		log.Fatal(err)
 	}
 }
