@@ -6,6 +6,9 @@ import (
 	"os"
 
 	"github.com/dpecos/cmdbox/models"
+	"github.com/mattes/migrate"
+	sqlite3 "github.com/mattes/migrate/database/sqlite3"
+	_ "github.com/mattes/migrate/source/file"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -20,7 +23,7 @@ func Init(dbPath string) {
 	os.Remove(dbPath)
 	Load(dbPath)
 	defer db.Close()
-	createSchema()
+
 	log.Printf("cmdbox database successfully initialized in path %s\n", dbPath)
 }
 
@@ -35,6 +38,8 @@ func Load(dbPath string) *sql.DB {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	updateSchema(dbPath)
 
 	return db
 }
@@ -72,19 +77,16 @@ func List() []models.Cmd {
 	return cmds
 }
 
-func createSchema() {
-	sqlStmt := `
-	create table commands (
-		id integer not null primary key,
-		cmd text not null,
-		title text not null,
-		description text,
-		url text,
-		created_at timestamp default current_timestamp,
-		updated_at timestamp default current_timestamp
-	);
-	`
-	_, err := db.Exec(sqlStmt)
+func updateSchema(dbPath string) {
+	driver, err := sqlite3.WithInstance(db, &sqlite3.Config{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	m, err := migrate.NewWithDatabaseInstance("file://./db/migrations", "ql", driver)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = m.Up()
 	if err != nil {
 		log.Fatal(err)
 	}
