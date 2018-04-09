@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/dpecos/cmdbox/db"
 	"github.com/dpecos/cmdbox/models"
@@ -11,10 +12,22 @@ import (
 )
 
 func readString(label string) string {
-	reader := bufio.NewReader(os.Stdin)
 	fmt.Print(label)
-	val, _ := reader.ReadString('\n')
-	return val
+
+	arr := make([]string, 0)
+	scanner := bufio.NewScanner(os.Stdin)
+	for {
+		scanner.Scan()
+		text := scanner.Text()
+		if len(text) != 0 {
+			arr = append(arr, text)
+		} else {
+			break
+		}
+	}
+
+	val := strings.Join(arr, "\n")
+	return strings.TrimSpace(val)
 }
 
 var addCmd = &cobra.Command{
@@ -29,7 +42,7 @@ var addCmd = &cobra.Command{
 			Cmd:         readString("Command / snippet: "),
 			Title:       readString("Title: "),
 			Description: readString("Description: "),
-			Url:         readString("URL: "),
+			URL:         readString("URL: "),
 		}
 
 		db.Add(command)

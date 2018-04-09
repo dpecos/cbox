@@ -45,10 +45,31 @@ func Add(cmd models.Cmd) {
 		cmd, title, description, url
 	) values ($1, $2, $3, $4)
 	`
-	_, err := db.Exec(sqlStmt, cmd.Cmd, cmd.Title, cmd.Description, cmd.Url)
+	_, err := db.Exec(sqlStmt, cmd.Cmd, cmd.Title, cmd.Description, cmd.URL)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func List() []models.Cmd {
+	sqlStmt := `select * from commands`
+
+	rows, err := db.Query(sqlStmt)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	cmds := []models.Cmd{}
+	for rows.Next() {
+		var item models.Cmd
+		if err := rows.Scan(&item.ID, &item.Cmd, &item.Title, &item.Description, &item.URL, &item.UpdatedAt, &item.CreatedAt); err != nil {
+			log.Fatal(err)
+		}
+		cmds = append(cmds, item)
+	}
+
+	return cmds
 }
 
 func createSchema() {
