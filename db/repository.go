@@ -84,6 +84,27 @@ func List() []models.Cmd {
 	return cmds
 }
 
+func Find(id int64) models.Cmd {
+	sqlStmt := `select * from commands where id = $1`
+
+	rows, err := db.Query(sqlStmt, id)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	var item models.Cmd
+	for rows.Next() {
+		if err := rows.Scan(&item.ID, &item.Cmd, &item.Title, &item.Description, &item.URL, &item.UpdatedAt, &item.CreatedAt); err != nil {
+			log.Fatal(err)
+		}
+
+		item.Tags = Tags(item.ID)
+	}
+
+	return item
+}
+
 func Tags(cmdID int64) []string {
 	sqlStmt := `select tag from command_tags where command = $1`
 

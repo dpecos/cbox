@@ -1,10 +1,8 @@
 package cmd
 
 import (
-	"log"
-	"strconv"
-
 	"github.com/dpecos/cmdbox/db"
+	"github.com/dpecos/cmdbox/tools"
 	"github.com/spf13/cobra"
 )
 
@@ -16,24 +14,15 @@ var tagCmd = &cobra.Command{
 		cmdboxDB := db.Load(dbPath)
 		defer cmdboxDB.Close()
 
+		cmdID := tools.StringToInt(args[0])
 		if deleteTag != "" {
-			cmdID := readIntParam(args, 0)
 			db.UnassignTag(cmdID, deleteTag)
 		} else {
-			cmdID := readIntParam(args, 0)
 			for _, tag := range args[1:] {
 				db.AssignTag(cmdID, tag)
 			}
 		}
 	},
-}
-
-func readIntParam(args []string, pos int) int64 {
-	param, err := strconv.ParseInt(args[pos], 10, 64)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return param
 }
 
 func init() {

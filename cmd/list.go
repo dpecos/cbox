@@ -1,11 +1,8 @@
 package cmd
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/dpecos/cmdbox/db"
-	"github.com/logrusorgru/aurora"
+	"github.com/dpecos/cmdbox/tools"
 	"github.com/spf13/cobra"
 )
 
@@ -20,22 +17,7 @@ var listCmd = &cobra.Command{
 
 		cmds := db.List()
 		for _, cmd := range cmds {
-			if len(cmd.Tags) != 0 {
-				tags := strings.Join(cmd.Tags, ", ")
-				fmt.Printf("%d - (%s) %s - %s\n", aurora.Red(aurora.Bold(cmd.ID)), aurora.Brown(tags), aurora.Blue(aurora.Bold(cmd.Title)), aurora.Green(cmd.CreatedAt))
-			} else {
-				fmt.Printf("%d - %s - %s\n", aurora.Red(aurora.Bold(cmd.ID)), aurora.Blue(aurora.Bold(cmd.Title)), aurora.Green(cmd.CreatedAt))
-
-			}
-			if viewSnippet {
-				if cmd.Description != "" {
-					fmt.Printf("\n%s\n", aurora.Cyan(cmd.Description))
-				}
-				if cmd.URL != "" {
-					fmt.Printf("\n%s\n", aurora.Blue(cmd.URL))
-				}
-				fmt.Printf("\n%s\n\n", cmd.Cmd)
-			}
+			tools.PrintCommand(cmd, viewSnippet, false)
 		}
 	},
 }
