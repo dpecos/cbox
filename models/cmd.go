@@ -5,7 +5,7 @@ import (
 )
 
 type Cmd struct {
-	ID          int
+	ID          int64
 	Cmd         string
 	Title       string
 	Description string

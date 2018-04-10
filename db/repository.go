@@ -41,16 +41,23 @@ func Load(dbPath string) *sql.DB {
 	return db
 }
 
-func Add(cmd models.Cmd) {
+func Add(cmd models.Cmd) int64 {
 	sqlStmt := `
 	insert into commands(
 		cmd, title, description, url
 	) values ($1, $2, $3, $4)
 	`
-	_, err := db.Exec(sqlStmt, cmd.Cmd, cmd.Title, cmd.Description, cmd.URL)
+	result, err := db.Exec(sqlStmt, cmd.Cmd, cmd.Title, cmd.Description, cmd.URL)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return id
 }
 
 func List() []models.Cmd {
@@ -77,7 +84,7 @@ func List() []models.Cmd {
 	return cmds
 }
 
-func Tags(cmdID int) []string {
+func Tags(cmdID int64) []string {
 	sqlStmt := `select tag from command_tags where command = $1`
 
 	rows, err := db.Query(sqlStmt, cmdID)
@@ -99,7 +106,7 @@ func Tags(cmdID int) []string {
 	return tags
 }
 
-func AssignTag(cmdID int, tag string) {
+func AssignTag(cmdID int64, tag string) {
 	sqlStmt := `insert or ignore into tags(name) values ($1)`
 
 	_, err := db.Exec(sqlStmt, tag)
@@ -115,7 +122,7 @@ func AssignTag(cmdID int, tag string) {
 	}
 }
 
-func UnassignTag(cmdID int, tag string) {
+func UnassignTag(cmdID int64, tag string) {
 	sqlStmt := `delete from command_tags where command = $1 and tag = $2`
 
 	_, err := db.Exec(sqlStmt, cmdID, tag)

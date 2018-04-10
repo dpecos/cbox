@@ -28,8 +28,8 @@ var tagCmd = &cobra.Command{
 	},
 }
 
-func readIntParam(args []string, pos int) int {
-	param, err := strconv.Atoi(args[pos])
+func readIntParam(args []string, pos int) int64 {
+	param, err := strconv.ParseInt(args[pos], 10, 64)
 	if err != nil {
 		log.Fatal(err)
 	}

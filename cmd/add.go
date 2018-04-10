@@ -53,7 +53,12 @@ var addCmd = &cobra.Command{
 			Cmd:         readStringMulti("Command / snippet"),
 		}
 
-		db.Add(command)
+		id := db.Add(command)
+
+		tags := readString("Tags (separated by space)")
+		for _, tag := range strings.Split(tags, " ") {
+			db.AssignTag(id, tag)
+		}
 	},
 }
 
