@@ -28,6 +28,12 @@ var listCmd = &cobra.Command{
 
 			}
 			if viewSnippet {
+				if cmd.Description != "" {
+					fmt.Printf("\n%s\n", aurora.Cyan(cmd.Description))
+				}
+				if cmd.URL != "" {
+					fmt.Printf("\n%s\n", aurora.Blue(cmd.URL))
+				}
 				fmt.Printf("\n%s\n\n", cmd.Cmd)
 			}
 		}
