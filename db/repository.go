@@ -118,6 +118,15 @@ func AssignTag(cmdID int, tag string) {
 	}
 }
 
+func UnassignTag(cmdID int, tag string) {
+	sqlStmt := `delete from command_tags where command = $1 and tag = $2`
+
+	_, err := db.Exec(sqlStmt, cmdID, tag)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func updateSchema(dbPath string) {
 	driver, err := sqlite3.WithInstance(db, &sqlite3.Config{})
 	if err != nil {
