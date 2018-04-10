@@ -6,10 +6,8 @@ import (
 	"os"
 
 	"github.com/dpecos/cmdbox/models"
-	"github.com/mattes/migrate"
-	sqlite3 "github.com/mattes/migrate/database/sqlite3"
-	_ "github.com/mattes/migrate/source/file"
 	_ "github.com/mattn/go-sqlite3"
+	migrate "github.com/rubenv/sql-migrate"
 )
 
 var (
@@ -128,16 +126,11 @@ func UnassignTag(cmdID int, tag string) {
 }
 
 func updateSchema(dbPath string) {
-	driver, err := sqlite3.WithInstance(db, &sqlite3.Config{})
+	n, err := migrate.Exec(db, "sqlite3", migrations(), migrate.Up)
 	if err != nil {
 		log.Fatal(err)
 	}
-	m, err := migrate.NewWithDatabaseInstance("file://./db/migrations", "ql", driver)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = m.Up()
-	if err != nil && err != migrate.ErrNoChange {
-		log.Fatal(err)
+	if n != 0 {
+		log.Printf("Applied %d migrations\n", n)
 	}
 }
