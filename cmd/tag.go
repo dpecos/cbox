@@ -17,25 +17,19 @@ var tagCmd = &cobra.Command{
 		defer cmdboxDB.Close()
 
 		if deleteTag != "" {
-			cmdID := readParamInt(args, 0)
-
+			cmdID := readIntParam(args, 0)
 			db.UnassignTag(cmdID, deleteTag)
 		} else {
-			cmdID := readParamInt(args, 1)
-			tag := readParam(args, 0)
-
-			db.AssignTag(cmdID, tag)
+			cmdID := readIntParam(args, 0)
+			for _, tag := range args[1:] {
+				db.AssignTag(cmdID, tag)
+			}
 		}
 	},
 }
 
-func readParam(args []string, pos int) string {
-	param := args[pos]
-	return param
-}
-
-func readParamInt(args []string, pos int) int {
-	param, err := strconv.Atoi(readParam(args, pos))
+func readIntParam(args []string, pos int) int {
+	param, err := strconv.Atoi(args[pos])
 	if err != nil {
 		log.Fatal(err)
 	}
