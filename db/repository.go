@@ -29,7 +29,6 @@ func Load(dbPath string) *sql.DB {
 	if dbPath == "" {
 		log.Fatal("ERROR: cmdbox database path not specified")
 	}
-	log.Printf("Using database: %s", dbPath)
 
 	var err error
 	db, err = sql.Open("sqlite3", dbPath)
