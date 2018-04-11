@@ -36,6 +36,8 @@ func Load(dbPath string) *sql.DB {
 		log.Fatal(err)
 	}
 
+	execSQL("PRAGMA foreign_keys = ON")
+
 	updateSchema(dbPath)
 
 	return db
@@ -144,12 +146,7 @@ func AssignTag(cmdID int64, tag string) {
 }
 
 func UnassignTag(cmdID int64, tag string) {
-	sqlStmt := `delete from command_tags where command = $1 and tag = $2`
-
-	_, err := db.Exec(sqlStmt, cmdID, tag)
-	if err != nil {
-		log.Fatal(err)
-	}
+	execSQL(`delete from command_tags where command = $1 and tag = $2`)
 }
 
 func updateSchema(dbPath string) {
@@ -159,5 +156,12 @@ func updateSchema(dbPath string) {
 	}
 	if n != 0 {
 		log.Printf("Applied %d migrations\n", n)
+	}
+}
+
+func execSQL(sql string, args ...interface{}) {
+	_, err := db.Exec(sql, args...)
+	if err != nil {
+		log.Fatal(err)
 	}
 }

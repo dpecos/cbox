@@ -34,7 +34,7 @@ func migrations() *migrate.MemoryMigrationSource {
 						command integer, 
 						tag text,
 						primary key (command, tag),
-						foreign key(command) references command(id),
+						foreign key(command) references commands(id),
 						foreign key(tag) references tags(name)
 					)`,
 				},
