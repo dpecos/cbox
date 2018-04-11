@@ -49,10 +49,7 @@ func Add(cmd models.Cmd) int64 {
 		cmd, title, description, url
 	) values ($1, $2, $3, $4)
 	`
-	result, err := db.Exec(sqlStmt, cmd.Cmd, cmd.Title, cmd.Description, cmd.URL)
-	if err != nil {
-		log.Fatal(err)
-	}
+	result := execSQL(sqlStmt, cmd.Cmd, cmd.Title, cmd.Description, cmd.URL)
 
 	id, err := result.LastInsertId()
 	if err != nil {
@@ -131,22 +128,15 @@ func Tags(cmdID int64) []string {
 
 func AssignTag(cmdID int64, tag string) {
 	sqlStmt := `insert or ignore into tags(name) values ($1)`
-
-	_, err := db.Exec(sqlStmt, tag)
-	if err != nil {
-		log.Fatal(err)
-	}
+	execSQL(sqlStmt, tag)
 
 	sqlStmt = `insert or ignore into command_tags(command, tag) values ($1, $2)`
-
-	_, err = db.Exec(sqlStmt, cmdID, tag)
-	if err != nil {
-		log.Fatal(err)
-	}
+	execSQL(sqlStmt, cmdID, tag)
 }
 
 func UnassignTag(cmdID int64, tag string) {
-	execSQL(`delete from command_tags where command = $1 and tag = $2`)
+	sqlStmt := `delete from command_tags where command = $1 and tag = $2`
+	execSQL(sqlStmt, cmdID, tag)
 }
 
 func updateSchema(dbPath string) {
@@ -159,9 +149,10 @@ func updateSchema(dbPath string) {
 	}
 }
 
-func execSQL(sql string, args ...interface{}) {
-	_, err := db.Exec(sql, args...)
+func execSQL(sql string, args ...interface{}) sql.Result {
+	result, err := db.Exec(sql, args...)
 	if err != nil {
 		log.Fatal(err)
 	}
+	return result
 }
