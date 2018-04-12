@@ -59,6 +59,14 @@ func Add(cmd models.Cmd) int64 {
 	return id
 }
 
+func Delete(id int64) {
+	sqlStmt := "delete from command_tags where command = $1"
+	execSQL(sqlStmt, id)
+
+	sqlStmt = "delete from commands where id = $1"
+	execSQL(sqlStmt, id)
+}
+
 func List(tag string) []models.Cmd {
 	sqlStmt := `select * from commands`
 	if tag != "" {
