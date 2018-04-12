@@ -24,12 +24,14 @@ var addCmd = &cobra.Command{
 			URL:         tools.ReadString("URL"),
 			Cmd:         tools.ReadStringMulti("Command / snippet"),
 		}
+		tags := tools.ReadString("Tags (separated by space)")
 
 		id := db.Add(command)
 
-		tags := tools.ReadString("Tags (separated by space)")
 		for _, tag := range strings.Split(tags, " ") {
-			db.AssignTag(id, tag)
+			if tag != "" {
+				db.AssignTag(id, tag)
+			}
 		}
 	},
 }
