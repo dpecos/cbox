@@ -31,3 +31,7 @@ func PrintCommand(cmd models.Cmd, full bool, sourceOnly bool) {
 		fmt.Println(cmd.Cmd)
 	}
 }
+
+func PrintTag(tag string) {
+	fmt.Printf("%s\n", aurora.Brown(tag))
+}
