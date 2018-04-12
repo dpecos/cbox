@@ -3,6 +3,7 @@ package tools
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/dpecos/cmdbox/models"
 	"github.com/logrusorgru/aurora"
@@ -16,7 +17,7 @@ func PrintCommand(cmd models.Cmd, full bool, sourceOnly bool) {
 		} else {
 			fmt.Printf("%d - %s", aurora.Red(aurora.Bold(cmd.ID)), aurora.Blue(aurora.Bold(cmd.Title)))
 		}
-		t := cmd.CreatedAt
+		t := cmd.CreatedAt.UTC().In(time.Local)
 		fmt.Println(aurora.Sprintf(aurora.Cyan(" %d-%02d-%02d %02d:%02d:%02d"), t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second()))
 		if full {
 			if cmd.Description != "" {
