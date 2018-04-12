@@ -1,22 +1,20 @@
 package tools
 
 import (
-	"bufio"
-	"fmt"
-	"os"
+	"log"
 	"strings"
+
+	"github.com/peterh/liner"
 )
 
 func ReadStringMulti(label string) string {
-	fmt.Printf("%s (empty line to finish): ", label)
-
 	arr := make([]string, 0)
-	scanner := bufio.NewScanner(os.Stdin)
+
 	for {
-		scanner.Scan()
-		text := scanner.Text()
+		text := ReadString(label + " (empty line to finish)")
 		if len(text) != 0 {
 			arr = append(arr, text)
+			label = ""
 		} else {
 			break
 		}
@@ -27,9 +25,17 @@ func ReadStringMulti(label string) string {
 }
 
 func ReadString(label string) string {
-	fmt.Printf("%s: ", label)
+	line := liner.NewLiner()
+	defer line.Close()
+	line.SetCtrlCAborts(true)
 
-	reader := bufio.NewReader(os.Stdin)
-	val, _ := reader.ReadString('\n')
+	if label != "" {
+		label += ": "
+	}
+
+	val, err := line.Prompt(label)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return strings.TrimSpace(val)
 }
