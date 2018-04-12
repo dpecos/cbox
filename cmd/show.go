@@ -12,6 +12,7 @@ var sourceOnly bool
 var showCmd = &cobra.Command{
 	Use:     "show",
 	Aliases: []string{"s"},
+	Args:    cobra.ExactArgs(1),
 	Short:   "Show one command",
 	Run: func(cmd *cobra.Command, args []string) {
 		cmdboxDB := db.Load(dbPath)

@@ -25,5 +25,5 @@ var listCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(listCmd)
 
-	listCmd.Flags().BoolVarP(&viewSnippet, "view", "v", false, "Show code snippet")
+	listCmd.Flags().BoolVarP(&viewSnippet, "view", "v", false, "Show all details about commands")
 }
