@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var deleteTag string
+var unassignTag string
 var tagCmd = &cobra.Command{
 	Use:   "tag",
 	Args:  cobra.MinimumNArgs(1),
@@ -18,11 +18,11 @@ var tagCmd = &cobra.Command{
 		defer cmdboxDB.Close()
 
 		cmdID := tools.StringToInt(args[0])
-		if deleteTag != "" {
+		if unassignTag != "" {
 			if len(args) != 1 {
 				log.Fatalf("Tags can only be deleted one by one")
 			}
-			db.UnassignTag(cmdID, deleteTag)
+			db.UnassignTag(cmdID, unassignTag)
 		} else {
 			for _, tag := range args[1:] {
 				db.AssignTag(cmdID, tag)
@@ -37,5 +37,5 @@ var tagCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(tagCmd)
 
-	tagCmd.Flags().StringVarP(&deleteTag, "delete", "d", "", "Delete specified tags from command")
+	tagCmd.Flags().StringVarP(&unassignTag, "unassign", "u", "", "Unassign specified tags from command")
 }

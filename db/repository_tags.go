@@ -24,6 +24,14 @@ func TagsList() []string {
 	return tags
 }
 
+func TagsDelete(tag string) {
+	sqlStmt := "delete from command_tags where tag = $1"
+	execSQL(sqlStmt, tag)
+
+	sqlStmt = "delete from tags where name = $1"
+	execSQL(sqlStmt, tag)
+}
+
 func AssignTag(cmdID int64, tag string) {
 	sqlStmt := `insert or ignore into tags(name) values ($1)`
 	execSQL(sqlStmt, tag)
