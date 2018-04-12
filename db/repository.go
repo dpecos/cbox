@@ -59,10 +59,13 @@ func Add(cmd models.Cmd) int64 {
 	return id
 }
 
-func List() []models.Cmd {
+func List(tag string) []models.Cmd {
 	sqlStmt := `select * from commands`
+	if tag != "" {
+		sqlStmt = `select c.* from commands c join command_tags ct on ct.command = c.ID where ct.tag = $1`
+	}
 
-	rows, err := db.Query(sqlStmt)
+	rows, err := db.Query(sqlStmt, tag)
 	if err != nil {
 		log.Fatal(err)
 	}
