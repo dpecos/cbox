@@ -78,6 +78,17 @@ func Find(id int64) models.Cmd {
 	return item
 }
 
+func Update(cmd models.Cmd) {
+	sqlStmt := `update commands set 
+		cmd = $1,
+		title = $2,
+		description = $3,
+		URL = $4
+	where id = $5
+	`
+	execSQL(sqlStmt, cmd.Cmd, cmd.Title, cmd.Description, cmd.URL, cmd.ID)
+}
+
 func commandTags(cmdID int64) []string {
 	sqlStmt := `select tag from command_tags where command = $1`
 

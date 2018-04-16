@@ -22,7 +22,7 @@ var addCmd = &cobra.Command{
 			Title:       tools.ReadString("Title"),
 			Description: tools.ReadStringMulti("Description"),
 			URL:         tools.ReadString("URL"),
-			Cmd:         tools.ReadStringMulti("Command / snippet"),
+			Cmd:         tools.ReadStringMulti("Command / Snippet"),
 		}
 		tags := tools.ReadString("Tags (separated by space)")
 
