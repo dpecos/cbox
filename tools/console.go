@@ -23,7 +23,12 @@ func ReadStringMulti(label string) string {
 	for {
 		text, err := line.Prompt(label)
 		if err != nil {
-			log.Fatal(err)
+			if err == liner.ErrPromptAborted {
+				line.Close()
+				os.Exit(0)
+			} else {
+				log.Fatal(err)
+			}
 		}
 		if len(text) != 0 {
 			arr = append(arr, text)
