@@ -10,9 +10,10 @@ import (
 
 var unassignTag string
 var tagCmd = &cobra.Command{
-	Use:   "tag",
-	Args:  cobra.MinimumNArgs(1),
-	Short: "Manage tags assigned to a command",
+	Use:     "tag",
+	Aliases: []string{"t"},
+	Args:    cobra.MinimumNArgs(1),
+	Short:   "Manage tags assigned to a command",
 	Run: func(cmd *cobra.Command, args []string) {
 		cmdboxDB := db.Load(dbPath)
 		defer cmdboxDB.Close()

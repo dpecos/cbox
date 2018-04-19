@@ -1,8 +1,11 @@
 package cli
 
 import (
+	"fmt"
+
 	"github.com/dpecos/cmdbox/db"
 	"github.com/dpecos/cmdbox/tools"
+	"github.com/logrusorgru/aurora"
 	"github.com/spf13/cobra"
 )
 
@@ -15,8 +18,15 @@ var deleteCmd = &cobra.Command{
 		cmdboxDB := db.Load(dbPath)
 		defer cmdboxDB.Close()
 
-		cmdID := tools.StringToInt(args[0])
-		db.Delete(cmdID)
+		id := tools.StringToInt(args[0])
+		command := db.Find(id)
+
+		tools.PrintCommand(command, true, false)
+		if tools.Confirm(aurora.Red("Are you sure you want to delete this command?").String()) {
+			db.Delete(id)
+			fmt.Println(aurora.Green("\nCommand successfully deleted!\n"))
+		}
+
 	},
 }
 

@@ -75,6 +75,10 @@ func Find(id int64) models.Cmd {
 		item.Tags = commandTags(item.ID)
 	}
 
+	if item.ID == 0 {
+		log.Fatalf("Command with id %d not found", id)
+	}
+
 	return item
 }
 

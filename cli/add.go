@@ -1,7 +1,10 @@
 package cli
 
 import (
+	"fmt"
 	"strings"
+
+	"github.com/logrusorgru/aurora"
 
 	"github.com/dpecos/cmdbox/db"
 	"github.com/dpecos/cmdbox/models"
@@ -33,6 +36,10 @@ var addCmd = &cobra.Command{
 				db.AssignTag(id, tag)
 			}
 		}
+
+		fmt.Println(aurora.Green("\nCommand stored successfully!\n"))
+		command = db.Find(id)
+		tools.PrintCommand(command, true, false)
 	},
 }
 
