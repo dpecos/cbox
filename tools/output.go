@@ -13,12 +13,12 @@ func PrintCommand(cmd models.Cmd, full bool, sourceOnly bool) {
 	if !sourceOnly {
 		if len(cmd.Tags) != 0 {
 			tags := strings.Join(cmd.Tags, ", ")
-			fmt.Printf("%d - (%s) %s", aurora.Red(aurora.Bold(cmd.ID)), aurora.Brown(tags), aurora.Blue(aurora.Bold(cmd.Title)))
+			fmt.Printf("%d - (%s)", aurora.Red(cmd.ID), aurora.Brown(tags))
 		} else {
-			fmt.Printf("%d - %s", aurora.Red(aurora.Bold(cmd.ID)), aurora.Blue(aurora.Bold(cmd.Title)))
+			fmt.Printf("%d -", aurora.Red(cmd.ID))
 		}
 		t := cmd.CreatedAt.UTC().In(time.Local)
-		fmt.Println(aurora.Sprintf(aurora.Cyan(" %d-%02d-%02d %02d:%02d:%02d"), t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second()))
+		fmt.Printf(" %s %s\n", aurora.Blue(aurora.Bold(cmd.Title)), aurora.Gray(DateToString(t)))
 		if full {
 			if cmd.Description != "" {
 				fmt.Printf("\n%s\n", aurora.Green(cmd.Description))
