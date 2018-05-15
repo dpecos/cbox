@@ -18,7 +18,16 @@ var listCmd = &cobra.Command{
 		cmdboxDB := db.Load(dbPath)
 		defer cmdboxDB.Close()
 
-		cmds := db.List(filterTag)
+		var filter string
+		if filterTag != "" {
+			filter = filterTag
+		} else {
+			if len(args) != 0 {
+				filter = args[0]
+			}
+		}
+
+		cmds := db.List(filter)
 		for _, cmd := range cmds {
 			tools.PrintCommand(cmd, viewSnippet, false)
 		}
