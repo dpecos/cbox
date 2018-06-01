@@ -6,7 +6,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var deleteTag string
 var tagsCmd = &cobra.Command{
 	Use:   "tags",
 	Short: "List the tags available in your cmdbox",
@@ -14,18 +13,13 @@ var tagsCmd = &cobra.Command{
 		cmdboxDB := db.Load(dbPath)
 		defer cmdboxDB.Close()
 
-		if deleteTag != "" {
-			db.TagsDelete(deleteTag)
-		} else {
-			cmds := db.TagsList()
-			for _, cmd := range cmds {
-				tools.PrintTag(cmd)
-			}
+		cmds := db.TagsList()
+		for _, cmd := range cmds {
+			tools.PrintTag(cmd)
 		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(tagsCmd)
-	tagsCmd.Flags().StringVarP(&deleteTag, "delete", "d", "", "Delete specified tag")
 }
