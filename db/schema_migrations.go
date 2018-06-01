@@ -10,7 +10,7 @@ func migrations() *migrate.MemoryMigrationSource {
 				Id: "20180406",
 				Up: []string{
 					`create table commands (
-						id integer not null primary key,
+						id integer primary key,
 						cmd text not null,
 						title text not null,
 						description text,
@@ -41,6 +41,19 @@ func migrations() *migrate.MemoryMigrationSource {
 				Down: []string{
 					"drop table tags",
 					"drop table command_tags",
+				},
+			},
+
+			&migrate.Migration{
+				Id: "20180601",
+				Up: []string{
+					`create table spaces (
+						id text primary key,
+						name text not null
+					)`,
+				},
+				Down: []string{
+					"drop table spaces",
 				},
 			},
 		},

@@ -36,3 +36,7 @@ func PrintCommand(cmd models.Cmd, full bool, sourceOnly bool) {
 func PrintTag(tag string) {
 	fmt.Printf("%s\n", aurora.Brown(tag))
 }
+
+func PrintSpace(space models.Space) {
+	fmt.Printf("%s - %s\n", aurora.Red(space.ID), aurora.Green(space.Name))
+}

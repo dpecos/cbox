@@ -76,7 +76,7 @@ func Find(id int64) models.Cmd {
 	}
 
 	if item.ID == 0 {
-		log.Fatalf("Command with id %d not found", id)
+		log.Fatalf("Command with ID %d not found", id)
 	}
 
 	return item
