@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/dpecos/cmdbox/models"
 	_ "github.com/mattn/go-sqlite3"
 	migrate "github.com/rubenv/sql-migrate"
 )
@@ -39,6 +40,8 @@ func Load(dbPath string) *sql.DB {
 
 	updateSchema(dbPath)
 
+	checkDefaultSpace(dbPath)
+
 	return db
 }
 
@@ -49,6 +52,17 @@ func updateSchema(dbPath string) {
 	}
 	if n != 0 {
 		log.Printf("Applied %d migrations\n", n)
+	}
+}
+
+func checkDefaultSpace(dbPath string) {
+	spaces := SpacesList()
+	if len(spaces) == 0 {
+		id := SpacesCreate(models.Space{
+			Name:  "default",
+			Title: "Default space for commands",
+		})
+		log.Printf("Default space created %s\n", id)
 	}
 }
 

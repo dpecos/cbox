@@ -49,7 +49,8 @@ func migrations() *migrate.MemoryMigrationSource {
 				Up: []string{
 					`create table spaces (
 						id text primary key,
-						name text not null
+						name text not null,
+						title text not null
 					)`,
 				},
 				Down: []string{

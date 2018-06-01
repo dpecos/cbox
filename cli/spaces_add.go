@@ -21,7 +21,8 @@ var spacesAddCmd = &cobra.Command{
 		defer cmdboxDB.Close()
 
 		space := models.Space{
-			Name: tools.ReadString("Name"),
+			Name:  tools.ReadString("Name"),
+			Title: tools.ReadString("Title"),
 		}
 
 		id := db.SpacesCreate(space)

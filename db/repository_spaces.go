@@ -1,6 +1,7 @@
 package db
 
 import (
+	"database/sql"
 	"log"
 
 	"github.com/satori/go.uuid"
@@ -19,15 +20,19 @@ func SpacesList() []models.Space {
 
 	spaces := []models.Space{}
 	for rows.Next() {
-		var item models.Space
-		if err := rows.Scan(&item.ID, &item.Name); err != nil {
-			log.Fatal(err)
-		}
-
+		item := extractItemFromRow(rows)
 		spaces = append(spaces, item)
 	}
 
 	return spaces
+}
+
+func extractItemFromRow(rows *sql.Rows) models.Space {
+	var item models.Space
+	if err := rows.Scan(&item.ID, &item.Name, &item.Title); err != nil {
+		log.Fatal(err)
+	}
+	return item
 }
 
 func SpacesFind(id uuid.UUID) models.Space {
@@ -41,9 +46,7 @@ func SpacesFind(id uuid.UUID) models.Space {
 
 	var item models.Space
 	for rows.Next() {
-		if err := rows.Scan(&item.ID, &item.Name); err != nil {
-			log.Fatal(err)
-		}
+		item = extractItemFromRow(rows)
 	}
 
 	if item.Name == "" {
@@ -58,10 +61,24 @@ func SpacesCreate(space models.Space) uuid.UUID {
 
 	sqlStmt := `
 	insert into spaces(
-		id, name
-	) values ($1, $2)
+		id, name, title
+	) values ($1, $2, $3)
 	`
-	execSQL(sqlStmt, id, space.Name)
+	execSQL(sqlStmt, id, space.Name, space.Title)
 
 	return id
+}
+
+func SpacesDelete(id uuid.UUID) {
+	sqlStmt := "delete from spaces where id = $1"
+	execSQL(sqlStmt, id)
+}
+
+func SpacesUpdate(space models.Space) {
+	sqlStmt := `update spaces set 
+		name = $1,
+		title = $2
+	where id = $3
+	`
+	execSQL(sqlStmt, space.Name, space.Title, space.ID)
 }

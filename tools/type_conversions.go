@@ -5,14 +5,24 @@ import (
 	"log"
 	"strconv"
 	"time"
+
+	"github.com/satori/go.uuid"
 )
 
 func StringToInt(str string) int64 {
-	param, err := strconv.ParseInt(str, 10, 64)
+	number, err := strconv.ParseInt(str, 10, 64)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return param
+	return number
+}
+
+func StringToUUID(str string) uuid.UUID {
+	id, err := uuid.FromString(str)
+	if err != nil {
+		log.Fatal("Could not parse UUID", err)
+	}
+	return id
 }
 
 func DateToString(t time.Time) string {

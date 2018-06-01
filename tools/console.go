@@ -80,7 +80,7 @@ func EditString(label string, previousValue string) string {
 
 	label += " (Ctrl+C to clear current value)"
 
-	val, err := line.PromptWithSuggestion(fmt.Sprintf("%s: ", label), previousValue, len(previousValue)-1)
+	val, err := line.PromptWithSuggestion(fmt.Sprintf("%s: ", label), previousValue, len(previousValue))
 	aborted := handleLinerError(line, err, true)
 
 	return resolveEditionValue(previousValue, val, aborted)
