@@ -7,15 +7,14 @@ import (
 )
 
 type Selector struct {
-	ID    string
-	Tag   string
+	Item  string
 	Space string
 }
 
 func ParseSelector(str string) (*Selector, error) {
 	selector := Selector{}
 
-	validRegex, err := regexp.Compile("^(#[a-z0-9-]+)?([a-z0-9-]+)?(@[a-z0-9-]+)?$")
+	validRegex, err := regexp.Compile("^([a-z0-9-]+)?(@[a-z0-9-]+)?$")
 	if err != nil {
 		log.Fatal("Could not compile space regexp", err)
 	}
@@ -29,14 +28,9 @@ func ParseSelector(str string) (*Selector, error) {
 		log.Fatal("Could not compile space regexp", err)
 	}
 
-	tagRegex, err := regexp.Compile("^#[a-z0-9-]+")
+	itemRegex, err := regexp.Compile("^[a-z0-9-]+")
 	if err != nil {
-		log.Fatal("Could not compile tag regexp", err)
-	}
-
-	idRegex, err := regexp.Compile("^[a-z0-9-]+")
-	if err != nil {
-		log.Fatal("Could not compile id regexp", err)
+		log.Fatal("Could not compile item regexp", err)
 	}
 
 	if spaceRegex.MatchString(str) {
@@ -45,12 +39,8 @@ func ParseSelector(str string) (*Selector, error) {
 		selector.Space = "default"
 	}
 
-	if tagRegex.MatchString(str) {
-		selector.Tag = tagRegex.FindString(str)[1:]
-	}
-
-	if idRegex.MatchString(str) {
-		selector.ID = idRegex.FindString(str)
+	if itemRegex.MatchString(str) {
+		selector.Item = itemRegex.FindString(str)
 	}
 
 	return &selector, nil

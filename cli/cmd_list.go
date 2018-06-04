@@ -34,7 +34,7 @@ var listCmd = &cobra.Command{
 		if space == nil {
 			log.Fatalf("Could not find space %s", selector.Space)
 		}
-		commands := space.CommandList(selector.Tag)
+		commands := space.CommandList(selector.Item)
 
 		for _, command := range commands {
 			tools.PrintCommand(command, viewSnippet, false)
