@@ -9,13 +9,13 @@ import (
 	"github.com/logrusorgru/aurora"
 )
 
-func PrintCommand(cmd models.Command, full bool, sourceOnly bool) {
+func PrintCommand(cmd *models.Command, full bool, sourceOnly bool) {
 	if !sourceOnly {
 		if len(cmd.Tags) != 0 {
 			tags := strings.Join(cmd.Tags, ", ")
-			fmt.Printf("%d - (%s)", aurora.Red(cmd.ID), aurora.Brown(tags))
+			fmt.Printf("%s - (%s)", aurora.Red(cmd.ID), aurora.Brown(tags))
 		} else {
-			fmt.Printf("%d -", aurora.Red(cmd.ID))
+			fmt.Printf("%s -", aurora.Red(cmd.ID))
 		}
 		t := cmd.CreatedAt.UTC().In(time.Local)
 		fmt.Printf(" %s %s\n", aurora.Blue(aurora.Bold(cmd.Title)), aurora.Gray(DateToString(t)))

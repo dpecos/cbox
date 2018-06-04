@@ -5,7 +5,7 @@ import (
 	"github.com/dpecos/cbox/repository"
 )
 
-func LoadCbox() models.CommandBox {
+func LoadCbox() *models.CommandBox {
 
 	cbox := models.CommandBox{
 		Spaces: []models.Space{},
@@ -15,8 +15,14 @@ func LoadCbox() models.CommandBox {
 
 	for _, spaceId := range spaceIds {
 		space := repository.SpaceLoad(spaceId)
-		cbox.SpaceAdd(space)
+		cbox.SpaceAdd(*space)
 	}
 
-	return cbox
+	return &cbox
+}
+
+func PersistCbox(cbox *models.CommandBox) {
+	for _, space := range cbox.Spaces {
+		repository.SpaceStore(space)
+	}
 }

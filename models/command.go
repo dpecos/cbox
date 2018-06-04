@@ -5,7 +5,7 @@ import (
 )
 
 type Command struct {
-	ID          int       `json:"id"`
+	ID          string    `json:"id"`
 	Code        string    `json:"code"`
 	Title       string    `json:"title"`
 	Description string    `json:"description"`

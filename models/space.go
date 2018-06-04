@@ -6,8 +6,8 @@ type Space struct {
 	Entries []Command `json:"entries"`
 }
 
-func (space *Space) CommandAdd(command Command) {
-	space.Entries = append(space.Entries, command)
+func (space *Space) CommandAdd(command *Command) {
+	space.Entries = append(space.Entries, *command)
 }
 
 func (space *Space) CommandList(tag string) []Command {

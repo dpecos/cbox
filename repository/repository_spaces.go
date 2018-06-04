@@ -21,23 +21,19 @@ func resolveSpaceFile(spaceName string) string {
 	return home + "/.cbox/spaces/" + spaceName + ".json"
 }
 
-func SpaceStore(name string, title string) models.Space {
-	space := models.Space{
-		Name:  name,
-		Title: title,
-	}
-
+func SpaceStore(space models.Space) {
 	raw, err := json.MarshalIndent(space, "", "  ")
 	if err != nil {
-		log.Fatalf("Error generating json for space %s: %s", name, err)
+		log.Fatalf("Error generating json for space %s: %s", space.Name, err)
 	}
 
-	err = ioutil.WriteFile(resolveSpaceFile(name), raw, os.ModeExclusive)
+	file := resolveSpaceFile(space.Name)
+	err = ioutil.WriteFile(file, raw, os.ModeExclusive)
 	if err != nil {
-		log.Fatalf("Error writing json file for space %s: %s", name, err)
+		log.Fatalf("Error writing json file (%s) for space %s: %s", file, space.Name, err)
 	}
 
-	return space
+	log.Printf("Space %s successfully stored in %s\n", space.Name, file)
 }
 
 func SpaceDelete(space models.Space) {
@@ -51,7 +47,7 @@ func SpacesList() []string {
 	return []string{DEFAULT_SPACE_NAME}
 }
 
-func SpaceLoad(name string) models.Space {
+func SpaceLoad(name string) *models.Space {
 	raw, err := ioutil.ReadFile(resolveSpaceFile(name))
 	if err != nil {
 		log.Fatalf("Error loading json file for space %s: %s", name, err)
@@ -63,5 +59,5 @@ func SpaceLoad(name string) models.Space {
 		log.Fatalf("Error parsing json file for space %s: %s", name, err)
 	}
 
-	return space
+	return &space
 }

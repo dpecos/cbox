@@ -1,16 +1,21 @@
 package models
 
+import (
+	"log"
+)
+
 type CommandBox struct {
 	path   string
 	Spaces []Space
 }
 
 func (cbox *CommandBox) SpaceFind(spaceName string) *Space {
-	for _, space := range cbox.Spaces {
+	for i, space := range cbox.Spaces {
 		if space.Name == spaceName {
-			return &space
+			return &cbox.Spaces[i]
 		}
 	}
+	log.Fatalf("Could not find space with name %s", spaceName)
 	return nil
 }
 

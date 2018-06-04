@@ -16,6 +16,7 @@ var (
 var listCmd = &cobra.Command{
 	Use:     "list",
 	Aliases: []string{"l"},
+	Args:    cobra.MaximumNArgs(1),
 	Short:   "List the content of your cbox",
 	Run: func(cmd *cobra.Command, args []string) {
 
@@ -31,13 +32,10 @@ var listCmd = &cobra.Command{
 
 		cbox := core.LoadCbox()
 		space := cbox.SpaceFind(selector.Space)
-		if space == nil {
-			log.Fatalf("Could not find space %s", selector.Space)
-		}
 		commands := space.CommandList(selector.Item)
 
 		for _, command := range commands {
-			tools.PrintCommand(command, viewSnippet, false)
+			tools.PrintCommand(&command, viewSnippet, false)
 		}
 
 	},
