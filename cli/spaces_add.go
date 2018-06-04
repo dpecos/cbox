@@ -7,7 +7,7 @@ import (
 var spacesAddCmd = &cobra.Command{
 	Use:   "add",
 	Args:  cobra.ExactArgs(0),
-	Short: "Add a new space to your cmdbox",
+	Short: "Add a new space to your cbox",
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// cmdboxDB := db.Load(dbPath)

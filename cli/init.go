@@ -7,7 +7,7 @@ import (
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Args:  cobra.ExactArgs(0),
-	Short: "Initialize your cmdbox",
+	Short: "Initialize your cbox",
 	Long: `It creates a storage for your cmbdbox.
 
 WARNING! It will remove any previous existing database that could exist in the same path.`,

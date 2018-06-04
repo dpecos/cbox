@@ -3,9 +3,9 @@ package cli
 import (
 	"log"
 
-	"github.com/dpecos/cmdbox/core"
-	"github.com/dpecos/cmdbox/models"
-	"github.com/dpecos/cmdbox/tools"
+	"github.com/dpecos/cbox/core"
+	"github.com/dpecos/cbox/models"
+	"github.com/dpecos/cbox/tools"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +16,7 @@ var (
 var listCmd = &cobra.Command{
 	Use:     "list",
 	Aliases: []string{"l"},
-	Short:   "List the content of your cmdbox",
+	Short:   "List the content of your cbox",
 	Run: func(cmd *cobra.Command, args []string) {
 
 		var selectorStr = ""

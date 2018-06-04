@@ -16,7 +16,7 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "cmdbox",
+	Use:   "cbox",
 	Short: "",
 	Long:  ``,
 }
@@ -32,8 +32,8 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cmdbox.yaml)")
-	rootCmd.PersistentFlags().StringVar(&dbPath, "path", "", "path where to store your cmdbox database (default is $HOME/.cmdbox.db)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cbox.yaml)")
+	rootCmd.PersistentFlags().StringVar(&dbPath, "path", "", "path where to store your cbox database (default is $HOME/.cbox.db)")
 
 	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
@@ -50,9 +50,9 @@ func initConfig() {
 			log.Fatal(err)
 		}
 
-		// Search config in home directory with name ".cmdbox" (without extension).
+		// Search config in home directory with name ".cbox" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".cmdbox")
+		viper.SetConfigName(".cbox")
 	}
 
 	if dbPath == "" {
@@ -61,7 +61,7 @@ func initConfig() {
 			log.Fatal(err)
 		}
 
-		dbPath = filepath.Join(home, ".cmdbox.db")
+		dbPath = filepath.Join(home, ".cbox.db")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

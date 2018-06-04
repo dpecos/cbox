@@ -1,8 +1,8 @@
 package core
 
 import (
-	"github.com/dpecos/cmdbox/models"
-	"github.com/dpecos/cmdbox/repository"
+	"github.com/dpecos/cbox/models"
+	"github.com/dpecos/cbox/repository"
 )
 
 func LoadCbox() models.CommandBox {

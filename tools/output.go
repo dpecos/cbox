@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dpecos/cmdbox/models"
+	"github.com/dpecos/cbox/models"
 	"github.com/logrusorgru/aurora"
 )
 

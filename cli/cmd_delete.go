@@ -8,7 +8,7 @@ var deleteCmd = &cobra.Command{
 	Use:     "delete",
 	Aliases: []string{"del"},
 	Args:    cobra.ExactArgs(1),
-	Short:   "Delete a command from your cmdbox",
+	Short:   "Delete a command from your cbox",
 	Run: func(cmd *cobra.Command, args []string) {
 		// cmdboxDB := db.Load(dbPath)
 		// defer cmdboxDB.Close()

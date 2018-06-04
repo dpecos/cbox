@@ -7,7 +7,7 @@ import (
 var editCmd = &cobra.Command{
 	Use:   "edit",
 	Args:  cobra.ExactArgs(1),
-	Short: "Edit a command from your cmdbox",
+	Short: "Edit a command from your cbox",
 	Run: func(cmd *cobra.Command, args []string) {
 		// cmdboxDB := db.Load(dbPath)
 		// defer cmdboxDB.Close()

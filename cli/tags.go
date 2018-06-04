@@ -6,7 +6,7 @@ import (
 
 var tagsCmd = &cobra.Command{
 	Use:   "tags",
-	Short: "List the tags available in your cmdbox",
+	Short: "List the tags available in your cbox",
 	Run: func(cmd *cobra.Command, args []string) {
 		// cmdboxDB := db.Load(dbPath)
 		// defer cmdboxDB.Close()

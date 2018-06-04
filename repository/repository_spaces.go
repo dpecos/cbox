@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/dpecos/cmdbox/models"
+	"github.com/dpecos/cbox/models"
 )
 
 func SpaceStore(name string, title string) models.Space {

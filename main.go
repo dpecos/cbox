@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/dpecos/cmdbox/cli"
+	"github.com/dpecos/cbox/cli"
 )
 
 func main() {

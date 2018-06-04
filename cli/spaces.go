@@ -6,7 +6,7 @@ import (
 
 var spacesCmd = &cobra.Command{
 	Use:   "spaces",
-	Short: "Show available spaces in your cmdbox",
+	Short: "Show available spaces in your cbox",
 	Run: func(cmd *cobra.Command, args []string) {
 		// cmdboxDB := db.Load(dbPath)
 		// defer cmdboxDB.Close()
