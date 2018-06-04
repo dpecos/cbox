@@ -1,6 +1,11 @@
 package models
 
-import "github.com/dpecos/cbox/tools/console"
+import (
+	"fmt"
+	"log"
+
+	"github.com/dpecos/cbox/tools/console"
+)
 
 type Space struct {
 	Name    string    `json:"name"`
@@ -39,4 +44,30 @@ func (space *Space) CommandList(tag string) []Command {
 		}
 	}
 	return result
+}
+
+func (space *Space) commandFindPosition(commandId string) (int, error) {
+	for i, command := range space.Entries {
+		if command.ID == commandId {
+			return i, nil
+		}
+	}
+	return -1, fmt.Errorf("Could not find command with ID %s", commandId)
+}
+
+func (space *Space) CommandFind(commandId string) *Command {
+	pos, err := space.commandFindPosition(commandId)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return &space.Entries[pos]
+}
+
+func (space *Space) CommandDelete(command *Command) {
+	pos, err := space.commandFindPosition(command.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	space.Entries = append(space.Entries[:pos], space.Entries[pos+1:]...)
 }
