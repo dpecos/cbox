@@ -9,7 +9,7 @@ import (
 	"github.com/logrusorgru/aurora"
 )
 
-func PrintCommand(cmd models.Cmd, full bool, sourceOnly bool) {
+func PrintCommand(cmd models.Command, full bool, sourceOnly bool) {
 	if !sourceOnly {
 		if len(cmd.Tags) != 0 {
 			tags := strings.Join(cmd.Tags, ", ")
@@ -26,10 +26,10 @@ func PrintCommand(cmd models.Cmd, full bool, sourceOnly bool) {
 			if cmd.URL != "" {
 				fmt.Printf("\n%s\n", aurora.Blue(cmd.URL))
 			}
-			fmt.Printf("\n%s\n\n", cmd.Cmd)
+			fmt.Printf("\n%s\n\n", cmd.Code)
 		}
 	} else {
-		fmt.Println(cmd.Cmd)
+		fmt.Println(cmd.Code)
 	}
 }
 
@@ -38,5 +38,5 @@ func PrintTag(tag string) {
 }
 
 func PrintSpace(space models.Space) {
-	fmt.Printf("%s - %s - %s\n", aurora.Red(space.ID), aurora.Green(space.Name), aurora.Blue(aurora.Bold(space.Title)))
+	fmt.Printf("%s - %s\n", aurora.Green(space.Name), aurora.Blue(aurora.Bold(space.Title)))
 }

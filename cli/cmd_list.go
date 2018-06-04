@@ -1,7 +1,10 @@
 package cli
 
 import (
-	"github.com/dpecos/cmdbox/db"
+	"log"
+
+	"github.com/dpecos/cmdbox/core"
+	"github.com/dpecos/cmdbox/models"
 	"github.com/dpecos/cmdbox/tools"
 	"github.com/spf13/cobra"
 )
@@ -15,22 +18,28 @@ var listCmd = &cobra.Command{
 	Aliases: []string{"l"},
 	Short:   "List the content of your cmdbox",
 	Run: func(cmd *cobra.Command, args []string) {
-		cmdboxDB := db.Load(dbPath)
-		defer cmdboxDB.Close()
 
-		var filter string
-		if filterTag != "" {
-			filter = filterTag
-		} else {
-			if len(args) != 0 {
-				filter = args[0]
-			}
+		var selectorStr = ""
+		if len(args) == 1 {
+			selectorStr = args[0]
 		}
 
-		cmds := db.List(filter)
-		for _, cmd := range cmds {
-			tools.PrintCommand(cmd, viewSnippet, false)
+		selector, err := models.ParseSelector(selectorStr)
+		if err != nil {
+			log.Fatal("Could not parse selector", err)
 		}
+
+		cbox := core.LoadCbox()
+		space := cbox.SpaceFind(selector.Space)
+		if space == nil {
+			log.Fatalf("Could not find space %s", selector.Space)
+		}
+		commands := space.CommandList(selector.Tag)
+
+		for _, command := range commands {
+			tools.PrintCommand(command, viewSnippet, false)
+		}
+
 	},
 }
 
@@ -38,5 +47,4 @@ func init() {
 	rootCmd.AddCommand(listCmd)
 
 	listCmd.Flags().BoolVarP(&viewSnippet, "view", "v", false, "Show all details about commands")
-	listCmd.Flags().StringVarP(&filterTag, "tag", "t", "", "List commands only of specified tag")
 }

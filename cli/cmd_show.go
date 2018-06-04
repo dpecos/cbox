@@ -1,9 +1,6 @@
 package cli
 
 import (
-	"github.com/dpecos/cmdbox/db"
-	"github.com/dpecos/cmdbox/tools"
-
 	"github.com/spf13/cobra"
 )
 
@@ -15,12 +12,12 @@ var showCmd = &cobra.Command{
 	Args:    cobra.ExactArgs(1),
 	Short:   "Show one command",
 	Run: func(cmd *cobra.Command, args []string) {
-		cmdboxDB := db.Load(dbPath)
-		defer cmdboxDB.Close()
+		// cmdboxDB := db.Load(dbPath)
+		// defer cmdboxDB.Close()
 
-		cmdID := tools.StringToInt(args[0])
-		command := db.Find(cmdID)
-		tools.PrintCommand(command, true, sourceOnly)
+		// cmdID := tools.StringToInt(args[0])
+		// command := db.Find(cmdID)
+		// tools.PrintCommand(command, true, sourceOnly)
 	},
 }
 

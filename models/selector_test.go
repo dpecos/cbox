@@ -1,6 +1,8 @@
 package models
 
-import "testing"
+import (
+	"testing"
+)
 
 func expectSelector(t *testing.T, s *Selector, err error, id string, tag string, space string) {
 	if err != nil {
