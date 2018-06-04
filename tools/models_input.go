@@ -36,4 +36,5 @@ func ConsoleEditCommand(command *models.Command) {
 	command.Description = console.EditStringMulti("Description", command.Description)
 	command.URL = console.EditString("URL", command.URL)
 	command.Code = console.EditStringMulti("Code / Command", command.Code)
+	command.UpdatedAt = time.Now()
 }
