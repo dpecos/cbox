@@ -34,7 +34,6 @@ var deleteCmd = &cobra.Command{
 			core.PersistCbox(cbox)
 			fmt.Println(aurora.Green("\nCommand deleted successfully!\n"))
 		}
-
 	},
 }
 

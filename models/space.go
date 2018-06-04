@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/dpecos/cbox/tools/console"
 )
@@ -27,6 +28,8 @@ func (space *Space) CommandAdd(command *Command) {
 		console.PrintError("ID already found in space. Try a different one")
 		command.ID = console.ReadString("ID")
 	}
+	command.CreatedAt = time.Now()
+	command.UpdatedAt = time.Now()
 	space.Entries = append(space.Entries, *command)
 }
 
@@ -40,6 +43,7 @@ func (space *Space) CommandEdit(command *Command, previousID string) {
 		}
 		command.ID = newID
 	}
+	command.UpdatedAt = time.Now()
 }
 
 func (space *Space) CommandList(tag string) []Command {

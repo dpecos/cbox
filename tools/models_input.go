@@ -2,7 +2,6 @@ package tools
 
 import (
 	"strings"
-	"time"
 
 	"github.com/dpecos/cbox/models"
 	"github.com/dpecos/cbox/tools/console"
@@ -17,8 +16,6 @@ func ConsoleReadCommand() *models.Command {
 		URL:         console.ReadString("URL"),
 		Code:        console.ReadStringMulti("Code / Command"),
 		Tags:        []string{},
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
 	}
 	tags := console.ReadString("Tags (separated by space)")
 	for _, tag := range strings.Split(tags, " ") {
@@ -36,5 +33,4 @@ func ConsoleEditCommand(command *models.Command) {
 	command.Description = console.EditStringMulti("Description", command.Description)
 	command.URL = console.EditString("URL", command.URL)
 	command.Code = console.EditStringMulti("Code / Command", command.Code)
-	command.UpdatedAt = time.Now()
 }

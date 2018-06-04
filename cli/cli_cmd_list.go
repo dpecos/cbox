@@ -37,7 +37,6 @@ var listCmd = &cobra.Command{
 		for _, command := range commands {
 			tools.PrintCommand(&command, viewSnippet, false)
 		}
-
 	},
 }
 

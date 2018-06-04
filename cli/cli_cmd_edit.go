@@ -38,7 +38,6 @@ var editCmd = &cobra.Command{
 		} else {
 			fmt.Println("Cancelled")
 		}
-
 	},
 }
 

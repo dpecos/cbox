@@ -11,35 +11,34 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var addCmd = &cobra.Command{
-	Use:   "add",
-	Args:  cobra.MaximumNArgs(1),
-	Short: "Add a new command to your cbox",
+var tagCmd = &cobra.Command{
+	Use:     "tag",
+	Aliases: []string{"t"},
+	Args:    cobra.MinimumNArgs(2),
+	Short:   "Add tags to a command",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		var selectorStr = ""
-		if len(args) == 1 {
-			selectorStr = args[0]
-		}
-
-		selector, err := models.ParseSelector(selectorStr)
+		selector, err := models.ParseSelector(args[0])
 		if err != nil {
 			log.Fatal("Could not parse selector", err)
 		}
 
 		cbox := core.LoadCbox()
+
 		space := cbox.SpaceFind(selector.Space)
+		command := space.CommandFind(selector.Item)
 
-		command := tools.ConsoleReadCommand()
+		for _, tag := range args[1:] {
+			command.TagAdd(tag)
+		}
 
-		space.CommandAdd(command)
 		core.PersistCbox(cbox)
 
 		tools.PrintCommand(command, true, false)
-		fmt.Println(aurora.Green("\nCommand stored successfully!\n"))
+		fmt.Println(aurora.Green("\nCommand tagged successfully!\n"))
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(addCmd)
+	rootCmd.AddCommand(tagCmd)
 }
