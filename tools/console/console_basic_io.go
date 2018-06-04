@@ -1,4 +1,4 @@
-package tools
+package console
 
 import (
 	"bufio"
@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/logrusorgru/aurora"
 	"github.com/peterh/liner"
 )
 
@@ -111,4 +112,8 @@ func resolveEditionValue(previousValue string, newValue string, aborted bool) st
 
 func Confirm(label string) bool {
 	return ReadString(label+" (y/n)") == "y"
+}
+
+func PrintError(msg string) {
+	fmt.Println(aurora.Red(msg))
 }
