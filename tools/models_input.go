@@ -29,3 +29,11 @@ func ConsoleReadCommand() *models.Command {
 
 	return &command
 }
+
+func ConsoleEditCommand(command *models.Command) {
+	command.ID = console.EditString("ID", command.ID)
+	command.Title = console.EditString("Title", command.Title)
+	command.Description = console.EditStringMulti("Description", command.Description)
+	command.URL = console.EditString("URL", command.URL)
+	command.Code = console.EditStringMulti("Code / Command", command.Code)
+}

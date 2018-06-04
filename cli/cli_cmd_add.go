@@ -13,11 +13,16 @@ import (
 
 var addCmd = &cobra.Command{
 	Use:   "add",
-	Args:  cobra.ExactArgs(1),
+	Args:  cobra.MaximumNArgs(1),
 	Short: "Add a new command to your cbox",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		selector, err := models.ParseSelector(args[0])
+		var selectorStr = ""
+		if len(args) == 1 {
+			selectorStr = args[0]
+		}
+
+		selector, err := models.ParseSelector(selectorStr)
 		if err != nil {
 			log.Fatal("Could not parse selector", err)
 		}

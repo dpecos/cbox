@@ -13,9 +13,9 @@ type Space struct {
 	Entries []Command `json:"entries"`
 }
 
-func commandPresentInSapce(space *Space, command *Command) bool {
+func commandPresentInSapce(space *Space, commandID string) bool {
 	for _, cmd := range space.Entries {
-		if command.ID == cmd.ID {
+		if commandID == cmd.ID {
 			return true
 		}
 	}
@@ -23,11 +23,23 @@ func commandPresentInSapce(space *Space, command *Command) bool {
 }
 
 func (space *Space) CommandAdd(command *Command) {
-	for commandPresentInSapce(space, command) {
+	for commandPresentInSapce(space, command.ID) {
 		console.PrintError("ID already found in space. Try a different one")
 		command.ID = console.ReadString("ID")
 	}
 	space.Entries = append(space.Entries, *command)
+}
+
+func (space *Space) CommandEdit(command *Command, previousID string) {
+	if command.ID != previousID {
+		newID := command.ID
+		command.ID = previousID
+		for commandPresentInSapce(space, newID) {
+			console.PrintError("ID already found in space. Try a different one")
+			newID = console.ReadString("ID")
+		}
+		command.ID = newID
+	}
 }
 
 func (space *Space) CommandList(tag string) []Command {

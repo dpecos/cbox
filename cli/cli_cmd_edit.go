@@ -12,11 +12,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var deleteCmd = &cobra.Command{
-	Use:     "delete",
-	Aliases: []string{"del"},
-	Args:    cobra.ExactArgs(1),
-	Short:   "Delete a command from your cbox",
+var editCmd = &cobra.Command{
+	Use:   "edit",
+	Args:  cobra.ExactArgs(1),
+	Short: "Edit a command from your cbox",
 	Run: func(cmd *cobra.Command, args []string) {
 
 		selector, err := models.ParseSelector(args[0])
@@ -25,19 +24,24 @@ var deleteCmd = &cobra.Command{
 		}
 
 		cbox := core.LoadCbox()
+
 		space := cbox.SpaceFind(selector.Space)
 		command := space.CommandFind(selector.Item)
+		tools.ConsoleEditCommand(command)
+
+		space.CommandEdit(command, selector.Item)
 
 		tools.PrintCommand(command, true, false)
-		if console.Confirm(aurora.Red("Are you sure you want to delete this command?").String()) {
-			space.CommandDelete(command)
+		if console.Confirm("Update?") {
 			core.PersistCbox(cbox)
-			fmt.Println(aurora.Green("\nCommand deleted successfully!\n"))
+			fmt.Println(aurora.Green("\nCommand updated successfully!\n"))
+		} else {
+			fmt.Println("Cancelled")
 		}
 
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(deleteCmd)
+	rootCmd.AddCommand(editCmd)
 }
