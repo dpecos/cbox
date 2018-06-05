@@ -19,8 +19,8 @@ func (cbox *CommandBox) SpaceFind(spaceName string) *Space {
 	return nil
 }
 
-func (cbox *CommandBox) SpaceAdd(space Space) Space {
-	cbox.Spaces = append(cbox.Spaces, space)
+func (cbox *CommandBox) SpaceAdd(space *Space) *Space {
+	cbox.Spaces = append(cbox.Spaces, *space)
 	return space
 }
 

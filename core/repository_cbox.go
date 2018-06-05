@@ -10,11 +10,10 @@ func LoadCbox() *models.CommandBox {
 		Spaces: []models.Space{},
 	}
 
-	spaceIds := SpacesList()
+	spaces := SpaceList()
 
-	for _, spaceId := range spaceIds {
-		space := SpaceLoad(spaceId)
-		cbox.SpaceAdd(*space)
+	for _, space := range spaces {
+		cbox.SpaceAdd(space)
 	}
 
 	return &cbox
