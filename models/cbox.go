@@ -2,6 +2,7 @@ package models
 
 import (
 	"log"
+	"strings"
 
 	"github.com/dpecos/cbox/tools/console"
 )
@@ -37,7 +38,7 @@ func (cbox *CBox) spaceInCbox(space *Space) bool {
 func (cbox *CBox) SpaceCreate(space *Space) {
 	for cbox.spaceInCbox(space) {
 		console.PrintError("Space already found in your cbox. Try a different one")
-		space.Name = console.ReadString("Name")
+		space.Name = strings.ToLower(console.ReadString("Name"))
 	}
 
 	cbox.SpaceAdd(space)

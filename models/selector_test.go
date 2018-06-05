@@ -50,3 +50,11 @@ func TestInvalidEmptySpaceSelector(t *testing.T) {
 		t.Error("Expected error was not created")
 	}
 }
+
+func TestInvalidUppercaseSpaceSelector(t *testing.T) {
+	_, err := ParseSelector("Test")
+
+	if err == nil {
+		t.Error("Expected error was not created")
+	}
+}

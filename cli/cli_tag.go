@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/dpecos/cbox/core"
 	"github.com/dpecos/cbox/models"
@@ -29,7 +30,7 @@ var tagCmd = &cobra.Command{
 		command := space.CommandFind(selector.Item)
 
 		for _, tag := range args[1:] {
-			command.TagAdd(tag)
+			command.TagAdd(strings.ToLower(tag))
 		}
 
 		core.PersistCbox(cbox)

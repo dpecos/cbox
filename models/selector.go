@@ -11,6 +11,8 @@ type Selector struct {
 	Space string
 }
 
+const DEFAULT_SPACE_NAME = "default"
+
 func ParseSelector(str string) (*Selector, error) {
 	selector := Selector{}
 
@@ -36,7 +38,7 @@ func ParseSelector(str string) (*Selector, error) {
 	if spaceRegex.MatchString(str) {
 		selector.Space = spaceRegex.FindString(str)[1:]
 	} else {
-		selector.Space = "default"
+		selector.Space = DEFAULT_SPACE_NAME
 	}
 
 	if itemRegex.MatchString(str) {

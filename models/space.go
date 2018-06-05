@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/dpecos/cbox/tools/console"
@@ -26,7 +27,7 @@ func commandPresentInSapce(space *Space, commandID string) bool {
 func (space *Space) CommandAdd(command *Command) {
 	for commandPresentInSapce(space, command.ID) {
 		console.PrintError("ID already found in space. Try a different one")
-		command.ID = console.ReadString("ID")
+		command.ID = strings.ToLower(console.ReadString("ID"))
 	}
 	command.CreatedAt = time.Now()
 	command.UpdatedAt = time.Now()
@@ -39,7 +40,7 @@ func (space *Space) CommandEdit(command *Command, previousID string) {
 		command.ID = previousID
 		for commandPresentInSapce(space, newID) {
 			console.PrintError("ID already found in space. Try a different one")
-			newID = console.ReadString("ID")
+			newID = strings.ToLower(console.ReadString("ID"))
 		}
 		command.ID = newID
 	}
