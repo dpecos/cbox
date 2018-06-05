@@ -4,9 +4,9 @@ import (
 	"github.com/dpecos/cbox/models"
 )
 
-func LoadCbox() *models.CommandBox {
+func LoadCbox() *models.CBox {
 
-	cbox := models.CommandBox{
+	cbox := models.CBox{
 		Spaces: []models.Space{},
 	}
 
@@ -19,8 +19,8 @@ func LoadCbox() *models.CommandBox {
 	return &cbox
 }
 
-func PersistCbox(cbox *models.CommandBox) {
+func PersistCbox(cbox *models.CBox) {
 	for _, space := range cbox.Spaces {
-		SpaceStore(space)
+		SpaceStore(&space)
 	}
 }

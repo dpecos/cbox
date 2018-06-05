@@ -42,14 +42,14 @@ func SpaceList() []*models.Space {
 	return spaces
 }
 
-func SpaceStore(space models.Space) {
+func SpaceStore(space *models.Space) {
 	raw, err := json.MarshalIndent(space, "", "  ")
 	if err != nil {
 		log.Fatalf("Error generating json for space %s: %s", space.Name, err)
 	}
 
 	file := resolveSpaceFile(space.Name)
-	err = ioutil.WriteFile(file, raw, os.ModeExclusive)
+	err = ioutil.WriteFile(file, raw, 0644)
 	if err != nil {
 		log.Fatalf("Error writing json file (%s) for space %s: %s", file, space.Name, err)
 	}
@@ -57,7 +57,7 @@ func SpaceStore(space models.Space) {
 	log.Printf("Space %s successfully stored in %s\n", space.Name, file)
 }
 
-func SpaceDelete(space models.Space) {
+func SpaceDelete(space *models.Space) {
 	err := os.Remove(resolveSpaceFile(space.Name))
 	if err != nil {
 		log.Fatalf("Error deleting space %s: %s", space.Name, err)

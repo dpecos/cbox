@@ -34,3 +34,12 @@ func ConsoleEditCommand(command *models.Command) {
 	command.URL = console.EditString("URL", command.URL)
 	command.Code = console.EditStringMulti("Code / Command", command.Code)
 }
+
+func ConsoleReadSpace() *models.Space {
+	space := models.Space{
+		Name:    console.ReadString("Name"),
+		Title:   console.ReadString("Title"),
+		Entries: []models.Command{},
+	}
+	return &space
+}
