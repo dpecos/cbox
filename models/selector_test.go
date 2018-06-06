@@ -40,8 +40,21 @@ func TestMandatorySpaceSelector(t *testing.T) {
 	expectSelector(t, s, err, "", "test")
 }
 
+func TestMandatoryItemSelector(t *testing.T) {
+	s, err := ParseSelectorMandatoryItem("item@test")
+	expectSelector(t, s, err, "item", "test")
+}
+
 func TestEmptyMandatorySpaceSelector(t *testing.T) {
 	_, err := ParseSelectorMandatorySpace("")
+
+	if err == nil {
+		t.Error("Expected error was not created")
+	}
+}
+
+func TestEmptyMandatoryItem(t *testing.T) {
+	_, err := ParseSelectorMandatoryItem("@space")
 
 	if err == nil {
 		t.Error("Expected error was not created")

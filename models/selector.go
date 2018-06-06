@@ -37,6 +37,18 @@ func ParseSelectorMandatorySpace(str string) (*Selector, error) {
 	return selector, nil
 }
 
+func ParseSelectorMandatoryItem(str string) (*Selector, error) {
+	selector, err := ParseSelector(str)
+
+	if err == nil {
+		if selector.Item == "" {
+			return nil, fmt.Errorf("Item not specified in the selector '%s'", str)
+		}
+	}
+
+	return selector, nil
+}
+
 func parseSelector(str string) (*Selector, error) {
 	selector := Selector{}
 

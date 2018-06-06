@@ -88,3 +88,22 @@ func (space *Space) CommandDelete(command *Command) {
 
 	space.Entries = append(space.Entries[:pos], space.Entries[pos+1:]...)
 }
+
+func (space *Space) TagsList(filterTag string) []string {
+	commands := space.CommandList(filterTag)
+
+	result := []string{}
+
+	tags := make(map[string]struct{})
+	var found struct{}
+	for _, command := range commands {
+		for _, tag := range command.Tags {
+			if _, ok := tags[tag]; !ok {
+				tags[tag] = found
+				result = append(result, tag)
+			}
+		}
+	}
+
+	return result
+}
