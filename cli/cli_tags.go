@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"log"
+	"sort"
 
 	"github.com/dpecos/cbox/core"
 	"github.com/dpecos/cbox/models"
@@ -31,6 +32,7 @@ var tagsCmd = &cobra.Command{
 		space := cbox.SpaceFind(selector.Space)
 
 		tags := space.TagsList(selector.Item)
+		sort.Strings(tags)
 
 		for _, tag := range tags {
 			fmt.Printf("%s\n", tag)
