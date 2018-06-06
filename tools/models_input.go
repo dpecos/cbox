@@ -43,3 +43,8 @@ func ConsoleReadSpace() *models.Space {
 	}
 	return &space
 }
+
+func ConsoleEditSpace(space *models.Space) {
+	space.Name = strings.ToLower(console.EditString("Name", space.Name))
+	space.Title = console.EditString("Title", space.Title)
+}

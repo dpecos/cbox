@@ -35,6 +35,19 @@ func TestTagSpaceSelector(t *testing.T) {
 	expectSelector(t, s, err, "test-tag", "test")
 }
 
+func TestMandatorySpaceSelector(t *testing.T) {
+	s, err := ParseSelectorMandatorySpace("@test")
+	expectSelector(t, s, err, "", "test")
+}
+
+func TestEmptyMandatorySpaceSelector(t *testing.T) {
+	_, err := ParseSelectorMandatorySpace("")
+
+	if err == nil {
+		t.Error("Expected error was not created")
+	}
+}
+
 func TestInvalidIdTagSelector(t *testing.T) {
 	_, err := ParseSelector("invalid%chars")
 

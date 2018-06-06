@@ -12,31 +12,41 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var spacesDeleteCmd = &cobra.Command{
-	Use:   "delete",
+var spacesEditCmd = &cobra.Command{
+	Use:   "edit",
 	Args:  cobra.ExactArgs(1),
-	Short: "Delete a space from your cbox",
+	Short: "Edit an space from your cbox",
 	Long:  tools.Logo,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		selector, err := models.ParseSelectorMandatorySpace(args[0])
 		if err != nil {
-			log.Fatal("Could not parse selector", err)
+			log.Fatalf("Could not parse selector: %s", err)
 		}
 
 		cbox := core.LoadCbox()
 
 		space := cbox.SpaceFind(selector.Space)
+		tools.ConsoleEditSpace(space)
+
+		cbox.SpaceEdit(space, selector.Space)
 
 		tools.PrintSpace(space)
-		if console.Confirm(aurora.Red("Are you sure you want to delete this space?").String()) {
-			core.SpaceDelete(space)
-			fmt.Println(aurora.Green("\nSpace successfully deleted!\n"))
+		if console.Confirm("Update?") {
+			spaceToDelete := &models.Space{
+				Name: selector.Space,
+			}
+			core.SpaceDelete(spaceToDelete)
+
+			core.PersistCbox(cbox)
+			fmt.Println(aurora.Green("\nSpace updated successfully!\n"))
+		} else {
+			fmt.Println("Cancelled")
 		}
 
 	},
 }
 
 func init() {
-	spacesCmd.AddCommand(spacesDeleteCmd)
+	spacesCmd.AddCommand(spacesEditCmd)
 }

@@ -14,6 +14,30 @@ type Selector struct {
 const DEFAULT_SPACE_NAME = "default"
 
 func ParseSelector(str string) (*Selector, error) {
+	selector, err := parseSelector(str)
+
+	if err == nil {
+		if selector.Space == "" {
+			selector.Space = DEFAULT_SPACE_NAME
+		}
+	}
+
+	return selector, err
+}
+
+func ParseSelectorMandatorySpace(str string) (*Selector, error) {
+	selector, err := parseSelector(str)
+
+	if err == nil {
+		if selector.Space == "" {
+			return nil, fmt.Errorf("Space not specified in the selector '%s'", str)
+		}
+	}
+
+	return selector, nil
+}
+
+func parseSelector(str string) (*Selector, error) {
 	selector := Selector{}
 
 	validRegex, err := regexp.Compile("^([a-z0-9-]+)?(@[a-z0-9-]+)?$")
@@ -37,8 +61,6 @@ func ParseSelector(str string) (*Selector, error) {
 
 	if spaceRegex.MatchString(str) {
 		selector.Space = spaceRegex.FindString(str)[1:]
-	} else {
-		selector.Space = DEFAULT_SPACE_NAME
 	}
 
 	if itemRegex.MatchString(str) {
