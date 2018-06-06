@@ -18,6 +18,7 @@ var listCmd = &cobra.Command{
 	Aliases: []string{"l"},
 	Args:    cobra.MaximumNArgs(1),
 	Short:   "List the content of your cbox",
+	Long:    tools.Logo,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		var selectorStr = ""

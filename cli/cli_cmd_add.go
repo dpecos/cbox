@@ -15,6 +15,7 @@ var addCmd = &cobra.Command{
 	Use:   "add",
 	Args:  cobra.MaximumNArgs(1),
 	Short: "Add a new command to your cbox",
+	Long:  tools.Logo,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		var selectorStr = ""

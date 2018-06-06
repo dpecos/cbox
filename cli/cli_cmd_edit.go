@@ -16,6 +16,7 @@ var editCmd = &cobra.Command{
 	Use:   "edit",
 	Args:  cobra.ExactArgs(1),
 	Short: "Edit a command from your cbox",
+	Long:  tools.Logo,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		selector, err := models.ParseSelector(args[0])

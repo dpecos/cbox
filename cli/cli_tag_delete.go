@@ -15,6 +15,7 @@ var tagDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Args:  cobra.MinimumNArgs(2),
 	Short: "Delete tags from a command",
+	Long:  tools.Logo,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		selector, err := models.ParseSelector(args[0])

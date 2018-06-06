@@ -16,6 +16,7 @@ var viewCmd = &cobra.Command{
 	Aliases: []string{"v"},
 	Args:    cobra.ExactArgs(1),
 	Short:   "View one command",
+	Long:    tools.Logo,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		selector, err := models.ParseSelector(args[0])

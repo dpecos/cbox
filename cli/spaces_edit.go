@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"github.com/dpecos/cbox/tools"
 	"github.com/spf13/cobra"
 )
 
@@ -8,6 +9,7 @@ var spacesEditCmd = &cobra.Command{
 	Use:   "edit",
 	Args:  cobra.ExactArgs(1),
 	Short: "Edit an space from your cbox",
+	Long:  tools.Logo,
 	Run: func(cmd *cobra.Command, args []string) {
 		// cmdboxDB := db.Load(dbPath)
 		// defer cmdboxDB.Close()

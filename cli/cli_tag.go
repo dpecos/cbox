@@ -17,6 +17,7 @@ var tagCmd = &cobra.Command{
 	Aliases: []string{"t"},
 	Args:    cobra.MinimumNArgs(2),
 	Short:   "Add tags to a command",
+	Long:    tools.Logo,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		selector, err := models.ParseSelector(args[0])

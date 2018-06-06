@@ -9,6 +9,7 @@ import (
 var spacesCmd = &cobra.Command{
 	Use:   "spaces",
 	Short: "Show available spaces in your cbox",
+	Long:  tools.Logo,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		spaces := core.SpaceList()

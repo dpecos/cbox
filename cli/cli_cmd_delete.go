@@ -17,6 +17,7 @@ var deleteCmd = &cobra.Command{
 	Aliases: []string{"del"},
 	Args:    cobra.ExactArgs(1),
 	Short:   "Delete a command from your cbox",
+	Long:    tools.Logo,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		selector, err := models.ParseSelector(args[0])

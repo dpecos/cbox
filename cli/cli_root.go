@@ -3,13 +3,14 @@ package cli
 import (
 	"log"
 
+	"github.com/dpecos/cbox/tools"
 	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{
 	Use:   "cbox",
 	Short: "",
-	Long:  ``,
+	Long:  tools.Logo,
 }
 
 func Execute() {
