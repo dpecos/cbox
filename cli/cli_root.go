@@ -3,6 +3,7 @@ package cli
 import (
 	"log"
 
+	"github.com/dpecos/cbox/core"
 	"github.com/dpecos/cbox/tools"
 	"github.com/spf13/cobra"
 )
@@ -24,5 +25,5 @@ func init() {
 }
 
 func initConfig() {
-	// TODO initialize home dir structure
+	core.CheckCboxDir()
 }

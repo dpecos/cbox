@@ -5,32 +5,28 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
 
 	"github.com/dpecos/cbox/models"
-	homedir "github.com/mitchellh/go-homedir"
 )
 
-const SPACES_PATH = "/.cbox/spaces/"
+const SPACES_PATH = "spaces"
 const DEFAULT_SPACE_NAME = "default"
+const DEFAULT_SPACE_TITLE = "Default space to store commands"
 
 func resolveSpaceFile(spaceName string) string {
-	home, err := homedir.Dir()
-	if err != nil {
-		log.Fatalf("Could not retrieve HOME: %s", err)
-	}
-
-	return home + SPACES_PATH + spaceName + ".json"
+	spacePath := path.Join(SPACES_PATH, spaceName+".json")
+	return resolveInCboxDir(spacePath)
 }
 
 func SpaceList() []*models.Space {
-	home, err := homedir.Dir()
-	if err != nil {
-		log.Fatalf("Could not retrieve HOME: %s", err)
-	}
 
 	spaces := []*models.Space{}
-	files, err := ioutil.ReadDir(home + SPACES_PATH)
+	files, err := ioutil.ReadDir(resolveInCboxDir(SPACES_PATH))
+	if err != nil {
+		log.Fatalf("Error reading spaces: %s", err)
+	}
 	for _, f := range files {
 		filename := f.Name()
 		extension := filepath.Ext(filename)
