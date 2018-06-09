@@ -1,0 +1,34 @@
+package cli
+
+import (
+	"log"
+
+	"github.com/dpecos/cbox/models"
+)
+
+type CLIController struct {
+}
+
+var ctrl = CLIController{}
+
+func parseSelectorAllowEmpty(args []string) *models.Selector {
+	var selectorStr = ""
+	if len(args) == 1 {
+		selectorStr = args[0]
+	}
+
+	selector, err := models.ParseSelector(selectorStr)
+	if err != nil {
+		log.Fatal("Could not parse selector", err)
+	}
+
+	return selector
+}
+
+func parseSelector(args []string) *models.Selector {
+	selector, err := models.ParseSelector(args[0])
+	if err != nil {
+		log.Fatal("Could not parse selector", err)
+	}
+	return selector
+}
