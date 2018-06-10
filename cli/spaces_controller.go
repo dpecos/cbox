@@ -8,7 +8,6 @@ import (
 	"github.com/dpecos/cbox/models"
 	"github.com/dpecos/cbox/tools"
 	"github.com/dpecos/cbox/tools/console"
-	"github.com/logrusorgru/aurora"
 	"github.com/spf13/cobra"
 )
 
@@ -24,13 +23,17 @@ func (ctrl *CLIController) SpacesAdd(cmd *cobra.Command, args []string) {
 
 	cbox := core.LoadCbox()
 
+	fmt.Println("Creating new space")
 	space := tools.ConsoleReadSpace()
-	cbox.SpaceCreate(space)
 
+	cbox.SpaceCreate(space)
 	core.PersistCbox(cbox)
 
-	fmt.Println(aurora.Green("\nSpace successfully created!\n"))
+	fmt.Println("\n--- New space ---")
 	tools.PrintSpace(space)
+	fmt.Println("-----\n")
+
+	console.PrintSuccess("Space successfully created!")
 }
 
 func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
@@ -43,11 +46,16 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 	cbox := core.LoadCbox()
 
 	space := cbox.SpaceFind(selector.Space)
+
+	fmt.Printf("Editing space with Name %s\n", space.Name)
 	tools.ConsoleEditSpace(space)
 
 	cbox.SpaceEdit(space, selector.Space)
 
+	fmt.Println("--- Space after edited values ---")
 	tools.PrintSpace(space)
+	fmt.Println("-----\n")
+
 	if console.Confirm("Update?") {
 		spaceToDelete := &models.Space{
 			Name: selector.Space,
@@ -55,11 +63,10 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 		core.SpaceDelete(spaceToDelete)
 
 		core.PersistCbox(cbox)
-		fmt.Println(aurora.Green("\nSpace updated successfully!\n"))
+		console.PrintSuccess("Space updated successfully!")
 	} else {
-		fmt.Println("Cancelled")
+		console.PrintError("Edition cancelled")
 	}
-
 }
 
 func (ctrl *CLIController) SpacesDelete(cmd *cobra.Command, args []string) {
@@ -73,10 +80,14 @@ func (ctrl *CLIController) SpacesDelete(cmd *cobra.Command, args []string) {
 
 	space := cbox.SpaceFind(selector.Space)
 
+	fmt.Println("\n--- Space to delete ---")
 	tools.PrintSpace(space)
-	if console.Confirm(aurora.Red("Are you sure you want to delete this space?").String()) {
-		core.SpaceDelete(space)
-		fmt.Println(aurora.Green("\nSpace successfully deleted!\n"))
-	}
+	fmt.Println("-----\n")
 
+	if console.Confirm("Are you sure you want to delete this space?") {
+		core.SpaceDelete(space)
+		console.PrintSuccess("Space deleted successfully!")
+	} else {
+		console.PrintError("Deletion cancelled")
+	}
 }

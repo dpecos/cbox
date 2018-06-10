@@ -3,42 +3,75 @@ package console
 import (
 	"bufio"
 	"fmt"
-	"log"
+	"io"
 	"os"
 	"strings"
 
 	"github.com/logrusorgru/aurora"
-	"github.com/peterh/liner"
 )
 
+const MSG_EMPTY_TO_FINISH = "Empty line to finish"
+const MSG_EDIT = "Ctrl+D to clear, Empty line to maintain"
+
+func formatLabel(label string) string {
+	return fmt.Sprintf("  %s: ", aurora.Blue(aurora.Bold(label)))
+}
+
+func formatLabelDetails(label string, details string) string {
+	return fmt.Sprintf("  %s %s: ", aurora.Blue(aurora.Bold(label)), aurora.Blue("("+details+")"))
+}
+
+func formatPreviousValue(label string, value string) string {
+	return fmt.Sprintf("  %s: %s", aurora.Cyan(label), value)
+}
+
+func formatQuestion(question string, options string) string {
+	return fmt.Sprintf("%s %s: ", aurora.Magenta(aurora.Bold(question)), aurora.Magenta(options))
+}
+
+func ReadString(label string) string {
+	fmt.Printf(formatLabel(label))
+	value, _ := readString()
+	return value
+}
+
 func ReadStringMulti(label string) string {
-	val, _ := readStringMulti(label, false)
+	val, _ := readStringMulti(label, MSG_EMPTY_TO_FINISH)
 	return val
 }
 
-func readStringMulti(label string, allowAbortEdition bool) (string, bool) {
-	line := liner.NewLiner()
-	defer line.Close()
-	line.SetCtrlCAborts(true)
+func readString() (string, error) {
+	reader := bufio.NewReader(os.Stdin)
+	val, err := reader.ReadString('\n')
+	return strings.TrimSpace(val), err
+}
 
-	if label != "" {
-		if allowAbortEdition {
-			label += " (Ctrl+C to clear current value): "
-		} else {
-			label += " (empty line to finish): "
-		}
+func readStringDetails(label string, details string) (string, bool) {
+	fmt.Printf(formatLabelDetails(label, details))
+	val, err := readString()
+	if err == io.EOF {
+		return "", true
 	}
+	return val, false
+}
+
+func readStringMulti(label string, details string) (string, bool) {
+
+	if details != "" {
+		fmt.Println(formatLabelDetails(label, details))
+	} else {
+		fmt.Println(formatLabel(label))
+	}
+
+	reader := bufio.NewReader(os.Stdin)
 
 	arr := make([]string, 0)
 	for {
-		text, err := line.Prompt(label)
-		aborted := handleLinerError(line, err, allowAbortEdition)
-
-		if aborted {
+		text, err := reader.ReadString('\n')
+		if err == io.EOF {
 			return "", true
 		}
-
-		if len(text) != 0 {
+		if text != "\n" {
 			arr = append(arr, text)
 			label = ""
 		} else {
@@ -46,51 +79,22 @@ func readStringMulti(label string, allowAbortEdition bool) (string, bool) {
 		}
 	}
 
-	val := strings.Join(arr, "\n")
+	val := strings.Join(arr, "")
 	return strings.TrimSpace(val), false
 }
 
-func handleLinerError(line *liner.State, err error, allowAbortEdition bool) bool {
-	if err != nil {
-		if err == liner.ErrPromptAborted {
-			if !allowAbortEdition {
-				line.Close()
-				os.Exit(0)
-			} else {
-				return true
-			}
-		} else {
-			log.Fatal(err)
-		}
-	}
-	return false
-}
-
-func ReadString(label string) string {
-	fmt.Printf("%s: ", label)
-
-	reader := bufio.NewReader(os.Stdin)
-	val, _ := reader.ReadString('\n')
-	return strings.TrimSpace(val)
-}
-
 func EditString(label string, previousValue string) string {
-	line := liner.NewLiner()
-	defer line.Close()
-	line.SetCtrlCAborts(true)
+	fmt.Println(formatPreviousValue("Previous value of "+strings.ToLower(label), previousValue))
+	value, aborted := readStringDetails(label, MSG_EDIT)
+	fmt.Println()
 
-	label += " (Ctrl+C to clear current value)"
-
-	val, err := line.PromptWithSuggestion(fmt.Sprintf("%s: ", label), previousValue, len(previousValue))
-	aborted := handleLinerError(line, err, true)
-
-	return resolveEditionValue(previousValue, val, aborted)
+	return resolveEditionValue(previousValue, value, aborted)
 }
 
 func EditStringMulti(label string, previousValue string) string {
-	label = strings.ToLower(label)
-	fmt.Printf("Previous value for %s:\n%s\n", label, previousValue)
-	val, aborted := readStringMulti("New value for "+label, true)
+	fmt.Println(formatPreviousValue("Previous value of "+strings.ToLower(label), previousValue))
+	val, aborted := readStringMulti("New value for "+label, MSG_EDIT)
+	fmt.Println()
 
 	return resolveEditionValue(previousValue, val, aborted)
 }
@@ -111,9 +115,16 @@ func resolveEditionValue(previousValue string, newValue string, aborted bool) st
 }
 
 func Confirm(label string) bool {
-	return ReadString(label+" (y/n)") == "y"
+	fmt.Printf(formatQuestion(label, "y/n"))
+	val, _ := readString()
+	fmt.Println()
+	return val == "y"
 }
 
 func PrintError(msg string) {
-	fmt.Println(aurora.Red(msg))
+	fmt.Printf("%s\n\n", aurora.Red(msg))
+}
+
+func PrintSuccess(msg string) {
+	fmt.Printf("%s\n\n", aurora.Green(msg))
 }

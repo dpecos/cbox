@@ -6,7 +6,6 @@ import (
 	"github.com/dpecos/cbox/core"
 	"github.com/dpecos/cbox/tools"
 	"github.com/dpecos/cbox/tools/console"
-	"github.com/logrusorgru/aurora"
 	"github.com/spf13/cobra"
 )
 
@@ -30,13 +29,17 @@ func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 	cbox := core.LoadCbox()
 	space := cbox.SpaceFind(selector.Space)
 
+	fmt.Println("Creating new command")
 	command := tools.ConsoleReadCommand()
 
 	space.CommandAdd(command)
 	core.PersistCbox(cbox)
 
+	fmt.Println("\n--- New command ---")
 	tools.PrintCommand(command, true, false)
-	fmt.Println(aurora.Green("\nCommand stored successfully!\n"))
+	fmt.Println("-----\n")
+
+	console.PrintSuccess("Command stored successfully!")
 }
 
 func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
@@ -47,16 +50,21 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 
 	space := cbox.SpaceFind(selector.Space)
 	command := space.CommandFind(selector.Item)
+
+	fmt.Printf("Editing command with ID %s\n", command.ID)
 	tools.ConsoleEditCommand(command)
 
 	space.CommandEdit(command, selector.Item)
 
+	fmt.Println("\n--- Command after edited values ---")
 	tools.PrintCommand(command, true, false)
+	fmt.Println("-----\n")
+
 	if console.Confirm("Update?") {
 		core.PersistCbox(cbox)
-		fmt.Println(aurora.Green("\nCommand updated successfully!\n"))
+		console.PrintSuccess("\nCommand updated successfully!")
 	} else {
-		fmt.Println("Cancelled")
+		console.PrintError("Edition cancelled")
 	}
 }
 
@@ -68,11 +76,16 @@ func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
 	space := cbox.SpaceFind(selector.Space)
 	command := space.CommandFind(selector.Item)
 
+	fmt.Println("\n--- Command to delete ---")
 	tools.PrintCommand(command, true, false)
-	if console.Confirm(aurora.Red("Are you sure you want to delete this command?").String()) {
+	fmt.Println("-----\n")
+
+	if console.Confirm("Are you sure you want to delete this command?") {
 		space.CommandDelete(command)
 		core.PersistCbox(cbox)
-		fmt.Println(aurora.Green("\nCommand deleted successfully!\n"))
+		console.PrintSuccess("\nCommand deleted successfully!")
+	} else {
+		console.PrintError("Deletion cancelled")
 	}
 }
 

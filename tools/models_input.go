@@ -8,11 +8,10 @@ import (
 )
 
 func ConsoleReadCommand() *models.Command {
-
 	command := models.Command{
 		ID:          console.ReadString("ID"),
-		Description: console.ReadStringMulti("Description"),
-		Details:     console.ReadString("Details"),
+		Description: console.ReadString("Description"),
+		Details:     console.ReadStringMulti("Details"),
 		URL:         console.ReadString("URL"),
 		Code:        console.ReadStringMulti("Code / Command"),
 		Tags:        []string{},
@@ -29,8 +28,8 @@ func ConsoleReadCommand() *models.Command {
 
 func ConsoleEditCommand(command *models.Command) {
 	command.ID = strings.ToLower(console.EditString("ID", command.ID))
-	command.Description = console.EditStringMulti("Description", command.Description)
-	command.Details = console.EditString("Details", command.Details)
+	command.Description = console.EditString("Description", command.Description)
+	command.Details = console.EditStringMulti("Details", command.Details)
 	command.URL = console.EditString("URL", command.URL)
 	command.Code = console.EditStringMulti("Code / Command", command.Code)
 }

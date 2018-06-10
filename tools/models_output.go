@@ -26,7 +26,7 @@ func PrintCommand(cmd *models.Command, full bool, sourceOnly bool) {
 			if cmd.URL != "" {
 				fmt.Printf("\n%s\n", aurora.Blue(cmd.URL))
 			}
-			fmt.Printf("\n%s\n\n", cmd.Code)
+			fmt.Printf("\n%s\n", cmd.Code)
 		}
 	} else {
 		fmt.Println(cmd.Code)
