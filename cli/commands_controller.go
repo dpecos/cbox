@@ -12,7 +12,7 @@ import (
 
 func (ctrl *CLIController) CommandList(cmd *cobra.Command, args []string) {
 
-	selector := parseSelectorAllowEmpty(args)
+	selector := ctrl.parseSelectorAllowEmpty(args)
 
 	cbox := core.LoadCbox()
 	space := cbox.SpaceFind(selector.Space)
@@ -25,7 +25,7 @@ func (ctrl *CLIController) CommandList(cmd *cobra.Command, args []string) {
 
 func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 
-	selector := parseSelectorAllowEmpty(args)
+	selector := ctrl.parseSelectorAllowEmpty(args)
 
 	cbox := core.LoadCbox()
 	space := cbox.SpaceFind(selector.Space)
@@ -41,7 +41,7 @@ func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 
 func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 
-	selector := parseSelector(args)
+	selector := ctrl.parseSelector(args)
 
 	cbox := core.LoadCbox()
 
@@ -62,7 +62,7 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 
 func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
 
-	selector := parseSelector(args)
+	selector := ctrl.parseSelector(args)
 
 	cbox := core.LoadCbox()
 	space := cbox.SpaceFind(selector.Space)
@@ -78,7 +78,7 @@ func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
 
 func (ctrl *CLIController) CommandView(cmd *cobra.Command, args []string) {
 
-	selector := parseSelector(args)
+	selector := ctrl.parseSelector(args)
 
 	cbox := core.LoadCbox()
 	space := cbox.SpaceFind(selector.Space)

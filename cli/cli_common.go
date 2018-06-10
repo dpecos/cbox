@@ -11,7 +11,7 @@ type CLIController struct {
 
 var ctrl = CLIController{}
 
-func parseSelectorAllowEmpty(args []string) *models.Selector {
+func (ctrl *CLIController) parseSelectorAllowEmpty(args []string) *models.Selector {
 	var selectorStr = ""
 	if len(args) == 1 {
 		selectorStr = args[0]
@@ -25,7 +25,7 @@ func parseSelectorAllowEmpty(args []string) *models.Selector {
 	return selector
 }
 
-func parseSelector(args []string) *models.Selector {
+func (ctrl *CLIController) parseSelector(args []string) *models.Selector {
 	selector, err := models.ParseSelector(args[0])
 	if err != nil {
 		log.Fatal("Could not parse selector", err)
