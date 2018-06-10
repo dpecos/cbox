@@ -37,14 +37,14 @@ func ConsoleEditCommand(command *models.Command) {
 
 func ConsoleReadSpace() *models.Space {
 	space := models.Space{
-		Name:    strings.ToLower(console.ReadString("Name")),
-		Title:   console.ReadString("Title"),
-		Entries: []models.Command{},
+		Name:        strings.ToLower(console.ReadString("Name")),
+		Description: console.ReadString("Description"),
+		Entries:     []models.Command{},
 	}
 	return &space
 }
 
 func ConsoleEditSpace(space *models.Space) {
 	space.Name = strings.ToLower(console.EditString("Name", space.Name))
-	space.Title = console.EditString("Title", space.Title)
+	space.Description = console.EditString("Description", space.Description)
 }

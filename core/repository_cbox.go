@@ -26,8 +26,8 @@ func CheckCboxDir() {
 	spacesPath := resolveInCboxDir("spaces")
 	if tools.CreateDirectoryIfNotExists(spacesPath) {
 		defaultSpace := models.Space{
-			Name:  DEFAULT_SPACE_NAME,
-			Title: DEFAULT_SPACE_TITLE,
+			Name:        DEFAULT_SPACE_NAME,
+			Description: DEFAULT_SPACE_DESCRIPTION,
 		}
 		cbox := LoadCbox()
 		cbox.SpaceCreate(&defaultSpace)

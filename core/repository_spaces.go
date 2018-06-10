@@ -13,7 +13,7 @@ import (
 
 const SPACES_PATH = "spaces"
 const DEFAULT_SPACE_NAME = "default"
-const DEFAULT_SPACE_TITLE = "Default space to store commands"
+const DEFAULT_SPACE_DESCRIPTION = "Default space to store commands"
 
 func resolveSpaceFile(spaceName string) string {
 	spacePath := path.Join(SPACES_PATH, spaceName+".json")
