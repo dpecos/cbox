@@ -7,8 +7,8 @@ import (
 type Command struct {
 	ID          string    `json:"id"`
 	Code        string    `json:"code"`
-	Title       string    `json:"title"`
 	Description string    `json:"description"`
+	Details     string    `json:"details"`
 	URL         string    `json:"url"`
 	Tags        []string  `json:"tags"`
 	UpdatedAt   time.Time `json:"updated-at"`

@@ -18,10 +18,10 @@ func PrintCommand(cmd *models.Command, full bool, sourceOnly bool) {
 			fmt.Printf("%s -", aurora.Red(cmd.ID))
 		}
 		t := cmd.CreatedAt.UTC().In(time.Local)
-		fmt.Printf(" %s %s\n", aurora.Blue(aurora.Bold(cmd.Title)), aurora.Gray(DateToString(t)))
+		fmt.Printf(" %s %s\n", aurora.Blue(aurora.Bold(cmd.Description)), aurora.Gray(DateToString(t)))
 		if full {
-			if cmd.Description != "" {
-				fmt.Printf("\n%s\n", aurora.Green(cmd.Description))
+			if cmd.Details != "" {
+				fmt.Printf("\n%s\n", aurora.Green(cmd.Details))
 			}
 			if cmd.URL != "" {
 				fmt.Printf("\n%s\n", aurora.Blue(cmd.URL))

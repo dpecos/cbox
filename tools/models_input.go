@@ -11,8 +11,8 @@ func ConsoleReadCommand() *models.Command {
 
 	command := models.Command{
 		ID:          console.ReadString("ID"),
-		Title:       console.ReadString("Title"),
 		Description: console.ReadStringMulti("Description"),
+		Details:     console.ReadString("Details"),
 		URL:         console.ReadString("URL"),
 		Code:        console.ReadStringMulti("Code / Command"),
 		Tags:        []string{},
@@ -29,8 +29,8 @@ func ConsoleReadCommand() *models.Command {
 
 func ConsoleEditCommand(command *models.Command) {
 	command.ID = strings.ToLower(console.EditString("ID", command.ID))
-	command.Title = console.EditString("Title", command.Title)
 	command.Description = console.EditStringMulti("Description", command.Description)
+	command.Details = console.EditString("Details", command.Details)
 	command.URL = console.EditString("URL", command.URL)
 	command.Code = console.EditStringMulti("Code / Command", command.Code)
 }
