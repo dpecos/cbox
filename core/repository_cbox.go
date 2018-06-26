@@ -19,9 +19,12 @@ func resolveInCboxDir(content string) string {
 	return path.Join(home, CBOX_PATH, content)
 }
 
-func CheckCboxDir() {
+func CheckCboxDir() string {
 	cboxPath := resolveInCboxDir("")
 	tools.CreateDirectoryIfNotExists(cboxPath)
+
+	configFile := resolveInCboxDir("config.yml")
+	tools.CreateFileIfNotExists(configFile)
 
 	spacesPath := resolveInCboxDir("spaces")
 	if tools.CreateDirectoryIfNotExists(spacesPath) {
@@ -33,6 +36,8 @@ func CheckCboxDir() {
 		cbox.SpaceCreate(&defaultSpace)
 		PersistCbox(cbox)
 	}
+
+	return cboxPath
 }
 
 func LoadCbox() *models.CBox {

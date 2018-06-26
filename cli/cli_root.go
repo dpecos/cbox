@@ -6,6 +6,7 @@ import (
 	"github.com/dpecos/cbox/core"
 	"github.com/dpecos/cbox/tools"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var rootCmd = &cobra.Command{
@@ -18,6 +19,7 @@ func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatal(err)
 	}
+	viper.WriteConfig()
 }
 
 func init() {
@@ -25,5 +27,12 @@ func init() {
 }
 
 func initConfig() {
-	core.CheckCboxDir()
+	cboxPath := core.CheckCboxDir()
+
+	viper.AddConfigPath(cboxPath)
+	viper.SetConfigName("config")
+
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatal(err)
+	}
 }
