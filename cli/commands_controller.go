@@ -35,9 +35,9 @@ func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 	space.CommandAdd(command)
 	core.PersistCbox(cbox)
 
-	fmt.Println("\n--- New command ---")
+	fmt.Printf("\n--- New command ---\n")
 	tools.PrintCommand(command, true, false)
-	fmt.Println("-----\n")
+	fmt.Printf("-----\n\n")
 
 	console.PrintSuccess("Command stored successfully!")
 }
@@ -56,9 +56,9 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 
 	space.CommandEdit(command, selector.Item)
 
-	fmt.Println("\n--- Command after edited values ---")
+	fmt.Printf("\n--- Command after edited values ---\n")
 	tools.PrintCommand(command, true, false)
-	fmt.Println("-----\n")
+	fmt.Printf("-----\n\n")
 
 	if console.Confirm("Update?") {
 		core.PersistCbox(cbox)
@@ -76,9 +76,9 @@ func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
 	space := cbox.SpaceFind(selector.Space)
 	command := space.CommandFind(selector.Item)
 
-	fmt.Println("\n--- Command to delete ---")
+	fmt.Printf("\n--- Command to delete ---\n")
 	tools.PrintCommand(command, true, false)
-	fmt.Println("-----\n")
+	fmt.Printf("-----\n\n")
 
 	if console.Confirm("Are you sure you want to delete this command?") {
 		space.CommandDelete(command)

@@ -29,9 +29,9 @@ func (ctrl *CLIController) SpacesAdd(cmd *cobra.Command, args []string) {
 	cbox.SpaceCreate(space)
 	core.PersistCbox(cbox)
 
-	fmt.Println("\n--- New space ---")
+	fmt.Printf("\n--- New space ---\n")
 	tools.PrintSpace(space)
-	fmt.Println("-----\n")
+	fmt.Printf("-----\n\n")
 
 	console.PrintSuccess("Space successfully created!")
 }
@@ -52,9 +52,9 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 
 	cbox.SpaceEdit(space, selector.Space)
 
-	fmt.Println("--- Space after edited values ---")
+	fmt.Printf("--- Space after edited values ---\n")
 	tools.PrintSpace(space)
-	fmt.Println("-----\n")
+	fmt.Printf("-----\n")
 
 	if console.Confirm("Update?") {
 		spaceToDelete := &models.Space{
@@ -80,9 +80,9 @@ func (ctrl *CLIController) SpacesDelete(cmd *cobra.Command, args []string) {
 
 	space := cbox.SpaceFind(selector.Space)
 
-	fmt.Println("\n--- Space to delete ---")
+	fmt.Printf("\n--- Space to delete ---\n")
 	tools.PrintSpace(space)
-	fmt.Println("-----\n")
+	fmt.Printf("-----\n\n")
 
 	if console.Confirm("Are you sure you want to delete this space?") {
 		core.SpaceDelete(space)

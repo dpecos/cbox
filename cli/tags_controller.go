@@ -38,7 +38,7 @@ func (ctrl *CLIController) TagsAdd(cmd *cobra.Command, args []string) {
 	space := cbox.SpaceFind(selector.Space)
 	command := space.CommandFind(selector.Item)
 
-	fmt.Println("Adding tags to command with ID %s", command.ID)
+	fmt.Printf("Adding tags to command with ID %s\n", command.ID)
 
 	for _, tag := range args[1:] {
 		command.TagAdd(strings.ToLower(tag))
@@ -46,9 +46,9 @@ func (ctrl *CLIController) TagsAdd(cmd *cobra.Command, args []string) {
 
 	core.PersistCbox(cbox)
 
-	fmt.Println("\n--- Tagged command ---")
+	fmt.Printf("\n--- Tagged command ---\n")
 	tools.PrintCommand(command, true, false)
-	fmt.Println("-----\n")
+	fmt.Printf("-----\n\n")
 
 	console.PrintSuccess("Command tagged successfully!")
 }
@@ -62,7 +62,7 @@ func (ctrl *CLIController) TagsRemove(cmd *cobra.Command, args []string) {
 	space := cbox.SpaceFind(selector.Space)
 	command := space.CommandFind(selector.Item)
 
-	fmt.Println("Removing tags from command with ID %s", command.ID)
+	fmt.Printf("Removing tags from command with ID %s\n", command.ID)
 
 	for _, tag := range args[1:] {
 		command.TagDelete(tag)
@@ -70,9 +70,9 @@ func (ctrl *CLIController) TagsRemove(cmd *cobra.Command, args []string) {
 
 	core.PersistCbox(cbox)
 
-	fmt.Println("\n--- Untagged command ---")
+	fmt.Printf("\n--- Untagged command ---\n")
 	tools.PrintCommand(command, true, false)
-	fmt.Println("-----\n")
+	fmt.Printf("-----\n\n")
 
 	console.PrintSuccess("Command tag deleted successfully!")
 }
@@ -88,15 +88,15 @@ func (ctrl *CLIController) TagsDelete(cmd *cobra.Command, args []string) {
 	space := cbox.SpaceFind(selector.Space)
 	commands := space.CommandList(selector.Item)
 
-	fmt.Println("Deleting tags from space with Name %s", space.Name)
+	fmt.Printf("Deleting tags from space with Name %s\n", space.Name)
 
 	for _, cmd := range commands {
 		command := space.CommandFind(cmd.ID)
 		command.TagDelete(selector.Item)
 
-		fmt.Println("\n--- Untagged command ---")
+		fmt.Printf("\n--- Untagged command ---\n")
 		tools.PrintCommand(command, false, false)
-		fmt.Println("-----\n")
+		fmt.Printf("-----\n\n")
 	}
 
 	core.PersistCbox(cbox)
