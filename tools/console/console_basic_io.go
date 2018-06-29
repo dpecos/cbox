@@ -14,15 +14,15 @@ const MSG_EMPTY_TO_FINISH = "Empty line to finish"
 const MSG_EDIT = "Ctrl+D to clear, Empty line to maintain"
 
 func formatLabel(label string) string {
-	return fmt.Sprintf("  %s: ", aurora.Blue(aurora.Bold(label)))
+	return fmt.Sprintf("%s: ", aurora.Blue(aurora.Bold(label)))
 }
 
 func formatLabelDetails(label string, details string) string {
-	return fmt.Sprintf("  %s %s: ", aurora.Blue(aurora.Bold(label)), aurora.Blue("("+details+")"))
+	return fmt.Sprintf("%s %s: ", aurora.Blue(aurora.Bold(label)), aurora.Blue("("+details+")"))
 }
 
 func formatPreviousValue(label string, value string) string {
-	return fmt.Sprintf("  %s: %s", aurora.Cyan(label), value)
+	return fmt.Sprintf("%s: %s", aurora.Cyan(label), value)
 }
 
 func formatQuestion(question string, options string) string {
