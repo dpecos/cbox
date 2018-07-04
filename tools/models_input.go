@@ -9,11 +9,11 @@ import (
 
 func ConsoleReadCommand() *models.Command {
 	command := models.Command{
-		ID:          console.ReadString("ID"),
+		ID:          strings.ToLower(console.ReadString("ID", console.NOT_EMPTY_VALUES)),
 		Description: console.ReadString("Description"),
-		Details:     console.ReadStringMulti("Details"),
+		Details:     console.ReadString("Details", console.MULTILINE),
 		URL:         console.ReadString("URL"),
-		Code:        console.ReadStringMulti("Code / Command"),
+		Code:        console.ReadString("Code / Command", console.MULTILINE, console.NOT_EMPTY_VALUES),
 		Tags:        []string{},
 	}
 	tags := console.ReadString("Tags (separated by space)")
@@ -27,16 +27,16 @@ func ConsoleReadCommand() *models.Command {
 }
 
 func ConsoleEditCommand(command *models.Command) {
-	command.ID = strings.ToLower(console.EditString("ID", command.ID))
+	command.ID = strings.ToLower(console.EditString("ID", command.ID, console.NOT_EMPTY_VALUES))
 	command.Description = console.EditString("Description", command.Description)
-	command.Details = console.EditStringMulti("Details", command.Details)
+	command.Details = console.EditString("Details", command.Details, console.MULTILINE)
 	command.URL = console.EditString("URL", command.URL)
-	command.Code = console.EditStringMulti("Code / Command", command.Code)
+	command.Code = console.EditString("Code / Command", command.Code, console.MULTILINE, console.NOT_EMPTY_VALUES)
 }
 
 func ConsoleReadSpace() *models.Space {
 	space := models.Space{
-		Name:        strings.ToLower(console.ReadString("Name")),
+		Name:        strings.ToLower(console.ReadString("Name", console.NOT_EMPTY_VALUES)),
 		Description: console.ReadString("Description"),
 		Entries:     []models.Command{},
 	}
@@ -44,6 +44,6 @@ func ConsoleReadSpace() *models.Space {
 }
 
 func ConsoleEditSpace(space *models.Space) {
-	space.Name = strings.ToLower(console.EditString("Name", space.Name))
+	space.Name = strings.ToLower(console.EditString("Name", space.Name, console.NOT_EMPTY_VALUES))
 	space.Description = console.EditString("Description", space.Description)
 }

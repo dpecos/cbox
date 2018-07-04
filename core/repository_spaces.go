@@ -49,8 +49,6 @@ func SpaceStore(space *models.Space) {
 	if err != nil {
 		log.Fatalf("Error writing json file (%s) for space %s: %s", file, space.Name, err)
 	}
-
-	log.Printf("Space %s successfully stored in %s\n", space.Name, file)
 }
 
 func SpaceDelete(space *models.Space) {

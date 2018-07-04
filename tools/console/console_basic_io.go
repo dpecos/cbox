@@ -8,10 +8,19 @@ import (
 	"strings"
 
 	"github.com/logrusorgru/aurora"
+	bitflag "github.com/mvpninjas/go-bitflag"
 )
 
 const MSG_EMPTY_TO_FINISH = "Empty line to finish"
 const MSG_EDIT = "Ctrl+D to clear, Empty line to maintain"
+const MSG_EMPTY_NOT_ALLOWED = "Empty value not allowed, please try again"
+
+type Flag byte
+
+const (
+	NOT_EMPTY_VALUES bitflag.Flag = 1 << bitflag.Flag(iota)
+	MULTILINE
+)
 
 func formatLabel(label string) string {
 	return fmt.Sprintf("%s: ", aurora.Blue(aurora.Bold(label)))
@@ -29,39 +38,61 @@ func formatQuestion(question string, options string) string {
 	return fmt.Sprintf("%s %s: ", aurora.Magenta(aurora.Bold(question)), aurora.Magenta(options))
 }
 
-func ReadString(label string) string {
-	fmt.Printf(formatLabel(label))
-	value, _ := readString()
+func ReadString(label string, opts ...bitflag.Flag) string {
+	return readStringDetails(label, "", opts...)
+}
+
+func ReadStringDetails(label string, details string, opts ...bitflag.Flag) string {
+	return readStringDetails(label, details, opts...)
+}
+
+func readStringDetails(label string, details string, opts ...bitflag.Flag) string {
+	var flags bitflag.Flag
+	flags.Set(opts...)
+
+	if flags.Isset(MULTILINE) && details == "" {
+		details = MSG_EMPTY_TO_FINISH
+	}
+
+	value, _ := readString(label, details, flags.Isset(MULTILINE))
+
+	if flags.Isset(NOT_EMPTY_VALUES) && strings.TrimSpace(value) == "" {
+		PrintError(MSG_EMPTY_NOT_ALLOWED)
+		value, _ = readString(label, details, flags.Isset(MULTILINE))
+	}
+
 	return value
 }
 
-func ReadStringMulti(label string) string {
-	val, _ := readStringMulti(label, MSG_EMPTY_TO_FINISH)
-	return val
+func readString(label string, details string, multiline bool) (string, bool) {
+	if details != "" {
+		fmt.Print(formatLabelDetails(label, details))
+	} else {
+		fmt.Print(formatLabel(label))
+	}
+
+	if multiline {
+		fmt.Println()
+	}
+
+	if multiline {
+		return readStringMulti()
+	} else {
+		return readStringSimple()
+	}
 }
 
-func readString() (string, error) {
+func readStringSimple() (string, bool) {
 	reader := bufio.NewReader(os.Stdin)
 	val, err := reader.ReadString('\n')
-	return strings.TrimSpace(val), err
-}
 
-func readStringDetails(label string, details string) (string, bool) {
-	fmt.Printf(formatLabelDetails(label, details))
-	val, err := readString()
 	if err == io.EOF {
 		return "", true
 	}
-	return val, false
+	return strings.TrimSpace(val), false
 }
 
-func readStringMulti(label string, details string) (string, bool) {
-
-	if details != "" {
-		fmt.Println(formatLabelDetails(label, details))
-	} else {
-		fmt.Println(formatLabel(label))
-	}
+func readStringMulti() (string, bool) {
 
 	reader := bufio.NewReader(os.Stdin)
 
@@ -73,7 +104,6 @@ func readStringMulti(label string, details string) (string, bool) {
 		}
 		if text != "\n" {
 			arr = append(arr, text)
-			label = ""
 		} else {
 			break
 		}
@@ -83,17 +113,23 @@ func readStringMulti(label string, details string) (string, bool) {
 	return strings.TrimSpace(val), false
 }
 
-func EditString(label string, previousValue string) string {
-	fmt.Println(formatPreviousValue("Previous value of "+strings.ToLower(label), previousValue))
-	value, aborted := readStringDetails(label, MSG_EDIT)
-	fmt.Println()
+func EditString(label string, previousValue string, opts ...bitflag.Flag) string {
+	var flags bitflag.Flag
+	flags.Set(opts...)
 
-	return resolveEditionValue(previousValue, value, aborted)
+	value := editString(label, previousValue, flags.Isset(MULTILINE))
+
+	if flags.Isset(NOT_EMPTY_VALUES) && strings.TrimSpace(value) == "" {
+		PrintError(MSG_EMPTY_NOT_ALLOWED)
+		value = editString(label, previousValue, flags.Isset(MULTILINE))
+	}
+
+	return value
 }
 
-func EditStringMulti(label string, previousValue string) string {
-	fmt.Println(formatPreviousValue("Previous value of "+strings.ToLower(label), previousValue))
-	val, aborted := readStringMulti("New value for "+label, MSG_EDIT)
+func editString(label string, previousValue string, multiline bool) string {
+	fmt.Println(formatPreviousValue("Previous value of "+label, previousValue))
+	val, aborted := readString("New value for "+label, MSG_EDIT, multiline)
 	fmt.Println()
 
 	return resolveEditionValue(previousValue, val, aborted)
@@ -116,7 +152,7 @@ func resolveEditionValue(previousValue string, newValue string, aborted bool) st
 
 func Confirm(label string) bool {
 	fmt.Printf(formatQuestion(label, "y/n"))
-	val, _ := readString()
+	val, _ := readStringSimple()
 	fmt.Println()
 	return val == "y"
 }
