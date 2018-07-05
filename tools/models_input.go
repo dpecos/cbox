@@ -9,7 +9,7 @@ import (
 
 func ConsoleReadCommand() *models.Command {
 	command := models.Command{
-		ID:          strings.ToLower(console.ReadString("ID", console.NOT_EMPTY_VALUES)),
+		ID:          strings.ToLower(console.ReadString("ID", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS)),
 		Description: console.ReadString("Description"),
 		Details:     console.ReadString("Details", console.MULTILINE),
 		URL:         console.ReadString("URL"),
@@ -27,7 +27,7 @@ func ConsoleReadCommand() *models.Command {
 }
 
 func ConsoleEditCommand(command *models.Command) {
-	command.ID = strings.ToLower(console.EditString("ID", command.ID, console.NOT_EMPTY_VALUES))
+	command.ID = strings.ToLower(console.EditString("ID", command.ID, console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
 	command.Description = console.EditString("Description", command.Description)
 	command.Details = console.EditString("Details", command.Details, console.MULTILINE)
 	command.URL = console.EditString("URL", command.URL)
@@ -36,7 +36,7 @@ func ConsoleEditCommand(command *models.Command) {
 
 func ConsoleReadSpace() *models.Space {
 	space := models.Space{
-		Name:        strings.ToLower(console.ReadString("Name", console.NOT_EMPTY_VALUES)),
+		Name:        strings.ToLower(console.ReadString("Name", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS)),
 		Description: console.ReadString("Description"),
 		Entries:     []models.Command{},
 	}
@@ -44,6 +44,6 @@ func ConsoleReadSpace() *models.Space {
 }
 
 func ConsoleEditSpace(space *models.Space) {
-	space.Name = strings.ToLower(console.EditString("Name", space.Name, console.NOT_EMPTY_VALUES))
+	space.Name = strings.ToLower(console.EditString("Name", space.Name, console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
 	space.Description = console.EditString("Description", space.Description)
 }

@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"log"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/logrusorgru/aurora"
@@ -14,12 +16,14 @@ import (
 const MSG_EMPTY_TO_FINISH = "Empty line to finish"
 const MSG_EDIT = "Ctrl+D to clear, Empty line to maintain"
 const MSG_EMPTY_NOT_ALLOWED = "Empty value not allowed, please try again"
+const MSG_NOT_VALID_CHARS = "Value contains not valid chars, please try again"
 
 type Flag byte
 
 const (
 	NOT_EMPTY_VALUES bitflag.Flag = 1 << bitflag.Flag(iota)
 	MULTILINE
+	ONLY_VALID_CHARS
 )
 
 func formatLabel(label string) string {
@@ -46,6 +50,19 @@ func ReadStringDetails(label string, details string, opts ...bitflag.Flag) strin
 	return readStringDetails(label, details, opts...)
 }
 
+func checkValidChars(str string) bool {
+	validCharsRegexp, err := regexp.Compile("^[a-z0-9-]*$")
+	if err != nil {
+		log.Fatal("Could not compile valid chars regexp", err)
+	}
+
+	if !validCharsRegexp.MatchString(str) {
+		return false
+	}
+
+	return true
+}
+
 func readStringDetails(label string, details string, opts ...bitflag.Flag) string {
 	var flags bitflag.Flag
 	flags.Set(opts...)
@@ -58,7 +75,10 @@ func readStringDetails(label string, details string, opts ...bitflag.Flag) strin
 
 	if flags.Isset(NOT_EMPTY_VALUES) && strings.TrimSpace(value) == "" {
 		PrintError(MSG_EMPTY_NOT_ALLOWED)
-		value, _ = readString(label, details, flags.Isset(MULTILINE))
+		value = readStringDetails(label, details, opts...)
+	} else if flags.Isset(ONLY_VALID_CHARS) && !checkValidChars(value) {
+		PrintError(MSG_NOT_VALID_CHARS)
+		value = readStringDetails(label, details, opts...)
 	}
 
 	return value
@@ -121,7 +141,10 @@ func EditString(label string, previousValue string, opts ...bitflag.Flag) string
 
 	if flags.Isset(NOT_EMPTY_VALUES) && strings.TrimSpace(value) == "" {
 		PrintError(MSG_EMPTY_NOT_ALLOWED)
-		value = editString(label, previousValue, flags.Isset(MULTILINE))
+		value = EditString(label, previousValue, opts...)
+	} else if flags.Isset(ONLY_VALID_CHARS) && !checkValidChars(value) {
+		PrintError(MSG_NOT_VALID_CHARS)
+		value = EditString(label, previousValue, opts...)
 	}
 
 	return value
