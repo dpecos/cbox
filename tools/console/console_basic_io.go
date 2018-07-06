@@ -34,8 +34,12 @@ func formatLabelDetails(label string, details string) string {
 	return fmt.Sprintf("%s %s: ", aurora.Blue(aurora.Bold(label)), aurora.Blue("("+details+")"))
 }
 
-func formatPreviousValue(label string, value string) string {
-	return fmt.Sprintf("%s: %s", aurora.Cyan(label), value)
+func formatPreviousValue(label string, value string, multiline bool) string {
+	format := "%s: %s"
+	if multiline && value != "" {
+		format = "%s:\n%s"
+	}
+	return fmt.Sprintf(format, aurora.Cyan(label), value)
 }
 
 func formatQuestion(question string, options string) string {
@@ -151,7 +155,7 @@ func EditString(label string, previousValue string, opts ...bitflag.Flag) string
 }
 
 func editString(label string, previousValue string, multiline bool) string {
-	fmt.Println(formatPreviousValue("Previous value of "+label, previousValue))
+	fmt.Println(formatPreviousValue("Previous value of "+label, previousValue, multiline))
 	val, aborted := readString("New value for "+label, MSG_EDIT, multiline)
 	fmt.Println()
 
