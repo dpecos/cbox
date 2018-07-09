@@ -39,7 +39,7 @@ func VerifyJWT(jwtToken string) (string, error) {
 	expiresAt := time.Unix(int64(exp), 0)
 
 	if int64(exp) < time.Now().Unix() {
-		return "", fmt.Errorf("JWT Token expired: %s", expiresAt.String())
+		return "", fmt.Errorf("jwt: token expired: %s", expiresAt.String())
 	}
 
 	return subject, nil

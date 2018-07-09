@@ -25,7 +25,7 @@ func SpaceList() []*models.Space {
 	spaces := []*models.Space{}
 	files, err := ioutil.ReadDir(resolveInCboxDir(SPACES_PATH))
 	if err != nil {
-		log.Fatalf("Error reading spaces: %s", err)
+		log.Fatalf("repository: could not read spaces: %v", err)
 	}
 	for _, f := range files {
 		filename := f.Name()
@@ -41,33 +41,33 @@ func SpaceList() []*models.Space {
 func SpaceStore(space *models.Space) {
 	raw, err := json.MarshalIndent(space, "", "  ")
 	if err != nil {
-		log.Fatalf("Error generating json for space %s: %s", space.Name, err)
+		log.Fatalf("repository: store space %s: could not generate JSON: %v", space.Name, err)
 	}
 
 	file := resolveSpaceFile(space.Name)
 	err = ioutil.WriteFile(file, raw, 0644)
 	if err != nil {
-		log.Fatalf("Error writing json file (%s) for space %s: %s", file, space.Name, err)
+		log.Fatalf("repository: store space %s: could not write JSON file (%s): %v", space.Name, file, err)
 	}
 }
 
 func SpaceDelete(space *models.Space) {
 	err := os.Remove(resolveSpaceFile(space.Name))
 	if err != nil {
-		log.Fatalf("Error deleting space %s: %s", space.Name, err)
+		log.Fatalf("repository: delete space %s: %v", space.Name, err)
 	}
 }
 
 func SpaceLoad(name string) *models.Space {
 	raw, err := ioutil.ReadFile(resolveSpaceFile(name))
 	if err != nil {
-		log.Fatalf("Error loading json file for space %s: %s", name, err)
+		log.Fatalf("repository: load space %s: could not read file: %v", name, err)
 	}
 
 	var space models.Space
 	err = json.Unmarshal(raw, &space)
 	if err != nil {
-		log.Fatalf("Error parsing json file for space %s: %s", name, err)
+		log.Fatalf("repository: load space %s: could not parse JSON file: %v", name, err)
 	}
 
 	return &space

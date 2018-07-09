@@ -25,7 +25,7 @@ func (ctrl *CLIController) CloudLogin(cmd *cobra.Command, args []string) {
 	user, err := core.CloudLogin(jwt)
 	if err != nil {
 		console.PrintError("Error trying to parse JWT token. Try to login again")
-		log.Fatal(err)
+		log.Fatalf("cloud: %v", err)
 	}
 
 	console.PrintSuccess("Hi " + user + "!")

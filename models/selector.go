@@ -32,7 +32,7 @@ func ParseSelectorMandatorySpace(str string) (*Selector, error) {
 
 	if err == nil {
 		if selector.Space == "" {
-			return nil, fmt.Errorf("Space not specified in the selector '%s'", str)
+			return nil, fmt.Errorf("space not specified in the selector: '%s'", str)
 		}
 	}
 
@@ -44,7 +44,7 @@ func ParseSelectorMandatoryItem(str string) (*Selector, error) {
 
 	if err == nil {
 		if selector.Item == "" {
-			return nil, fmt.Errorf("Item not specified in the selector '%s'", str)
+			return nil, fmt.Errorf("item not specified in the selector: '%s'", str)
 		}
 	}
 
@@ -55,11 +55,11 @@ func parseSelector(str string) (*Selector, error) {
 
 	selectorRegexp, err := regexp.Compile("^(?P<item>[a-z0-9-]+)?(@(?P<organization>[a-z0-9-]+/)?(?P<user>[a-z0-9-]+:)?(?P<space>[a-z0-9-]+))?$")
 	if err != nil {
-		log.Fatal("Could not compile selector regexp", err)
+		log.Fatalf("parse selector: could not compile selector regexp: %v", err)
 	}
 
 	if !selectorRegexp.MatchString(str) {
-		return nil, fmt.Errorf("Invalid selector %s", str)
+		return nil, fmt.Errorf("parse selector: invalid selector: '%s'", str)
 	}
 
 	match := selectorRegexp.FindStringSubmatch(str)

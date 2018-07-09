@@ -14,7 +14,7 @@ const CBOX_PATH = ".cbox"
 func resolveInCboxDir(content string) string {
 	home, err := homedir.Dir()
 	if err != nil {
-		log.Fatalf("Could not retrieve HOME: %s", err)
+		log.Fatalf("respository: could not get HOME: %v", err)
 	}
 	return path.Join(home, CBOX_PATH, content)
 }

@@ -81,7 +81,7 @@ func (ctrl *CLIController) TagsDelete(cmd *cobra.Command, args []string) {
 
 	selector, err := models.ParseSelectorMandatoryItem(args[0])
 	if err != nil {
-		log.Fatal("Could not parse selector", err)
+		log.Fatalf("delete tag: invalid selector: %v", err)
 	}
 
 	cbox := core.LoadCbox()

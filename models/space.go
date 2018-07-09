@@ -69,13 +69,13 @@ func (space *Space) commandFindPosition(commandId string) (int, error) {
 			return i, nil
 		}
 	}
-	return -1, fmt.Errorf("Could not find command with ID %s", commandId)
+	return -1, fmt.Errorf("command with id '%s' not found", commandId)
 }
 
 func (space *Space) CommandFind(commandId string) *Command {
 	pos, err := space.commandFindPosition(commandId)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("find command: %v", err)
 	}
 	return &space.Entries[pos]
 }
@@ -83,7 +83,7 @@ func (space *Space) CommandFind(commandId string) *Command {
 func (space *Space) CommandDelete(command *Command) {
 	pos, err := space.commandFindPosition(command.ID)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("deelete command: %v", err)
 	}
 
 	space.Entries = append(space.Entries[:pos], space.Entries[pos+1:]...)

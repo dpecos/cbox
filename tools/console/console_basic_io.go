@@ -57,7 +57,7 @@ func ReadStringDetails(label string, details string, opts ...bitflag.Flag) strin
 func checkValidChars(str string) bool {
 	validCharsRegexp, err := regexp.Compile("^[a-z0-9-]*$")
 	if err != nil {
-		log.Fatal("Could not compile valid chars regexp", err)
+		log.Fatalf("valid chars: could not compile regexp: %v", err)
 	}
 
 	if !validCharsRegexp.MatchString(str) {

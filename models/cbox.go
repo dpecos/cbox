@@ -19,7 +19,7 @@ func (cbox *CBox) spaceFindPosition(spaceName string) (int, error) {
 			return i, nil
 		}
 	}
-	return -1, fmt.Errorf("Could not find space with name %s", spaceName)
+	return -1, fmt.Errorf("space with name '%s' not found", spaceName)
 }
 
 func (cbox *CBox) spaceInCbox(spaceName string) bool {
@@ -44,7 +44,7 @@ func (cbox *CBox) findUniqueSpaceNames() []string {
 func (cbox *CBox) SpaceFind(spaceName string) *Space {
 	pos, err := cbox.spaceFindPosition(spaceName)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("space find: %v", err)
 	}
 	return &cbox.Spaces[pos]
 }
