@@ -19,7 +19,7 @@ func (ctrl *CLIController) parseSelectorAllowEmpty(args []string) *models.Select
 
 	selector, err := models.ParseSelector(selectorStr)
 	if err != nil {
-		log.Fatalf("parse selector empty: error parsing: %v", err)
+		log.Fatalf("parse selector empty: %v", err)
 	}
 
 	return selector
@@ -28,7 +28,7 @@ func (ctrl *CLIController) parseSelectorAllowEmpty(args []string) *models.Select
 func (ctrl *CLIController) parseSelector(args []string) *models.Selector {
 	selector, err := models.ParseSelector(args[0])
 	if err != nil {
-		log.Fatalf("parse selector: error parsing: %v", err)
+		log.Fatalf("parse selector: %v", err)
 	}
 	return selector
 }

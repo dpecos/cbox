@@ -40,14 +40,14 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 
 	selector, err := models.ParseSelectorMandatorySpace(args[0])
 	if err != nil {
-		log.Fatalf("edit space: invalid selector: %v", err)
+		log.Fatalf("edit space: %v", err)
 	}
 
 	cbox := core.LoadCbox()
 
 	space := cbox.SpaceFind(selector.Space)
 
-	fmt.Printf("Editing space with Name %s\n", space.Name)
+	fmt.Printf("Editing space '%s'\n", space.Name)
 	tools.ConsoleEditSpace(space)
 
 	cbox.SpaceEdit(space, selector.Space)
@@ -73,7 +73,7 @@ func (ctrl *CLIController) SpacesDelete(cmd *cobra.Command, args []string) {
 
 	selector, err := models.ParseSelectorMandatorySpace(args[0])
 	if err != nil {
-		log.Fatalf("delete space: invalid selector: %v", err)
+		log.Fatalf("delete space: %v", err)
 	}
 
 	cbox := core.LoadCbox()
