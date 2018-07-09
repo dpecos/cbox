@@ -36,7 +36,7 @@ func ParseSelectorMandatorySpace(str string) (*Selector, error) {
 		}
 	}
 
-	return selector, nil
+	return selector, err
 }
 
 func ParseSelectorMandatoryItem(str string) (*Selector, error) {
@@ -48,7 +48,7 @@ func ParseSelectorMandatoryItem(str string) (*Selector, error) {
 		}
 	}
 
-	return selector, nil
+	return selector, err
 }
 
 func parseSelector(str string) (*Selector, error) {
