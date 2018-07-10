@@ -54,7 +54,10 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 	space := cbox.SpaceFind(selector.Space)
 	command := space.CommandFind(selector.Item)
 
-	fmt.Printf("Editing command with ID %s\n", command.ID)
+	fmt.Printf("\n--- Command to edit ---\n")
+	tools.PrintCommand(command, true, false)
+	fmt.Printf("-----\n\n")
+
 	tools.ConsoleEditCommand(command)
 
 	space.CommandEdit(command, selector.Item)

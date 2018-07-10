@@ -47,14 +47,17 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 
 	space := cbox.SpaceFind(selector.Space)
 
-	fmt.Printf("Editing space '%s'\n", space.Name)
+	fmt.Printf("--- Space to edit ---\n")
+	tools.PrintSpace(space)
+	fmt.Printf("-----\n\n")
+
 	tools.ConsoleEditSpace(space)
 
 	cbox.SpaceEdit(space, selector.Space)
 
 	fmt.Printf("--- Space after edited values ---\n")
 	tools.PrintSpace(space)
-	fmt.Printf("-----\n")
+	fmt.Printf("-----\n\n")
 
 	if console.Confirm("Update?") {
 		spaceToDelete := &models.Space{

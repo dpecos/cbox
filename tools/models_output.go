@@ -13,6 +13,9 @@ func PrintCommand(cmd *models.Command, full bool, sourceOnly bool) {
 	if sourceOnly {
 		fmt.Println(cmd.Code)
 	} else {
+		if !full {
+			fmt.Printf("* ")
+		}
 		if len(cmd.Tags) != 0 {
 			tags := strings.Join(cmd.Tags, ", ")
 			fmt.Printf("%s - (%s)", aurora.Red(cmd.ID), aurora.Brown(tags))

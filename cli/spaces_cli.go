@@ -7,6 +7,7 @@ import (
 
 var spacesCmd = &cobra.Command{
 	Use:   "spaces",
+	Args:  cobra.ExactArgs(0),
 	Short: "Show available spaces in your cbox",
 	Long:  tools.Logo,
 	Run:   ctrl.SpacesList,

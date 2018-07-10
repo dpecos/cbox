@@ -6,7 +6,7 @@ import (
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Args:  cobra.MaximumNArgs(0),
+	Args:  cobra.ExactArgs(0),
 	Short: "Display current cbox version",
 	Run:   ctrl.Version,
 }
