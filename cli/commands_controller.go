@@ -19,6 +19,9 @@ func (ctrl *CLIController) CommandList(cmd *cobra.Command, args []string) {
 
 	for _, command := range commands {
 		tools.PrintCommand(&command, viewSnippet, false)
+		if viewSnippet {
+			fmt.Printf("\n------------------\n\n")
+		}
 	}
 }
 
