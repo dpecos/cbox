@@ -19,13 +19,13 @@ func (ctrl *CLIController) CloudLogin(cmd *cobra.Command, args []string) {
 	jwt := console.ReadString("JWT Token")
 	fmt.Println()
 
-	user, err := core.CloudLogin(jwt)
+	_, _, name, err := core.CloudLogin(jwt)
 	if err != nil {
 		console.PrintError("Error trying to parse JWT token. Try to login again")
 		log.Fatalf("cloud: %v", err)
 	}
 
-	console.PrintSuccess("Hi " + user + "!")
+	console.PrintSuccess("Hi " + name + "!")
 }
 
 func (ctrl *CLIController) CloudLogout(cmd *cobra.Command, args []string) {

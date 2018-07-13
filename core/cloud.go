@@ -14,35 +14,43 @@ import (
 )
 
 const (
-	SERVER_URL_DEV = "https://api.dev.cbox.dplabs.io"
-	SETTINGS_USER  = "cloud.auth.user"
-	SETTINGS_JWT   = "cloud.auth.jwt"
+	SERVER_URL_DEV      = "https://api.dev.cbox.dplabs.io"
+	SETTINGS_USER_ID    = "cloud.auth.user.id"
+	SETTINGS_USER_LOGIN = "cloud.auth.user.login"
+	SETTINGS_USER_NAME  = "cloud.auth.user.name"
+	SETTINGS_JWT        = "cloud.auth.jwt"
 )
 
 type Cloud struct {
-	User       string
+	UserID     string
+	Login      string
+	Name       string
 	token      string
 	baseURL    *url.URL
 	httpClient *http.Client
 }
 
-func CloudLogin(jwt string) (string, error) {
-	user, err := tools.VerifyJWT(jwt)
+func CloudLogin(jwt string) (string, string, string, error) {
+	userID, login, name, err := tools.VerifyJWT(jwt)
 	if err != nil {
-		return "", err
+		return "", "", "", err
 	}
-	viper.Set(SETTINGS_USER, user)
+	viper.Set(SETTINGS_USER_ID, userID)
+	viper.Set(SETTINGS_USER_LOGIN, login)
+	viper.Set(SETTINGS_USER_NAME, name)
 	viper.Set(SETTINGS_JWT, jwt)
-	return user, nil
+	return userID, login, name, nil
 }
 
 func CloudLogout() {
-	viper.Set(SETTINGS_USER, "")
+	viper.Set(SETTINGS_USER_ID, "")
+	viper.Set(SETTINGS_USER_LOGIN, "")
+	viper.Set(SETTINGS_USER_NAME, "")
 	viper.Set(SETTINGS_JWT, "")
 }
 
 func CloudClient() (*Cloud, error) {
-	if !viper.IsSet(SETTINGS_USER) || !viper.IsSet(SETTINGS_JWT) {
+	if !viper.IsSet(SETTINGS_USER_ID) || !viper.IsSet(SETTINGS_USER_LOGIN) || !viper.IsSet(SETTINGS_USER_NAME) || !viper.IsSet(SETTINGS_JWT) {
 		return nil, fmt.Errorf("cloud: user not authenticated")
 	}
 
@@ -51,7 +59,14 @@ func CloudClient() (*Cloud, error) {
 		return nil, fmt.Errorf("cloud: could not parse server's URL: %v", err)
 	}
 
-	cloud := Cloud{User: viper.GetString(SETTINGS_USER), token: viper.GetString(SETTINGS_JWT), baseURL: url, httpClient: http.DefaultClient}
+	cloud := Cloud{
+		UserID:     viper.GetString(SETTINGS_USER_ID),
+		Login:      viper.GetString(SETTINGS_USER_LOGIN),
+		Name:       viper.GetString(SETTINGS_USER_NAME),
+		token:      viper.GetString(SETTINGS_JWT),
+		baseURL:    url,
+		httpClient: http.DefaultClient,
+	}
 
 	return &cloud, nil
 }
