@@ -5,19 +5,16 @@ import (
 	"log"
 
 	"github.com/dpecos/cbox/core"
+	"github.com/dpecos/cbox/models"
 	"github.com/dpecos/cbox/tools"
 	"github.com/dpecos/cbox/tools/console"
 
 	"github.com/spf13/cobra"
 )
 
-const (
-	AUTH_URL_DEV = "https://api.dev.cbox.dplabs.io/auth/"
-)
-
 func (ctrl *CLIController) CloudLogin(cmd *cobra.Command, args []string) {
 	fmt.Println(tools.Logo)
-	fmt.Printf("Open this URL in a browser and follow the authentication process: \n\n%s\n\n", AUTH_URL_DEV)
+	fmt.Printf("Open this URL in a browser and follow the authentication process: \n\n%s\n\n", fmt.Sprintf("%s/auth/", core.SERVER_URL_DEV))
 
 	jwt := console.ReadString("JWT Token")
 	fmt.Println()
@@ -29,4 +26,36 @@ func (ctrl *CLIController) CloudLogin(cmd *cobra.Command, args []string) {
 	}
 
 	console.PrintSuccess("Hi " + user + "!")
+}
+
+func (ctrl *CLIController) CloudPublishSpace(cmd *cobra.Command, args []string) {
+	selector, err := models.ParseSelectorMandatorySpace(args[0])
+	if err != nil {
+		log.Fatalf("publish space: %v", err)
+	}
+
+	cbox := core.LoadCbox()
+
+	space := cbox.SpaceFind(selector.Space)
+
+	fmt.Printf("--- Space ---\n")
+	tools.PrintSpace(space)
+	fmt.Printf("-----\n\n")
+
+	if console.Confirm("Publish?") {
+		fmt.Printf("Publishing space '%s'...\n", space.ID)
+
+		cloud, err := core.CloudClient()
+		if err != nil {
+			log.Fatalf("cloud: %v", err)
+		}
+		err = cloud.PublishSpace(space)
+		if err != nil {
+			log.Fatalf("cloud: %v", err)
+		}
+
+		console.PrintSuccess("Space published successfully!")
+	} else {
+		console.PrintError("Publish cancelled")
+	}
 }
