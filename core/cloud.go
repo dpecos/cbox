@@ -36,6 +36,11 @@ func CloudLogin(jwt string) (string, error) {
 	return user, nil
 }
 
+func CloudLogout() {
+	viper.Set(SETTINGS_USER, "")
+	viper.Set(SETTINGS_JWT, "")
+}
+
 func CloudClient() (*Cloud, error) {
 	if !viper.IsSet(SETTINGS_USER) || !viper.IsSet(SETTINGS_JWT) {
 		return nil, fmt.Errorf("cloud: user not authenticated")

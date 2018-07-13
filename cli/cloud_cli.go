@@ -12,8 +12,16 @@ var cloudCmd = &cobra.Command{
 
 var cloudLoginCmd = &cobra.Command{
 	Use:   "login",
+	Args:  cobra.ExactArgs(0),
 	Short: "Login to cbox cloud using your Github account",
 	Run:   ctrl.CloudLogin,
+}
+
+var cloudLogoutCmd = &cobra.Command{
+	Use:   "logout",
+	Args:  cobra.ExactArgs(0),
+	Short: "Logout from cbox cloud",
+	Run:   ctrl.CloudLogout,
 }
 
 var cloudPublishCmd = &cobra.Command{
@@ -26,5 +34,6 @@ var cloudPublishCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(cloudCmd)
 	cloudCmd.AddCommand(cloudLoginCmd)
+	cloudCmd.AddCommand(cloudLogoutCmd)
 	cloudCmd.AddCommand(cloudPublishCmd)
 }

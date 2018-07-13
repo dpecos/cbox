@@ -28,6 +28,12 @@ func (ctrl *CLIController) CloudLogin(cmd *cobra.Command, args []string) {
 	console.PrintSuccess("Hi " + user + "!")
 }
 
+func (ctrl *CLIController) CloudLogout(cmd *cobra.Command, args []string) {
+	fmt.Println(tools.Logo)
+	core.CloudLogout()
+	console.PrintSuccess("Successfully logged out from cbox cloud. See you back soon!")
+}
+
 func (ctrl *CLIController) CloudPublishSpace(cmd *cobra.Command, args []string) {
 	selector, err := models.ParseSelectorMandatorySpace(args[0])
 	if err != nil {
