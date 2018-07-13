@@ -10,9 +10,9 @@ import (
 )
 
 type Space struct {
-	Name        string    `json:"name"`
+	ID          string    `json:"id"`
 	Description string    `json:"description"`
-	Entries     []Command `json:"entries"`
+	Entries     []Command `json:"entries,omitempty"`
 }
 
 func commandPresentInSapce(space *Space, commandID string) bool {

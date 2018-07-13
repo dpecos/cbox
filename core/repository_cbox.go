@@ -29,7 +29,7 @@ func CheckCboxDir() string {
 	spacesPath := resolveInCboxDir("spaces")
 	if tools.CreateDirectoryIfNotExists(spacesPath) {
 		defaultSpace := models.Space{
-			Name:        DEFAULT_SPACE_NAME,
+			ID:          DEFAULT_SPACE_ID,
 			Description: DEFAULT_SPACE_DESCRIPTION,
 		}
 		cbox := LoadCbox()

@@ -41,5 +41,5 @@ func PrintTag(tag string) {
 }
 
 func PrintSpace(space *models.Space) {
-	fmt.Printf("%s - %s\n", aurora.Green(space.Name), aurora.Blue(aurora.Bold(space.Description)))
+	fmt.Printf("%s - %s\n", aurora.Green(space.ID), aurora.Blue(aurora.Bold(space.Description)))
 }

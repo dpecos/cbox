@@ -15,7 +15,7 @@ type CBox struct {
 
 func (cbox *CBox) spaceFindPosition(spaceName string) (int, error) {
 	for i, space := range cbox.Spaces {
-		if space.Name == spaceName {
+		if space.ID == spaceName {
 			return i, nil
 		}
 	}
@@ -30,8 +30,8 @@ func (cbox *CBox) spaceInCbox(spaceName string) bool {
 func (cbox *CBox) findUniqueSpaceNames() []string {
 	names := make(map[string]bool)
 	for _, space := range cbox.Spaces {
-		if _, ok := names[space.Name]; !ok {
-			names[space.Name] = true
+		if _, ok := names[space.ID]; !ok {
+			names[space.ID] = true
 		}
 	}
 	result := []string{}
@@ -54,20 +54,20 @@ func (cbox *CBox) SpaceAdd(space *Space) {
 }
 
 func (cbox *CBox) SpaceCreate(space *Space) {
-	for cbox.spaceInCbox(space.Name) {
+	for cbox.spaceInCbox(space.ID) {
 		console.PrintError("Space already found in your cbox. Try a different one")
-		space.Name = strings.ToLower(console.ReadString("Name"))
+		space.ID = strings.ToLower(console.ReadString("Name"))
 	}
 
 	cbox.SpaceAdd(space)
 }
 
 func (cbox *CBox) SpaceEdit(space *Space, previousName string) {
-	if space.Name != previousName {
+	if space.ID != previousName {
 
 		for len(cbox.findUniqueSpaceNames()) != len(cbox.Spaces) {
 			console.PrintError("Name already found in your cbox. Try a different one")
-			space.Name = strings.ToLower(console.ReadString("Name"))
+			space.ID = strings.ToLower(console.ReadString("Name"))
 		}
 
 	}

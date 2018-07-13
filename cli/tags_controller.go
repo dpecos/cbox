@@ -88,7 +88,7 @@ func (ctrl *CLIController) TagsDelete(cmd *cobra.Command, args []string) {
 	space := cbox.SpaceFind(selector.Space)
 	commands := space.CommandList(selector.Item)
 
-	fmt.Printf("Deleting tags from space '%s'\n", space.Name)
+	fmt.Printf("Deleting tags from space '%s'\n", space.ID)
 
 	for _, cmd := range commands {
 		command := space.CommandFind(cmd.ID)

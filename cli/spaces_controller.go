@@ -61,7 +61,7 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 
 	if console.Confirm("Update?") {
 		spaceToDelete := &models.Space{
-			Name: selector.Space,
+			ID: selector.Space,
 		}
 		core.SpaceDelete(spaceToDelete)
 
