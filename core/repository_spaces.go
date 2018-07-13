@@ -70,5 +70,9 @@ func SpaceLoad(id string) *models.Space {
 		log.Fatalf("repository: load space %s: could not parse JSON file: %v", id, err)
 	}
 
+	if space.Entries == nil {
+		space.Entries = []models.Command{}
+	}
+
 	return &space
 }
