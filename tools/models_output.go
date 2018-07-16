@@ -9,27 +9,37 @@ import (
 	"github.com/logrusorgru/aurora"
 )
 
+var (
+	spaceIDColor     = aurora.Brown
+	idColor          = aurora.Brown
+	tagsColor        = aurora.Red
+	descriptionColor = fmt.Sprintf
+	dateColor        = aurora.Blue
+	detailsColor     = aurora.Cyan
+	urlColor         = aurora.Green
+)
+
 func PrintCommand(cmd *models.Command, full bool, sourceOnly bool) {
+
 	if sourceOnly {
 		fmt.Println(cmd.Code)
 	} else {
 		if !full {
 			fmt.Printf("* ")
 		}
+		t := cmd.CreatedAt.UTC().In(time.Local)
 		if len(cmd.Tags) != 0 {
 			tags := strings.Join(cmd.Tags, ", ")
-			fmt.Printf("%s - (%s)", aurora.Red(cmd.ID), aurora.Brown(tags))
+			fmt.Printf("%s - %s (%s) %s\n", idColor(cmd.ID), descriptionColor(cmd.Description), tagsColor(tags), dateColor(DateToString(t)))
 		} else {
-			fmt.Printf("%s -", aurora.Red(cmd.ID))
+			fmt.Printf("%s - %s %s\n", idColor(cmd.ID), descriptionColor(cmd.Description), dateColor(DateToString(t)))
 		}
-		t := cmd.CreatedAt.UTC().In(time.Local)
-		fmt.Printf(" %s %s\n", aurora.Blue(aurora.Bold(cmd.Description)), aurora.Gray(DateToString(t)))
 		if full {
 			if cmd.Details != "" {
-				fmt.Printf("\n%s\n", aurora.Green(cmd.Details))
+				fmt.Printf("\n%s\n", detailsColor(cmd.Details))
 			}
 			if cmd.URL != "" {
-				fmt.Printf("\n%s\n", aurora.Blue(cmd.URL))
+				fmt.Printf("\n%s\n", urlColor(cmd.URL))
 			}
 			fmt.Printf("\n%s\n", cmd.Code)
 		}
@@ -37,9 +47,9 @@ func PrintCommand(cmd *models.Command, full bool, sourceOnly bool) {
 }
 
 func PrintTag(tag string) {
-	fmt.Printf("%s\n", aurora.Brown(tag))
+	fmt.Printf("%s\n", tagsColor(tag))
 }
 
 func PrintSpace(space *models.Space) {
-	fmt.Printf("%s - %s\n", aurora.Green(space.ID), aurora.Blue(aurora.Bold(space.Description)))
+	fmt.Printf("%s - %s\n", spaceIDColor(space.ID), descriptionColor(space.Description))
 }
