@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"time"
 
 	"github.com/dpecos/cbox/models"
 )
@@ -39,6 +40,8 @@ func SpaceList() []*models.Space {
 }
 
 func SpaceStore(space *models.Space) {
+	space.UpdatedAt = time.Now()
+
 	raw, err := json.MarshalIndent(space, "", "  ")
 	if err != nil {
 		log.Fatalf("repository: store space %s: could not generate JSON: %v", space.ID, err)

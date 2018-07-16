@@ -13,6 +13,7 @@ type Space struct {
 	ID          string    `json:"id"`
 	Description string    `json:"description"`
 	Entries     []Command `json:"entries,omitempty"`
+	UpdatedAt   time.Time `json:"updated-at"`
 }
 
 func commandPresentInSapce(space *Space, commandID string) bool {
@@ -29,8 +30,9 @@ func (space *Space) CommandAdd(command *Command) {
 		console.PrintError("ID already found in space. Try a different one")
 		command.ID = strings.ToLower(console.ReadString("ID"))
 	}
-	command.CreatedAt = time.Now()
-	command.UpdatedAt = time.Now()
+	now := time.Now()
+	command.CreatedAt = now
+	command.UpdatedAt = now
 	space.Entries = append(space.Entries, *command)
 }
 
