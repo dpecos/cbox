@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/dpecos/cbox/tools/console"
+
 	"github.com/dpecos/cbox/models"
 	"github.com/dpecos/cbox/tools"
 	"github.com/spf13/viper"
@@ -100,7 +102,7 @@ func (cloud *Cloud) doRequest(method string, path string, body string) (string, 
 		return bodyString, nil
 	}
 
-	return "", fmt.Errorf("rest: request failed with '%s' (code: %d): %s", resp.Status, resp.StatusCode, bodyString)
+	return "", fmt.Errorf("rest: request failed with '%s' (code: %d):\n%s", resp.Status, resp.StatusCode, console.ColorRed(bodyString))
 }
 
 func (cloud *Cloud) PublishSpace(space *models.Space) error {
