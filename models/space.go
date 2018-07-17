@@ -12,7 +12,7 @@ import (
 type Space struct {
 	ID          string    `json:"id"`
 	Description string    `json:"description"`
-	Entries     []Command `json:"entries,omitempty"`
+	Entries     []Command `json:"entries,omitempty" dynamodbav:",omitempty"`
 	UpdatedAt   time.Time `json:"updated-at"`
 }
 

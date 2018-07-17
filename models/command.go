@@ -8,9 +8,9 @@ type Command struct {
 	ID          string    `json:"id"`
 	Code        string    `json:"code"`
 	Description string    `json:"description"`
-	Details     string    `json:"details"`
-	URL         string    `json:"url"`
-	Tags        []string  `json:"tags"`
+	Details     string    `json:"details" dynamodbav:",omitempty"`
+	URL         string    `json:"url" dynamodbav:",omitempty"`
+	Tags        []string  `json:"tags" dynamodbav:",omitempty"`
 	UpdatedAt   time.Time `json:"updated-at"`
 	CreatedAt   time.Time `json:"created-at"`
 }
