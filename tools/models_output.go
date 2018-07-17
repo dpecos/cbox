@@ -6,17 +6,17 @@ import (
 	"time"
 
 	"github.com/dpecos/cbox/models"
-	"github.com/logrusorgru/aurora"
+	"github.com/dpecos/cbox/tools/console"
 )
 
 var (
-	spaceIDColor     = aurora.Brown
-	idColor          = aurora.Brown
-	tagsColor        = aurora.Red
+	spaceIDColor     = console.ColorBlue
+	idColor          = console.ColorBlue
+	tagsColor        = console.ColorRed
 	descriptionColor = fmt.Sprintf
-	dateColor        = aurora.Blue
-	detailsColor     = aurora.Cyan
-	urlColor         = aurora.Green
+	dateColor        = console.ColorBoldBlack
+	detailsColor     = console.ColorCyan
+	urlColor         = console.ColorGreen
 )
 
 func PrintCommand(cmd *models.Command, full bool, sourceOnly bool) {

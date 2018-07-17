@@ -9,7 +9,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/logrusorgru/aurora"
 	bitflag "github.com/mvpninjas/go-bitflag"
 )
 
@@ -27,11 +26,11 @@ const (
 )
 
 func formatLabel(label string) string {
-	return fmt.Sprintf("%s: ", aurora.Blue(aurora.Bold(label)))
+	return fmt.Sprintf("%s: ", ColorBoldBlue(label))
 }
 
 func formatLabelDetails(label string, details string) string {
-	return fmt.Sprintf("%s %s: ", aurora.Blue(aurora.Bold(label)), aurora.Blue("("+details+")"))
+	return fmt.Sprintf("%s %s: ", ColorBoldBlue(label), ColorBlue("("+details+")"))
 }
 
 func formatPreviousValue(label string, value string, multiline bool) string {
@@ -39,11 +38,11 @@ func formatPreviousValue(label string, value string, multiline bool) string {
 	if multiline && value != "" {
 		format = "%s:\n%s"
 	}
-	return fmt.Sprintf(format, aurora.Cyan(label), value)
+	return fmt.Sprintf(format, ColorCyan(label), value)
 }
 
 func formatQuestion(question string, options string) string {
-	return fmt.Sprintf("%s %s: ", aurora.Magenta(aurora.Bold(question)), aurora.Magenta(options))
+	return fmt.Sprintf("%s %s: ", ColorBoldMagenta(question), ColorMagenta(options))
 }
 
 func ReadString(label string, opts ...bitflag.Flag) string {
@@ -185,9 +184,9 @@ func Confirm(label string) bool {
 }
 
 func PrintError(msg string) {
-	fmt.Printf("%s\n\n", aurora.Red(msg))
+	fmt.Printf("%s\n\n", ColorRed(msg))
 }
 
 func PrintSuccess(msg string) {
-	fmt.Printf("%s\n\n", aurora.Green(msg))
+	fmt.Printf("%s\n\n", ColorGreen(msg))
 }
