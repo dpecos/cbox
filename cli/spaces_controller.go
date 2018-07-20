@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/dpecos/cbox/core"
 	"github.com/dpecos/cbox/models"
@@ -21,12 +22,18 @@ func (ctrl *CLIController) SpacesList(cmd *cobra.Command, args []string) {
 
 func (ctrl *CLIController) SpacesAdd(cmd *cobra.Command, args []string) {
 
-	cbox := core.LoadCbox()
+	cbox := core.LoadCbox("")
 
 	fmt.Println("Creating new space")
 	space := tools.ConsoleReadSpace()
 
-	cbox.SpaceCreate(space)
+	err := cbox.SpaceAdd(space)
+	for err != nil {
+		console.PrintError("Space already found in your cbox. Try a different one")
+		space.Label = strings.ToLower(console.ReadString("Label"))
+		err = cbox.SpaceAdd(space)
+	}
+
 	core.PersistCbox(cbox)
 
 	fmt.Printf("\n--- New space ---\n")
@@ -43,7 +50,7 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 		log.Fatalf("edit space: %v", err)
 	}
 
-	cbox := core.LoadCbox()
+	cbox := core.LoadCbox("")
 
 	space := cbox.SpaceFind(selector.Space)
 
@@ -53,7 +60,12 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 
 	tools.ConsoleEditSpace(space)
 
-	cbox.SpaceEdit(space, selector.Space)
+	if space.Label != selector.Space {
+		for len(cbox.SpaceLabels()) != len(cbox.Spaces) {
+			console.PrintError("Label already found in your cbox. Try a different one")
+			space.Label = strings.ToLower(console.ReadString("Label"))
+		}
+	}
 
 	fmt.Printf("--- Space after edited values ---\n")
 	tools.PrintSpace(space)
@@ -61,7 +73,7 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 
 	if console.Confirm("Update?") {
 		spaceToDelete := &models.Space{
-			ID: selector.Space,
+			Label: selector.Space,
 		}
 		core.SpaceDelete(spaceToDelete)
 
@@ -79,7 +91,7 @@ func (ctrl *CLIController) SpacesDelete(cmd *cobra.Command, args []string) {
 		log.Fatalf("delete space: %v", err)
 	}
 
-	cbox := core.LoadCbox()
+	cbox := core.LoadCbox("")
 
 	space := cbox.SpaceFind(selector.Space)
 

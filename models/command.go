@@ -2,10 +2,13 @@ package models
 
 import (
 	"time"
+
+	"github.com/satori/go.uuid"
 )
 
 type Command struct {
-	ID          string    `json:"id"`
+	ID          uuid.UUID `json:"id"`
+	Label       string    `json:"label"`
 	Code        string    `json:"code"`
 	Description string    `json:"description"`
 	Details     string    `json:"details" dynamodbav:",omitempty"`

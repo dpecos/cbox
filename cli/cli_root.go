@@ -27,7 +27,7 @@ func init() {
 }
 
 func initConfig() {
-	cboxPath := core.CheckCboxDir()
+	cboxPath := core.CheckCboxDir("")
 
 	viper.AddConfigPath(cboxPath)
 	viper.SetConfigName("config")

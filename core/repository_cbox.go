@@ -7,19 +7,30 @@ import (
 	"github.com/dpecos/cbox/models"
 	"github.com/dpecos/cbox/tools"
 	homedir "github.com/mitchellh/go-homedir"
+	uuid "github.com/satori/go.uuid"
 )
 
 const CBOX_PATH = ".cbox"
 
+var (
+	basePath string
+)
+
 func resolveInCboxDir(content string) string {
-	home, err := homedir.Dir()
-	if err != nil {
-		log.Fatalf("respository: could not get HOME: %v", err)
+	cboxBasePath := basePath
+	if cboxBasePath == "" {
+		var err error
+		cboxBasePath, err = homedir.Dir()
+		if err != nil {
+			log.Fatalf("respository: could not get HOME: %v", err)
+		}
 	}
-	return path.Join(home, CBOX_PATH, content)
+	return path.Join(cboxBasePath, CBOX_PATH, content)
 }
 
-func CheckCboxDir() string {
+func CheckCboxDir(path string) string {
+	basePath = path
+
 	cboxPath := resolveInCboxDir("")
 	tools.CreateDirectoryIfNotExists(cboxPath)
 
@@ -28,19 +39,22 @@ func CheckCboxDir() string {
 
 	spacesPath := resolveInCboxDir("spaces")
 	if tools.CreateDirectoryIfNotExists(spacesPath) {
+		id, _ := uuid.NewV4()
 		defaultSpace := models.Space{
-			ID:          DEFAULT_SPACE_ID,
+			ID:          id,
+			Label:       DEFAULT_SPACE_ID,
 			Description: DEFAULT_SPACE_DESCRIPTION,
 		}
-		cbox := LoadCbox()
-		cbox.SpaceCreate(&defaultSpace)
+		cbox := LoadCbox(path)
+		cbox.SpaceAdd(&defaultSpace)
 		PersistCbox(cbox)
 	}
 
 	return cboxPath
 }
 
-func LoadCbox() *models.CBox {
+func LoadCbox(path string) *models.CBox {
+	basePath = path
 
 	cbox := models.CBox{
 		Spaces: []models.Space{},
@@ -51,7 +65,6 @@ func LoadCbox() *models.CBox {
 	for _, space := range spaces {
 		cbox.SpaceAdd(space)
 	}
-
 	return &cbox
 }
 

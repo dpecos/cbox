@@ -13,7 +13,7 @@ func (ctrl *CLIController) CommandList(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelectorAllowEmpty(args)
 
-	cbox := core.LoadCbox()
+	cbox := core.LoadCbox("")
 	space := cbox.SpaceFind(selector.Space)
 	commands := space.CommandList(selector.Item)
 
@@ -29,7 +29,7 @@ func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelectorAllowEmpty(args)
 
-	cbox := core.LoadCbox()
+	cbox := core.LoadCbox("")
 	space := cbox.SpaceFind(selector.Space)
 
 	fmt.Println("Creating new command")
@@ -49,7 +49,7 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelector(args)
 
-	cbox := core.LoadCbox()
+	cbox := core.LoadCbox("")
 
 	space := cbox.SpaceFind(selector.Space)
 	command := space.CommandFind(selector.Item)
@@ -78,7 +78,7 @@ func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelector(args)
 
-	cbox := core.LoadCbox()
+	cbox := core.LoadCbox("")
 	space := cbox.SpaceFind(selector.Space)
 	command := space.CommandFind(selector.Item)
 
@@ -99,7 +99,7 @@ func (ctrl *CLIController) CommandView(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelector(args)
 
-	cbox := core.LoadCbox()
+	cbox := core.LoadCbox("")
 	space := cbox.SpaceFind(selector.Space)
 	command := space.CommandFind(selector.Item)
 

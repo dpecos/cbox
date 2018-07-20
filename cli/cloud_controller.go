@@ -40,7 +40,7 @@ func (ctrl *CLIController) CloudPublishSpace(cmd *cobra.Command, args []string) 
 		log.Fatalf("publish space: %v", err)
 	}
 
-	cbox := core.LoadCbox()
+	cbox := core.LoadCbox("")
 
 	space := cbox.SpaceFind(selector.Space)
 
@@ -49,7 +49,7 @@ func (ctrl *CLIController) CloudPublishSpace(cmd *cobra.Command, args []string) 
 	fmt.Printf("-----\n\n")
 
 	if console.Confirm("Publish?") {
-		fmt.Printf("Publishing space '%s'...\n", space.ID)
+		fmt.Printf("Publishing space '%s'...\n", space.Label)
 
 		cloud, err := core.CloudClient()
 		if err != nil {

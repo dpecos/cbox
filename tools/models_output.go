@@ -10,8 +10,10 @@ import (
 )
 
 var (
-	spaceIDColor     = console.ColorBlue
-	idColor          = console.ColorBlue
+	spaceIDColor     = console.ColorBoldBlack
+	spaceLabelColor  = console.ColorBlue
+	idColor          = console.ColorBoldBlack
+	labelColor       = console.ColorBlue
 	tagsColor        = console.ColorRed
 	descriptionColor = fmt.Sprintf
 	dateColor        = console.ColorBoldBlack
@@ -30,9 +32,9 @@ func PrintCommand(cmd *models.Command, full bool, sourceOnly bool) {
 		t := cmd.CreatedAt.UTC().In(time.Local)
 		if len(cmd.Tags) != 0 {
 			tags := strings.Join(cmd.Tags, ", ")
-			fmt.Printf("%s - %s (%s) %s\n", idColor(cmd.ID), descriptionColor(cmd.Description), tagsColor(tags), dateColor(DateToString(t)))
+			fmt.Printf("%s - %s - %s (%s) %s\n", idColor(cmd.ID.String()), labelColor(cmd.Label), descriptionColor(cmd.Description), tagsColor(tags), dateColor(DateToString(t)))
 		} else {
-			fmt.Printf("%s - %s %s\n", idColor(cmd.ID), descriptionColor(cmd.Description), dateColor(DateToString(t)))
+			fmt.Printf("%s - %s - %s %s\n", idColor(cmd.ID.String()), labelColor(cmd.Label), descriptionColor(cmd.Description), dateColor(DateToString(t)))
 		}
 		if full {
 			if cmd.Details != "" {
@@ -51,5 +53,5 @@ func PrintTag(tag string) {
 }
 
 func PrintSpace(space *models.Space) {
-	fmt.Printf("%s - %s\n", spaceIDColor(space.ID), descriptionColor(space.Description))
+	fmt.Printf("%s - %s - %s\n", spaceIDColor(space.ID.String()), spaceLabelColor(space.Label), descriptionColor(space.Description))
 }

@@ -7,18 +7,20 @@ import (
 	"time"
 
 	"github.com/dpecos/cbox/tools/console"
+	uuid "github.com/satori/go.uuid"
 )
 
 type Space struct {
-	ID          string    `json:"id"`
+	ID          uuid.UUID `json:"id"`
+	Label       string    `json:"label"`
 	Description string    `json:"description"`
 	Entries     []Command `json:"entries,omitempty" dynamodbav:",omitempty"`
 	UpdatedAt   time.Time `json:"updated-at"`
 }
 
-func commandPresentInSapce(space *Space, commandID string) bool {
+func commandPresentInSapce(space *Space, commandLabel string) bool {
 	for _, cmd := range space.Entries {
-		if commandID == cmd.ID {
+		if commandLabel == cmd.Label {
 			return true
 		}
 	}
@@ -26,9 +28,9 @@ func commandPresentInSapce(space *Space, commandID string) bool {
 }
 
 func (space *Space) CommandAdd(command *Command) {
-	for commandPresentInSapce(space, command.ID) {
-		console.PrintError("ID already found in space. Try a different one")
-		command.ID = strings.ToLower(console.ReadString("ID"))
+	for commandPresentInSapce(space, command.Label) {
+		console.PrintError("Label already found in space. Try a different one")
+		command.Label = strings.ToLower(console.ReadString("Label"))
 	}
 	now := time.Now()
 	command.CreatedAt = now
@@ -36,15 +38,15 @@ func (space *Space) CommandAdd(command *Command) {
 	space.Entries = append(space.Entries, *command)
 }
 
-func (space *Space) CommandEdit(command *Command, previousID string) {
-	if command.ID != previousID {
-		newID := command.ID
-		command.ID = previousID
-		for commandPresentInSapce(space, newID) {
-			console.PrintError("ID already found in space. Try a different one")
-			newID = strings.ToLower(console.ReadString("ID"))
+func (space *Space) CommandEdit(command *Command, previousLabel string) {
+	if command.Label != previousLabel {
+		newLabel := command.Label
+		command.Label = previousLabel
+		for commandPresentInSapce(space, newLabel) {
+			console.PrintError("Label already found in space. Try a different one")
+			newLabel = strings.ToLower(console.ReadString("Label"))
 		}
-		command.ID = newID
+		command.Label = newLabel
 	}
 	command.UpdatedAt = time.Now()
 }
@@ -65,27 +67,46 @@ func (space *Space) CommandList(tag string) []Command {
 	return result
 }
 
-func (space *Space) commandFindPosition(commandId string) (int, error) {
+func (space *Space) commandFindPositionByLabel(commandLabel string) (int, error) {
+	if commandLabel == "" {
+		return -1, fmt.Errorf("could not search by empty label")
+	}
 	for i, command := range space.Entries {
-		if command.ID == commandId {
+		if command.Label == commandLabel {
 			return i, nil
 		}
 	}
-	return -1, fmt.Errorf("command with id '%s' not found", commandId)
+	return -1, fmt.Errorf("command with label '%s' not found", commandLabel)
 }
 
-func (space *Space) CommandFind(commandId string) *Command {
-	pos, err := space.commandFindPosition(commandId)
+func (space *Space) commandFindPositionByID(commandID uuid.UUID) (int, error) {
+	if commandID == uuid.Nil {
+		return -1, fmt.Errorf("could not search by empty ID")
+	}
+	for i, command := range space.Entries {
+		if command.ID == commandID {
+			return i, nil
+		}
+	}
+	return -1, fmt.Errorf("command with ID '%s' not found", commandID)
+}
+
+func (space *Space) CommandFind(commandLocator string) *Command {
+	pos, err := space.commandFindPositionByLabel(commandLocator)
 	if err != nil {
-		log.Fatalf("find command: %v", err)
+		id := uuid.FromStringOrNil(commandLocator)
+		pos, err = space.commandFindPositionByID(id)
+		if err != nil {
+			log.Fatalf("find command: %v", err)
+		}
 	}
 	return &space.Entries[pos]
 }
 
 func (space *Space) CommandDelete(command *Command) {
-	pos, err := space.commandFindPosition(command.ID)
+	pos, err := space.commandFindPositionByID(command.ID)
 	if err != nil {
-		log.Fatalf("deelete command: %v", err)
+		log.Fatalf("delete command: %v", err)
 	}
 
 	space.Entries = append(space.Entries[:pos], space.Entries[pos+1:]...)
