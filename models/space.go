@@ -3,10 +3,8 @@ package models
 import (
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
-	"github.com/dpecos/cbox/tools/console"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -23,28 +21,30 @@ func commandPresentInSpace(space *Space, commandLabel string) bool {
 	return err == nil
 }
 
-func (space *Space) CommandAdd(command *Command) {
-	for commandPresentInSpace(space, command.Label) {
-		console.PrintError("Label already found in space. Try a different one")
-		command.Label = strings.ToLower(console.ReadString("Label"))
+func (space *Space) CommandAdd(command *Command) error {
+	if commandPresentInSpace(space, command.Label) {
+		return fmt.Errorf("add command: label '%s' already in use", command.Label)
 	}
 	now := time.Now()
 	command.CreatedAt = now
 	command.UpdatedAt = now
 	space.Entries = append(space.Entries, *command)
+
+	return nil
 }
 
-func (space *Space) CommandEdit(command *Command, previousLabel string) {
+func (space *Space) CommandEdit(command *Command, previousLabel string) error {
 	if command.Label != previousLabel {
 		newLabel := command.Label
 		command.Label = previousLabel
-		for commandPresentInSpace(space, newLabel) {
-			console.PrintError("Label already found in space. Try a different one")
-			newLabel = strings.ToLower(console.ReadString("Label"))
+		if commandPresentInSpace(space, newLabel) {
+			command.Label = newLabel
+			return fmt.Errorf("edit command: label '%s' already in use", newLabel)
 		}
 		command.Label = newLabel
 	}
 	command.UpdatedAt = time.Now()
+	return nil
 }
 
 func (space *Space) CommandList(tag string) []Command {

@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/dpecos/cbox/core"
 	"github.com/dpecos/cbox/tools"
@@ -43,7 +44,12 @@ func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 	fmt.Println("Creating new command")
 	command := tools.ConsoleReadCommand()
 
-	space.CommandAdd(command)
+	err = space.CommandAdd(command)
+	for err != nil {
+		console.PrintError(fmt.Sprintf("\nLabel '%s' already found in space. Try a different one", command.Label))
+		command.Label = strings.ToLower(console.ReadString("Label"))
+		err = space.CommandAdd(command)
+	}
 	core.PersistCbox(cbox)
 
 	fmt.Printf("\n--- New command ---\n")
@@ -69,13 +75,20 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 		log.Fatalf("edit command: %v", err)
 	}
 
+	previousCommandLabel := command.Label
+
 	fmt.Printf("\n--- Command to edit ---\n")
 	tools.PrintCommand(command, true, false)
 	fmt.Printf("-----\n\n")
 
 	tools.ConsoleEditCommand(command)
 
-	space.CommandEdit(command, selector.Item)
+	err = space.CommandEdit(command, previousCommandLabel)
+	for err != nil {
+		console.PrintError(fmt.Sprintf("Label '%s' already found in space. Try a different one", command.Label))
+		command.Label = strings.ToLower(console.ReadString("Label"))
+		err = space.CommandEdit(command, previousCommandLabel)
+	}
 
 	fmt.Printf("\n--- Command after edited values ---\n")
 	tools.PrintCommand(command, true, false)
