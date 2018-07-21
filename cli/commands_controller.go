@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/dpecos/cbox/core"
 	"github.com/dpecos/cbox/tools"
@@ -14,7 +15,11 @@ func (ctrl *CLIController) CommandList(cmd *cobra.Command, args []string) {
 	selector := ctrl.parseSelectorAllowEmpty(args)
 
 	cbox := core.LoadCbox("")
-	space := cbox.SpaceFind(selector.Space)
+	space, err := cbox.SpaceFind(selector.Space)
+	if err != nil {
+		log.Fatalf("list commands: %v", err)
+	}
+
 	commands := space.CommandList(selector.Item)
 
 	for _, command := range commands {
@@ -30,7 +35,10 @@ func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 	selector := ctrl.parseSelectorAllowEmpty(args)
 
 	cbox := core.LoadCbox("")
-	space := cbox.SpaceFind(selector.Space)
+	space, err := cbox.SpaceFind(selector.Space)
+	if err != nil {
+		log.Fatalf("add command: %v", err)
+	}
 
 	fmt.Println("Creating new command")
 	command := tools.ConsoleReadCommand()
@@ -51,7 +59,11 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 
 	cbox := core.LoadCbox("")
 
-	space := cbox.SpaceFind(selector.Space)
+	space, err := cbox.SpaceFind(selector.Space)
+	if err != nil {
+		log.Fatalf("edit command: %v", err)
+	}
+
 	command := space.CommandFind(selector.Item)
 
 	fmt.Printf("\n--- Command to edit ---\n")
@@ -79,7 +91,11 @@ func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
 	selector := ctrl.parseSelector(args)
 
 	cbox := core.LoadCbox("")
-	space := cbox.SpaceFind(selector.Space)
+	space, err := cbox.SpaceFind(selector.Space)
+	if err != nil {
+		log.Fatalf("delete command: %v", err)
+	}
+
 	command := space.CommandFind(selector.Item)
 
 	fmt.Printf("\n--- Command to delete ---\n")
@@ -100,7 +116,11 @@ func (ctrl *CLIController) CommandView(cmd *cobra.Command, args []string) {
 	selector := ctrl.parseSelector(args)
 
 	cbox := core.LoadCbox("")
-	space := cbox.SpaceFind(selector.Space)
+	space, err := cbox.SpaceFind(selector.Space)
+	if err != nil {
+		log.Fatalf("view command: %v", err)
+	}
+
 	command := space.CommandFind(selector.Item)
 
 	tools.PrintCommand(command, true, sourceOnly)

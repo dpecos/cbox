@@ -2,6 +2,8 @@ package models
 
 import (
 	"fmt"
+
+	uuid "github.com/satori/go.uuid"
 )
 
 type CBox struct {
@@ -9,13 +11,28 @@ type CBox struct {
 	Spaces []Space
 }
 
-func (cbox *CBox) spaceFindPosition(spaceLabel string) (int, error) {
+func (cbox *CBox) spaceFindPositionByLabel(spaceLabel string) (int, error) {
+	if spaceLabel == "" {
+		return -1, fmt.Errorf("could not search by empty label")
+	}
 	for i, space := range cbox.Spaces {
 		if space.Label == spaceLabel {
 			return i, nil
 		}
 	}
 	return -1, fmt.Errorf("space with label '%s' not found", spaceLabel)
+}
+
+func (cbox *CBox) spaceFindPositionByID(spaceID uuid.UUID) (int, error) {
+	if spaceID == uuid.Nil {
+		return -1, fmt.Errorf("could not search by empty ID")
+	}
+	for i, space := range cbox.Spaces {
+		if space.ID == spaceID {
+			return i, nil
+		}
+	}
+	return -1, fmt.Errorf("space with ID '%s' not found", spaceID)
 }
 
 func (cbox *CBox) SpaceLabels() []string {
@@ -32,16 +49,21 @@ func (cbox *CBox) SpaceLabels() []string {
 	return result
 }
 
-func (cbox *CBox) SpaceFind(spaceLabel string) *Space {
-	pos, err := cbox.spaceFindPosition(spaceLabel)
+func (cbox *CBox) SpaceFind(spaceLocator string) (*Space, error) {
+	pos, err := cbox.spaceFindPositionByLabel(spaceLocator)
 	if err != nil {
-		return nil
+		id := uuid.FromStringOrNil(spaceLocator)
+		pos, err = cbox.spaceFindPositionByID(id)
+		if err != nil {
+			return nil, fmt.Errorf("find space: %v", err)
+		}
 	}
-	return &cbox.Spaces[pos]
+	return &cbox.Spaces[pos], nil
 }
 
 func (cbox *CBox) SpaceAdd(space *Space) error {
-	if cbox.SpaceFind(space.Label) != nil {
+	s, err := cbox.SpaceFind(space.Label)
+	if err == nil && s != nil {
 		return fmt.Errorf("space add: space with label '%s' already exists", space.Label)
 	}
 	cbox.Spaces = append(cbox.Spaces, *space)

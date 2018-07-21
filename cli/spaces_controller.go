@@ -52,7 +52,10 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 
 	cbox := core.LoadCbox("")
 
-	space := cbox.SpaceFind(selector.Space)
+	space, err := cbox.SpaceFind(selector.Space)
+	if err != nil {
+		log.Fatalf("edit space: %v", err)
+	}
 
 	fmt.Printf("--- Space to edit ---\n")
 	tools.PrintSpace(space)
@@ -93,7 +96,10 @@ func (ctrl *CLIController) SpacesDelete(cmd *cobra.Command, args []string) {
 
 	cbox := core.LoadCbox("")
 
-	space := cbox.SpaceFind(selector.Space)
+	space, err := cbox.SpaceFind(selector.Space)
+	if err != nil {
+		log.Fatalf("delete space: %v", err)
+	}
 
 	fmt.Printf("\n--- Space to delete ---\n")
 	tools.PrintSpace(space)

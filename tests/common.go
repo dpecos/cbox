@@ -3,19 +3,11 @@ package tests
 import (
 	"math/rand"
 	"testing"
-	"time"
 
 	"github.com/dpecos/cbox/core"
 	"github.com/dpecos/cbox/models"
+	uuid "github.com/satori/go.uuid"
 )
-
-var (
-	cbox *models.CBox
-)
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -46,9 +38,39 @@ func assertSpaceFileExists(t *testing.T, space *models.Space) {
 		t.Fatal("space file could not be found (and should)")
 	}
 }
+
 func assertSpaceFileNotExists(t *testing.T, space *models.Space) {
 	found := findSpaceFile(space)
 	if found {
 		t.Fatal("new space found (and shouldn't)")
 	}
+}
+
+func createSpace(t *testing.T) *models.Space {
+	if cbox == nil {
+		t.Fatal("cbox not initialized")
+	}
+
+	id, _ := uuid.NewV4()
+
+	space := models.Space{
+		ID:          id,
+		Label:       randString(8),
+		Description: randString(15),
+	}
+
+	err := cbox.SpaceAdd(&space)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	core.PersistCbox(cbox)
+
+	return &space
+}
+
+func reloadCBox() {
+	core.CheckCboxDir("/tmp")
+	cbox = core.LoadCbox("/tmp")
 }

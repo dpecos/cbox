@@ -19,7 +19,10 @@ func (ctrl *CLIController) TagsList(cmd *cobra.Command, args []string) {
 	selector := ctrl.parseSelectorAllowEmpty(args)
 
 	cbox := core.LoadCbox("")
-	space := cbox.SpaceFind(selector.Space)
+	space, err := cbox.SpaceFind(selector.Space)
+	if err != nil {
+		log.Fatalf("list tags: %v", err)
+	}
 
 	tags := space.TagsList(selector.Item)
 	sort.Strings(tags)
@@ -35,7 +38,10 @@ func (ctrl *CLIController) TagsAdd(cmd *cobra.Command, args []string) {
 
 	cbox := core.LoadCbox("")
 
-	space := cbox.SpaceFind(selector.Space)
+	space, err := cbox.SpaceFind(selector.Space)
+	if err != nil {
+		log.Fatalf("add tags: %v", err)
+	}
 	command := space.CommandFind(selector.Item)
 
 	fmt.Printf("Adding tags to command with label '%s'\n", command.Label)
@@ -59,7 +65,10 @@ func (ctrl *CLIController) TagsRemove(cmd *cobra.Command, args []string) {
 
 	cbox := core.LoadCbox("")
 
-	space := cbox.SpaceFind(selector.Space)
+	space, err := cbox.SpaceFind(selector.Space)
+	if err != nil {
+		log.Fatalf("remove tags: %v", err)
+	}
 	command := space.CommandFind(selector.Item)
 
 	fmt.Printf("Removing tags from command with label '%s'\n", command.Label)
@@ -85,7 +94,10 @@ func (ctrl *CLIController) TagsDelete(cmd *cobra.Command, args []string) {
 	}
 
 	cbox := core.LoadCbox("")
-	space := cbox.SpaceFind(selector.Space)
+	space, err := cbox.SpaceFind(selector.Space)
+	if err != nil {
+		log.Fatalf("delete tags: %v", err)
+	}
 	commands := space.CommandList(selector.Item)
 
 	fmt.Printf("Deleting tags from space '%s'\n", space.Label)
