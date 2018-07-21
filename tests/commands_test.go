@@ -9,7 +9,6 @@ import (
 
 func createCommand(t *testing.T, space *models.Space) *models.Command {
 	id, _ := uuid.NewV4()
-
 	command := models.Command{
 		ID:          id,
 		Label:       randString(8),

@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	"github.com/dpecos/cbox/core"
+	"github.com/dpecos/cbox/models"
+	uuid "github.com/satori/go.uuid"
 )
 
 func TestSpaceCreationDeletion(t *testing.T) {
@@ -38,4 +40,20 @@ func TestSpaceCreationDeletion(t *testing.T) {
 		t.Error("space still found after deleting it")
 	}
 
+}
+
+func TestSpaceLabelUniquenessOnCreation(t *testing.T) {
+	s1 := createSpace(t)
+
+	id, _ := uuid.NewV4()
+	s2 := models.Space{
+		ID:          id,
+		Label:       s1.Label,
+		Description: randString(15),
+	}
+
+	err := cbox.SpaceAdd(&s2)
+	if err == nil {
+		t.Fatalf("space labels have to be unique")
+	}
 }
