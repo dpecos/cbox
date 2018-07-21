@@ -41,10 +41,11 @@ func CheckCboxDir(path string) string {
 	if tools.CreateDirectoryIfNotExists(spacesPath) {
 		id, _ := uuid.NewV4()
 		defaultSpace := models.Space{
-			ID:          id,
 			Label:       DEFAULT_SPACE_ID,
 			Description: DEFAULT_SPACE_DESCRIPTION,
 		}
+		defaultSpace.ID = id
+
 		cbox := LoadCbox(path)
 		cbox.SpaceAdd(&defaultSpace)
 		PersistCbox(cbox)

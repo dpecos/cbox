@@ -2,20 +2,16 @@ package models
 
 import (
 	"time"
-
-	"github.com/satori/go.uuid"
 )
 
 type Command struct {
-	ID          uuid.UUID `json:"id"`
-	Label       string    `json:"label"`
-	Code        string    `json:"code"`
-	Description string    `json:"description"`
-	Details     string    `json:"details" dynamodbav:",omitempty"`
-	URL         string    `json:"url" dynamodbav:",omitempty"`
-	Tags        []string  `json:"tags" dynamodbav:",omitempty"`
-	UpdatedAt   time.Time `json:"updated-at"`
-	CreatedAt   time.Time `json:"created-at"`
+	Meta
+	Label       string   `json:"label"`
+	Code        string   `json:"code"`
+	Description string   `json:"description"`
+	Details     string   `json:"details" dynamodbav:",omitempty"`
+	URL         string   `json:"url" dynamodbav:",omitempty"`
+	Tags        []string `json:"tags" dynamodbav:",omitempty"`
 }
 
 func (command *Command) TagAdd(tag string) {

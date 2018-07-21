@@ -53,10 +53,10 @@ func createSpace(t *testing.T) *models.Space {
 
 	id, _ := uuid.NewV4()
 	space := models.Space{
-		ID:          id,
 		Label:       randString(8),
 		Description: randString(15),
 	}
+	space.ID = id
 
 	err := cbox.SpaceAdd(&space)
 

@@ -10,7 +10,6 @@ import (
 func createCommand(t *testing.T, space *models.Space) *models.Command {
 	id, _ := uuid.NewV4()
 	command := models.Command{
-		ID:          id,
 		Label:       randString(8),
 		Description: randString(15),
 		Details:     randString(15),
@@ -18,6 +17,7 @@ func createCommand(t *testing.T, space *models.Space) *models.Command {
 		Code:        randString(30),
 		Tags:        []string{"test"},
 	}
+	command.ID = id
 
 	space.CommandAdd(&command)
 
@@ -95,7 +95,6 @@ func TestCommandLabelUniquenessOnCreation(t *testing.T) {
 
 	id, _ := uuid.NewV4()
 	c2 := models.Command{
-		ID:          id,
 		Label:       c1.Label,
 		Description: randString(15),
 		Details:     randString(15),
@@ -103,6 +102,7 @@ func TestCommandLabelUniquenessOnCreation(t *testing.T) {
 		Code:        randString(30),
 		Tags:        []string{"test"},
 	}
+	c2.ID = id
 
 	err := space.CommandAdd(&c2)
 	if err == nil {

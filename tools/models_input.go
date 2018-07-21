@@ -12,14 +12,15 @@ import (
 func ConsoleReadCommand() *models.Command {
 	id, _ := uuid.NewV4()
 	command := models.Command{
-		ID:          id,
-		Label:       strings.ToLower(console.ReadString("Label", console.ONLY_VALID_CHARS)),
+		Label:       strings.ToLower(console.ReadString("Label", console.ONLY_VALID_CHARS, console.NOT_EMPTY_VALUES)),
 		Description: console.ReadString("Description"),
 		Details:     console.ReadString("Details", console.MULTILINE),
 		URL:         console.ReadString("URL"),
 		Code:        console.ReadString("Code / Command", console.MULTILINE, console.NOT_EMPTY_VALUES),
 		Tags:        []string{},
 	}
+	command.ID = id
+
 	tags := console.ReadString("Tags (separated by space)")
 	for _, tag := range strings.Split(tags, " ") {
 		if tag != "" {
@@ -31,7 +32,7 @@ func ConsoleReadCommand() *models.Command {
 }
 
 func ConsoleEditCommand(command *models.Command) {
-	command.Label = strings.ToLower(console.EditString("Label", command.Label, console.ONLY_VALID_CHARS))
+	command.Label = strings.ToLower(console.EditString("Label", command.Label, console.ONLY_VALID_CHARS, console.NOT_EMPTY_VALUES))
 	command.Description = console.EditString("Description", command.Description)
 	command.Details = console.EditString("Details", command.Details, console.MULTILINE)
 	command.URL = console.EditString("URL", command.URL)
@@ -41,11 +42,11 @@ func ConsoleEditCommand(command *models.Command) {
 func ConsoleReadSpace() *models.Space {
 	id, _ := uuid.NewV4()
 	space := models.Space{
-		ID:          id,
 		Label:       strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS)),
 		Description: console.ReadString("Description"),
 		Entries:     []models.Command{},
 	}
+	space.ID = id
 	return &space
 }
 

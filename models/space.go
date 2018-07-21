@@ -9,11 +9,10 @@ import (
 )
 
 type Space struct {
-	ID          uuid.UUID `json:"id"`
+	Meta
 	Label       string    `json:"label"`
 	Description string    `json:"description"`
-	Entries     []Command `json:"entries" dynamodbav:",omitempty"`
-	UpdatedAt   time.Time `json:"updated-at"`
+	Entries     []Command `json:"entries" dynamodbav:"-"`
 }
 
 func commandPresentInSpace(space *Space, commandLabel string) bool {

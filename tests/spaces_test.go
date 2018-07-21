@@ -47,10 +47,10 @@ func TestSpaceLabelUniquenessOnCreation(t *testing.T) {
 
 	id, _ := uuid.NewV4()
 	s2 := models.Space{
-		ID:          id,
 		Label:       s1.Label,
 		Description: randString(15),
 	}
+	s2.ID = id
 
 	err := cbox.SpaceAdd(&s2)
 	if err == nil {

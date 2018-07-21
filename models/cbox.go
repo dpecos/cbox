@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"time"
 
 	uuid "github.com/satori/go.uuid"
 )
@@ -72,6 +73,9 @@ func (cbox *CBox) SpaceAdd(space *Space) error {
 	if space.Entries == nil {
 		space.Entries = []Command{}
 	}
+	now := time.Now()
+	space.CreatedAt = now
+	space.UpdatedAt = now
 	cbox.Spaces = append(cbox.Spaces, *space)
 	return nil
 }
