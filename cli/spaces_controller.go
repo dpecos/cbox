@@ -14,7 +14,7 @@ import (
 
 func (ctrl *CLIController) SpacesList(cmd *cobra.Command, args []string) {
 
-	spaces := core.SpaceList()
+	spaces := core.SpaceListFiles()
 	for _, space := range spaces {
 		tools.PrintSpace(space)
 	}
@@ -78,7 +78,7 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 		spaceToDelete := &models.Space{
 			Label: selector.Space,
 		}
-		core.SpaceDelete(spaceToDelete)
+		core.SpaceDeleteFile(spaceToDelete)
 
 		core.PersistCbox(cbox)
 		console.PrintSuccess("Space updated successfully!")
@@ -106,7 +106,11 @@ func (ctrl *CLIController) SpacesDelete(cmd *cobra.Command, args []string) {
 	fmt.Printf("-----\n\n")
 
 	if console.Confirm("Are you sure you want to delete this space?") {
-		core.SpaceDelete(space)
+		err = cbox.SpaceDelete(space)
+		if err != nil {
+			log.Fatalf("delete space: %v", err)
+		}
+		core.SpaceDeleteFile(space)
 		console.PrintSuccess("Space deleted successfully!")
 	} else {
 		console.PrintError("Deletion cancelled")

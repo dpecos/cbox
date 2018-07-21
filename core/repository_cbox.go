@@ -60,7 +60,7 @@ func LoadCbox(path string) *models.CBox {
 		Spaces: []models.Space{},
 	}
 
-	spaces := SpaceList()
+	spaces := SpaceListFiles()
 
 	for _, space := range spaces {
 		cbox.SpaceAdd(space)
@@ -70,6 +70,6 @@ func LoadCbox(path string) *models.CBox {
 
 func PersistCbox(cbox *models.CBox) {
 	for _, space := range cbox.Spaces {
-		SpaceStore(&space)
+		SpaceStoreFile(&space)
 	}
 }

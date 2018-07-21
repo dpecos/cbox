@@ -7,3 +7,5 @@ build:
 install:
 	go install -ldflags "-X github.com/dpecos/cbox/cli.cboxBuild=$(BUILD)"
 
+test:
+	go test ./...

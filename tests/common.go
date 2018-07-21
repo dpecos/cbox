@@ -20,7 +20,7 @@ func randString(n int) string {
 }
 
 func findSpaceFile(space *models.Space) bool {
-	spaces := core.SpaceList()
+	spaces := core.SpaceListFiles()
 
 	found := false
 	for _, s := range spaces {
@@ -65,12 +65,6 @@ func createSpace(t *testing.T) *models.Space {
 		t.Error(err)
 	}
 
-	core.PersistCbox(cbox)
-
-	return &space
-}
-
-func reloadCBox() {
-	core.CheckCboxDir("/tmp")
-	cbox = core.LoadCbox("/tmp")
+	s, _ := cbox.SpaceFind(space.ID.String())
+	return s
 }

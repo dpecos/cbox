@@ -10,12 +10,19 @@ import (
 )
 
 var (
-	cbox  *models.CBox
-	space *models.Space
+	cbox *models.CBox
 )
 
 func setupTests() {
 	os.RemoveAll("/tmp/.cbox")
+
+	reloadCBox()
+}
+
+func reloadCBox() {
+	if cbox != nil {
+		core.PersistCbox(cbox)
+	}
 
 	core.CheckCboxDir("/tmp")
 	cbox = core.LoadCbox("/tmp")

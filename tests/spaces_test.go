@@ -7,8 +7,7 @@ import (
 )
 
 func TestSpaceCreationDeletion(t *testing.T) {
-
-	space = createSpace(t)
+	space := createSpace(t)
 
 	reloadCBox()
 
@@ -24,7 +23,19 @@ func TestSpaceCreationDeletion(t *testing.T) {
 		t.Errorf("could not find space by label: %v", err)
 	}
 
-	core.SpaceDelete(space)
+	err = cbox.SpaceDelete(space)
+	if err != nil {
+		t.Error(err)
+	}
+	core.SpaceDeleteFile(space)
 
 	assertSpaceFileNotExists(t, space)
+
+	reloadCBox()
+
+	_, err = cbox.SpaceFind(space.ID.String())
+	if err == nil {
+		t.Error("space still found after deleting it")
+	}
+
 }

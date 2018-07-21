@@ -14,21 +14,17 @@ type Space struct {
 	ID          uuid.UUID `json:"id"`
 	Label       string    `json:"label"`
 	Description string    `json:"description"`
-	Entries     []Command `json:"entries,omitempty" dynamodbav:",omitempty"`
+	Entries     []Command `json:"entries" dynamodbav:",omitempty"`
 	UpdatedAt   time.Time `json:"updated-at"`
 }
 
-func commandPresentInSapce(space *Space, commandLabel string) bool {
-	for _, cmd := range space.Entries {
-		if commandLabel == cmd.Label {
-			return true
-		}
-	}
-	return false
+func commandPresentInSpace(space *Space, commandLabel string) bool {
+	_, err := space.commandFindPositionByLabel(commandLabel)
+	return err == nil
 }
 
 func (space *Space) CommandAdd(command *Command) {
-	for commandPresentInSapce(space, command.Label) {
+	for commandPresentInSpace(space, command.Label) {
 		console.PrintError("Label already found in space. Try a different one")
 		command.Label = strings.ToLower(console.ReadString("Label"))
 	}
@@ -42,7 +38,7 @@ func (space *Space) CommandEdit(command *Command, previousLabel string) {
 	if command.Label != previousLabel {
 		newLabel := command.Label
 		command.Label = previousLabel
-		for commandPresentInSapce(space, newLabel) {
+		for commandPresentInSpace(space, newLabel) {
 			console.PrintError("Label already found in space. Try a different one")
 			newLabel = strings.ToLower(console.ReadString("Label"))
 		}
@@ -91,16 +87,20 @@ func (space *Space) commandFindPositionByID(commandID uuid.UUID) (int, error) {
 	return -1, fmt.Errorf("command with ID '%s' not found", commandID)
 }
 
-func (space *Space) CommandFind(commandLocator string) *Command {
+func (space *Space) CommandFind(commandLocator string) (*Command, error) {
 	pos, err := space.commandFindPositionByLabel(commandLocator)
 	if err != nil {
-		id := uuid.FromStringOrNil(commandLocator)
+		id, e := uuid.FromString(commandLocator)
+		if e != nil {
+			return nil, fmt.Errorf("find command: %v", err)
+		}
+
 		pos, err = space.commandFindPositionByID(id)
 		if err != nil {
-			log.Fatalf("find command: %v", err)
+			return nil, fmt.Errorf("find command: %v", err)
 		}
 	}
-	return &space.Entries[pos]
+	return &space.Entries[pos], nil
 }
 
 func (space *Space) CommandDelete(command *Command) {

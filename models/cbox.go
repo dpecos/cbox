@@ -52,7 +52,10 @@ func (cbox *CBox) SpaceLabels() []string {
 func (cbox *CBox) SpaceFind(spaceLocator string) (*Space, error) {
 	pos, err := cbox.spaceFindPositionByLabel(spaceLocator)
 	if err != nil {
-		id := uuid.FromStringOrNil(spaceLocator)
+		id, e := uuid.FromString(spaceLocator)
+		if e != nil {
+			return nil, fmt.Errorf("find command: %v", err)
+		}
 		pos, err = cbox.spaceFindPositionByID(id)
 		if err != nil {
 			return nil, fmt.Errorf("find space: %v", err)
@@ -66,6 +69,20 @@ func (cbox *CBox) SpaceAdd(space *Space) error {
 	if err == nil && s != nil {
 		return fmt.Errorf("space add: space with label '%s' already exists", space.Label)
 	}
+	if space.Entries == nil {
+		space.Entries = []Command{}
+	}
 	cbox.Spaces = append(cbox.Spaces, *space)
+	return nil
+}
+
+func (cbox *CBox) SpaceDelete(space *Space) error {
+	pos, err := cbox.spaceFindPositionByID(space.ID)
+	if err != nil {
+		return fmt.Errorf("space delete: could not found space with ID '%s'", space.ID)
+	}
+
+	cbox.Spaces = append(cbox.Spaces[:pos], cbox.Spaces[pos+1:]...)
+
 	return nil
 }

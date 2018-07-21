@@ -21,7 +21,7 @@ func resolveSpaceFile(spaceName string) string {
 	return resolveInCboxDir(spacePath)
 }
 
-func SpaceList() []*models.Space {
+func SpaceListFiles() []*models.Space {
 	spaces := []*models.Space{}
 	files, err := ioutil.ReadDir(resolveInCboxDir(SPACES_PATH))
 	if err != nil {
@@ -32,13 +32,13 @@ func SpaceList() []*models.Space {
 		extension := filepath.Ext(filename)
 		if extension == ".json" {
 			name := filename[0 : len(filename)-len(extension)]
-			spaces = append(spaces, SpaceLoad(name))
+			spaces = append(spaces, SpaceLoadFile(name))
 		}
 	}
 	return spaces
 }
 
-func SpaceStore(space *models.Space) {
+func SpaceStoreFile(space *models.Space) {
 	space.UpdatedAt = time.Now()
 
 	raw, err := json.MarshalIndent(space, "", "  ")
@@ -53,14 +53,15 @@ func SpaceStore(space *models.Space) {
 	}
 }
 
-func SpaceDelete(space *models.Space) {
-	err := os.Remove(resolveSpaceFile(space.Label))
+func SpaceDeleteFile(space *models.Space) {
+	file := resolveSpaceFile(space.Label)
+	err := os.Remove(file)
 	if err != nil {
 		log.Fatalf("repository: delete space '%s': %v", space.Label, err)
 	}
 }
 
-func SpaceLoad(label string) *models.Space {
+func SpaceLoadFile(label string) *models.Space {
 	raw, err := ioutil.ReadFile(resolveSpaceFile(label))
 	if err != nil {
 		log.Fatalf("repository: load space '%s': could not read file: %v", label, err)

@@ -7,7 +7,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func createCommand(t *testing.T) *models.Command {
+func createCommand(t *testing.T, space *models.Space) *models.Command {
 	id, _ := uuid.NewV4()
 
 	command := models.Command{
@@ -25,17 +25,36 @@ func createCommand(t *testing.T) *models.Command {
 	return &command
 }
 
-func TestCommandCreation(t *testing.T) {
-	space = createSpace(t)
+func TestCommandCreationDeletion(t *testing.T) {
+	space := createSpace(t)
+	command := createCommand(t, space)
 
-	// command := createCommand(t)
+	reloadCBox()
 
-	// reloadCBox()
+	s, _ := cbox.SpaceFind(space.Label)
 
-	// s := cbox.SpaceFind(space.Label)
-	// c := s.CommandFind(command.Label)
+	if len(space.Entries) != len(s.Entries) {
+		t.Fatal("space after persistance has different amount of commands")
+	}
 
-	// if c == nil {
-	// 	t.Error("could not find command by label")
-	// }
+	c, err := s.CommandFind(command.ID.String())
+	if c == nil || err != nil {
+		t.Errorf("could not find command by ID: %v", err)
+	}
+
+	c, err = s.CommandFind(command.Label)
+	if c == nil || err != nil {
+		t.Errorf("could not find command by label: %v", err)
+	}
+
+	s.CommandDelete(c)
+
+	reloadCBox()
+
+	_, err = s.CommandFind(command.ID.String())
+	if err == nil {
+		if err == nil {
+			t.Error("command still found after deleting it")
+		}
+	}
 }

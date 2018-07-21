@@ -64,7 +64,10 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 		log.Fatalf("edit command: %v", err)
 	}
 
-	command := space.CommandFind(selector.Item)
+	command, err := space.CommandFind(selector.Item)
+	if err != nil {
+		log.Fatalf("edit command: %v", err)
+	}
 
 	fmt.Printf("\n--- Command to edit ---\n")
 	tools.PrintCommand(command, true, false)
@@ -96,7 +99,10 @@ func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
 		log.Fatalf("delete command: %v", err)
 	}
 
-	command := space.CommandFind(selector.Item)
+	command, err := space.CommandFind(selector.Item)
+	if err != nil {
+		log.Fatalf("delete command: %v", err)
+	}
 
 	fmt.Printf("\n--- Command to delete ---\n")
 	tools.PrintCommand(command, true, false)
@@ -121,7 +127,10 @@ func (ctrl *CLIController) CommandView(cmd *cobra.Command, args []string) {
 		log.Fatalf("view command: %v", err)
 	}
 
-	command := space.CommandFind(selector.Item)
+	command, err := space.CommandFind(selector.Item)
+	if err != nil {
+		log.Fatalf("view command: %v", err)
+	}
 
 	tools.PrintCommand(command, true, sourceOnly)
 }

@@ -42,7 +42,11 @@ func (ctrl *CLIController) TagsAdd(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatalf("add tags: %v", err)
 	}
-	command := space.CommandFind(selector.Item)
+
+	command, err := space.CommandFind(selector.Item)
+	if err != nil {
+		log.Fatalf("add tags: %v", err)
+	}
 
 	fmt.Printf("Adding tags to command with label '%s'\n", command.Label)
 
@@ -69,7 +73,11 @@ func (ctrl *CLIController) TagsRemove(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatalf("remove tags: %v", err)
 	}
-	command := space.CommandFind(selector.Item)
+
+	command, err := space.CommandFind(selector.Item)
+	if err != nil {
+		log.Fatalf("remove tags: %v", err)
+	}
 
 	fmt.Printf("Removing tags from command with label '%s'\n", command.Label)
 
@@ -103,7 +111,7 @@ func (ctrl *CLIController) TagsDelete(cmd *cobra.Command, args []string) {
 	fmt.Printf("Deleting tags from space '%s'\n", space.Label)
 
 	for _, cmd := range commands {
-		command := space.CommandFind(cmd.Label)
+		command, _ := space.CommandFind(cmd.Label)
 		command.TagDelete(selector.Item)
 
 		fmt.Printf("\n--- Untagged command ---\n")
