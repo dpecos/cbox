@@ -47,9 +47,7 @@ func (ctrl *CLIController) CloudPublishSpace(cmd *cobra.Command, args []string) 
 		log.Fatalf("cloud: publish space: %v", err)
 	}
 
-	fmt.Printf("--- Space ---\n")
-	tools.PrintSpace(space)
-	fmt.Printf("-----\n\n")
+	tools.PrintSpace("Space", space)
 
 	if console.Confirm("Publish?") {
 		fmt.Printf("Publishing space '%s'...\n", space.Label)

@@ -47,9 +47,7 @@ func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 	}
 	core.PersistCbox(cbox)
 
-	fmt.Printf("\n--- New command ---\n")
-	tools.PrintCommand(command, true, false)
-	fmt.Printf("-----\n\n")
+	tools.PrintCommand("New command", command, true, false)
 
 	console.PrintSuccess("Command stored successfully!")
 }
@@ -72,9 +70,7 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 
 	previousCommandLabel := command.Label
 
-	fmt.Printf("\n--- Command to edit ---\n")
-	tools.PrintCommand(command, true, false)
-	fmt.Printf("-----\n\n")
+	tools.PrintCommand("Command to edit", command, true, false)
 
 	tools.ConsoleEditCommand(command)
 
@@ -85,9 +81,7 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 		err = space.CommandEdit(command, previousCommandLabel)
 	}
 
-	fmt.Printf("\n--- Command after edited values ---\n")
-	tools.PrintCommand(command, true, false)
-	fmt.Printf("-----\n\n")
+	tools.PrintCommand("Command after edition", command, true, false)
 
 	if console.Confirm("Update?") {
 		core.PersistCbox(cbox)
@@ -112,9 +106,7 @@ func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
 		log.Fatalf("delete command: %v", err)
 	}
 
-	fmt.Printf("\n--- Command to delete ---\n")
-	tools.PrintCommand(command, true, false)
-	fmt.Printf("-----\n\n")
+	tools.PrintCommand("Command to delete ", command, true, false)
 
 	if console.Confirm("Are you sure you want to delete this command?") {
 		space.CommandDelete(command)
@@ -140,5 +132,5 @@ func (ctrl *CLIController) CommandView(cmd *cobra.Command, args []string) {
 		log.Fatalf("view command: %v", err)
 	}
 
-	tools.PrintCommand(command, true, sourceOnly)
+	tools.PrintCommand("", command, true, sourceOnly)
 }

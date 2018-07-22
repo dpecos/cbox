@@ -56,9 +56,7 @@ func (ctrl *CLIController) TagsAdd(cmd *cobra.Command, args []string) {
 
 	core.PersistCbox(cbox)
 
-	fmt.Printf("\n--- Tagged command ---\n")
-	tools.PrintCommand(command, true, false)
-	fmt.Printf("-----\n\n")
+	tools.PrintCommand("Tagged command", command, true, false)
 
 	console.PrintSuccess("Command tagged successfully!")
 }
@@ -87,9 +85,7 @@ func (ctrl *CLIController) TagsRemove(cmd *cobra.Command, args []string) {
 
 	core.PersistCbox(cbox)
 
-	fmt.Printf("\n--- Untagged command ---\n")
-	tools.PrintCommand(command, true, false)
-	fmt.Printf("-----\n\n")
+	tools.PrintCommand("Untagged command", command, true, false)
 
 	console.PrintSuccess("Command tag deleted successfully!")
 }
@@ -114,9 +110,7 @@ func (ctrl *CLIController) TagsDelete(cmd *cobra.Command, args []string) {
 		command, _ := space.CommandFind(cmd.Label)
 		command.TagDelete(selector.Item)
 
-		fmt.Printf("\n--- Untagged command ---\n")
-		tools.PrintCommand(command, false, false)
-		fmt.Printf("-----\n\n")
+		tools.PrintCommand("Untagged command", command, false, false)
 	}
 
 	core.PersistCbox(cbox)
