@@ -85,10 +85,5 @@ func (ctrl *CLIController) CloudCommandList(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: list commands: %v", err)
 	}
 
-	for _, command := range commands {
-		tools.PrintCommand(command, viewSnippet, false)
-		if viewSnippet {
-			fmt.Printf("\n------------------\n\n")
-		}
-	}
+	tools.PrintCommandList(commands, viewSnippet, false)
 }

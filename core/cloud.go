@@ -117,14 +117,14 @@ func (cloud *Cloud) PublishSpace(space *models.Space) error {
 	return err
 }
 
-func (cloud *Cloud) CommandList(selector *models.Selector) ([]*models.Command, error) {
+func (cloud *Cloud) CommandList(selector *models.Selector) ([]models.Command, error) {
 
 	response, err := cloud.doRequest("POST", "/v1/commands", selector.String())
 	if err != nil {
 		return nil, err
 	}
 
-	var commands []*models.Command
+	var commands []models.Command
 	json.Unmarshal([]byte(response), &commands)
 
 	return commands, nil

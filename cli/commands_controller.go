@@ -23,12 +23,7 @@ func (ctrl *CLIController) CommandList(cmd *cobra.Command, args []string) {
 
 	commands := space.CommandList(selector.Item)
 
-	for _, command := range commands {
-		tools.PrintCommand(&command, viewSnippet, false)
-		if viewSnippet {
-			fmt.Printf("\n------------------\n\n")
-		}
-	}
+	tools.PrintCommandList(commands, viewSnippet, false)
 }
 
 func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {

@@ -19,6 +19,7 @@ var (
 	dateColor        = console.ColorBoldBlack
 	detailsColor     = console.ColorCyan
 	urlColor         = console.ColorGreen
+	separatorColor   = console.ColorYellow
 )
 
 func PrintCommand(cmd *models.Command, full bool, sourceOnly bool) {
@@ -44,6 +45,15 @@ func PrintCommand(cmd *models.Command, full bool, sourceOnly bool) {
 				fmt.Printf("\n%s\n", urlColor(cmd.URL))
 			}
 			fmt.Printf("\n%s\n", cmd.Code)
+		}
+	}
+}
+
+func PrintCommandList(commands []models.Command, full bool, sourceOnly bool) {
+	for i, command := range commands {
+		PrintCommand(&command, full, sourceOnly)
+		if full && i != len(commands)-1 {
+			fmt.Printf("\n%s\n\n", separatorColor("- - - - - - - - - - - -"))
 		}
 	}
 }
