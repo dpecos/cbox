@@ -15,7 +15,7 @@ var listCmd = &cobra.Command{
 	Use:     "list",
 	Aliases: []string{"l"},
 	Args:    cobra.MaximumNArgs(1),
-	Short:   "List the content of your cbox",
+	Short:   "List the content of a space in your cbox",
 	Long:    tools.Logo,
 	Run:     ctrl.CommandList,
 }
@@ -29,12 +29,12 @@ var addCmd = &cobra.Command{
 }
 
 var editCmd = &cobra.Command{
-	Use:   "edit",
+	Use:     "edit",
 	Aliases: []string{"e"},
-	Args:  cobra.ExactArgs(1),
-	Short: "Edit a command from your cbox",
-	Long:  tools.Logo,
-	Run:   ctrl.CommandEdit,
+	Args:    cobra.ExactArgs(1),
+	Short:   "Edit a command from your cbox",
+	Long:    tools.Logo,
+	Run:     ctrl.CommandEdit,
 }
 
 var deleteCmd = &cobra.Command{

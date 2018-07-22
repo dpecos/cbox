@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"github.com/dpecos/cbox/tools"
 	"github.com/spf13/cobra"
 )
 
@@ -31,12 +32,13 @@ var cloudPublishCmd = &cobra.Command{
 	Run:   ctrl.CloudPublishSpace,
 }
 
-var cloudViewCommandCmd = &cobra.Command{
-	Use:     "view",
-	Aliases: []string{"v"},
+var cloudListCmd = &cobra.Command{
+	Use:     "list",
+	Aliases: []string{"l"},
 	Args:    cobra.ExactArgs(1),
-	Short:   "View one remote command",
-	Run:     ctrl.CloudCommandView,
+	Short:   "List the content of a space from cbox cloud",
+	Long:    tools.Logo,
+	Run:     ctrl.CloudCommandList,
 }
 
 func init() {
@@ -44,5 +46,7 @@ func init() {
 	cloudCmd.AddCommand(cloudLoginCmd)
 	cloudCmd.AddCommand(cloudLogoutCmd)
 	cloudCmd.AddCommand(cloudPublishCmd)
-	cloudCmd.AddCommand(cloudViewCommandCmd)
+	cloudCmd.AddCommand(cloudListCmd)
+
+	cloudListCmd.Flags().BoolVarP(&viewSnippet, "view", "v", false, "Show all details about commands")
 }

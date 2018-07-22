@@ -69,21 +69,26 @@ func (ctrl *CLIController) CloudPublishSpace(cmd *cobra.Command, args []string) 
 	}
 }
 
-func (ctrl *CLIController) CloudCommandView(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) CloudCommandList(cmd *cobra.Command, args []string) {
 	selector, err := models.ParseSelectorForCloudCommand(args[0])
 	if err != nil {
-		log.Fatalf("cloud: view command: %v", err)
+		log.Fatalf("cloud: list commands: %v", err)
 	}
 
 	cloud, err := core.CloudClient()
 	if err != nil {
-		log.Fatalf("cloud: view command: %v", err)
+		log.Fatalf("cloud: list commands: %v", err)
 	}
 
-	command, err := cloud.CommandView(selector)
+	commands, err := cloud.CommandList(selector)
 	if err != nil {
-		log.Fatalf("cloud: view command: %v", err)
+		log.Fatalf("cloud: list commands: %v", err)
 	}
 
-	tools.PrintCommand(command, true, false)
+	for _, command := range commands {
+		tools.PrintCommand(command, viewSnippet, false)
+		if viewSnippet {
+			fmt.Printf("\n------------------\n\n")
+		}
+	}
 }
