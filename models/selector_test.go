@@ -131,3 +131,33 @@ func TestInvalidCharacter3InSpaceSelector(t *testing.T) {
 		t.Error("Expected error was not created")
 	}
 }
+
+func TestStringWithUser(t *testing.T) {
+	sel := "item@user:space"
+	s, _ := ParseSelectorMandatoryItem(sel)
+	str := s.String()
+
+	if sel != str {
+		t.Errorf("Generated string does not match expected value: expected = '%s', got = '%s'", sel, str)
+	}
+}
+
+func TestStringWithoutUser(t *testing.T) {
+	sel := "item@space"
+	s, _ := ParseSelectorMandatoryItem(sel)
+	str := s.String()
+
+	if sel != str {
+		t.Errorf("Generated string does not match expected value: expected = '%s', got = '%s'", sel, str)
+	}
+}
+
+func TestStringWithoutItem(t *testing.T) {
+	sel := "@space"
+	s, _ := ParseSelectorMandatorySpace(sel)
+	str := s.String()
+
+	if sel != str {
+		t.Errorf("Generated string does not match expected value: expected = '%s', got = '%s'", sel, str)
+	}
+}

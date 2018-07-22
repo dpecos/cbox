@@ -13,6 +13,16 @@ type Selector struct {
 	Space        string
 }
 
+func (selector *Selector) String() string {
+	if selector == nil {
+		return ""
+	}
+	if selector.User != "" {
+		return fmt.Sprintf("%s@%s:%s", selector.Item, selector.User, selector.Space)
+	}
+	return fmt.Sprintf("%s@%s", selector.Item, selector.Space)
+}
+
 const DEFAULT_SPACE_NAME = "default"
 
 func ParseSelector(str string) (*Selector, error) {
@@ -27,12 +37,25 @@ func ParseSelector(str string) (*Selector, error) {
 	return selector, err
 }
 
+func check(selector *Selector, str string, item bool, user bool, space bool) error {
+	if item && selector.Item == "" {
+		return fmt.Errorf("item not specified in the selector: '%s'", str)
+	}
+	if user && selector.User == "" {
+		return fmt.Errorf("user not specified in the selector: '%s'", str)
+	}
+	if space && selector.Space == "" {
+		return fmt.Errorf("space not specified in the selector: '%s'", str)
+	}
+	return nil
+}
+
 func ParseSelectorMandatorySpace(str string) (*Selector, error) {
 	selector, err := parseSelector(str)
 
 	if err == nil {
-		if selector.Space == "" {
-			return nil, fmt.Errorf("space not specified in the selector: '%s'", str)
+		if err := check(selector, str, false, false, true); err != nil {
+			return nil, err
 		}
 	}
 
@@ -43,8 +66,20 @@ func ParseSelectorMandatoryItem(str string) (*Selector, error) {
 	selector, err := ParseSelector(str)
 
 	if err == nil {
-		if selector.Item == "" {
-			return nil, fmt.Errorf("item not specified in the selector: '%s'", str)
+		if err := check(selector, str, true, false, false); err != nil {
+			return nil, err
+		}
+	}
+
+	return selector, err
+}
+
+func ParseSelectorForCloudCommand(str string) (*Selector, error) {
+	selector, err := ParseSelector(str)
+
+	if err == nil {
+		if err := check(selector, str, true, true, true); err != nil {
+			return nil, err
 		}
 	}
 
@@ -53,7 +88,7 @@ func ParseSelectorMandatoryItem(str string) (*Selector, error) {
 
 func parseSelector(str string) (*Selector, error) {
 
-	selectorRegexp, err := regexp.Compile("^(?P<item>[a-z0-9-]+)?(@(?P<organization>[a-z0-9-]+/)?(?P<user>[a-z0-9-]+:)?(?P<space>[a-z0-9-]+))?$")
+	selectorRegexp, err := regexp.Compile("^(?P<item>[a-z0-9-]+)?(@(?P<organization>[a-z0-9-]+/)?((?P<user>[a-z0-9-]+):)?(?P<space>[a-z0-9-]+))?$")
 	if err != nil {
 		log.Fatalf("parse selector: could not compile selector regexp: %v", err)
 	}
