@@ -22,7 +22,7 @@ func (ctrl *CLIController) CloudLogin(cmd *cobra.Command, args []string) {
 	_, _, name, err := core.CloudLogin(jwt)
 	if err != nil {
 		console.PrintError("Error trying to parse JWT token. Try to login again")
-		log.Fatalf("cloud: %v", err)
+		log.Fatalf("cloud: login: %v", err)
 	}
 
 	console.PrintSuccess("Hi " + name + "!")
@@ -37,14 +37,14 @@ func (ctrl *CLIController) CloudLogout(cmd *cobra.Command, args []string) {
 func (ctrl *CLIController) CloudPublishSpace(cmd *cobra.Command, args []string) {
 	selector, err := models.ParseSelectorMandatorySpace(args[0])
 	if err != nil {
-		log.Fatalf("publish space: %v", err)
+		log.Fatalf("cloud: publish space: %v", err)
 	}
 
 	cbox := core.LoadCbox("")
 
 	space, err := cbox.SpaceFind(selector.Space)
 	if err != nil {
-		log.Fatalf("cloud: %v", err)
+		log.Fatalf("cloud: publish space: %v", err)
 	}
 
 	fmt.Printf("--- Space ---\n")
@@ -56,15 +56,34 @@ func (ctrl *CLIController) CloudPublishSpace(cmd *cobra.Command, args []string) 
 
 		cloud, err := core.CloudClient()
 		if err != nil {
-			log.Fatalf("cloud: %v", err)
+			log.Fatalf("cloud: publish space: %v", err)
 		}
 		err = cloud.PublishSpace(space)
 		if err != nil {
-			log.Fatalf("cloud: %v", err)
+			log.Fatalf("cloud: publish space: %v", err)
 		}
 
 		console.PrintSuccess("Space published successfully!")
 	} else {
 		console.PrintError("Publish cancelled")
 	}
+}
+
+func (ctrl *CLIController) CloudCommandView(cmd *cobra.Command, args []string) {
+	selector, err := models.ParseSelectorForCloudCommand(args[0])
+	if err != nil {
+		log.Fatalf("cloud: view command: %v", err)
+	}
+
+	cloud, err := core.CloudClient()
+	if err != nil {
+		log.Fatalf("cloud: view command: %v", err)
+	}
+
+	command, err := cloud.CommandView(selector)
+	if err != nil {
+		log.Fatalf("cloud: view command: %v", err)
+	}
+
+	tools.PrintCommand(command, true, false)
 }

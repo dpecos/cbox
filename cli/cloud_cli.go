@@ -31,9 +31,18 @@ var cloudPublishCmd = &cobra.Command{
 	Run:   ctrl.CloudPublishSpace,
 }
 
+var cloudViewCommandCmd = &cobra.Command{
+	Use:     "view",
+	Aliases: []string{"v"},
+	Args:    cobra.ExactArgs(1),
+	Short:   "View one remote command",
+	Run:     ctrl.CloudCommandView,
+}
+
 func init() {
 	rootCmd.AddCommand(cloudCmd)
 	cloudCmd.AddCommand(cloudLoginCmd)
 	cloudCmd.AddCommand(cloudLogoutCmd)
 	cloudCmd.AddCommand(cloudPublishCmd)
+	cloudCmd.AddCommand(cloudViewCommandCmd)
 }

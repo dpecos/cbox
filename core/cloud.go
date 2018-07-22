@@ -116,3 +116,16 @@ func (cloud *Cloud) PublishSpace(space *models.Space) error {
 
 	return err
 }
+
+func (cloud *Cloud) CommandView(selector *models.Selector) (*models.Command, error) {
+
+	response, err := cloud.doRequest("POST", "/v1/commands", selector.String())
+	if err != nil {
+		return nil, err
+	}
+
+	var command models.Command
+	json.Unmarshal([]byte(response), &command)
+
+	return &command, nil
+}
