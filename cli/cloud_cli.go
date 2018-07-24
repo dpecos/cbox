@@ -41,12 +41,21 @@ var cloudListCmd = &cobra.Command{
 	Run:     ctrl.CloudCommandList,
 }
 
+var cloudCopyCmd = &cobra.Command{
+	Use:   "copy",
+	Args:  cobra.ExactArgs(2),
+	Short: "Copy a remote command into a local space",
+	Long:  tools.Logo,
+	Run:   ctrl.CloudCommandCopy,
+}
+
 func init() {
 	rootCmd.AddCommand(cloudCmd)
 	cloudCmd.AddCommand(cloudLoginCmd)
 	cloudCmd.AddCommand(cloudLogoutCmd)
 	cloudCmd.AddCommand(cloudPublishCmd)
 	cloudCmd.AddCommand(cloudListCmd)
+	cloudCmd.AddCommand(cloudCopyCmd)
 
 	cloudListCmd.Flags().BoolVarP(&viewSnippet, "view", "v", false, "Show all details about commands")
 }

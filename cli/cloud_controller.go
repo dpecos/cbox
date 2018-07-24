@@ -70,12 +70,12 @@ func (ctrl *CLIController) CloudPublishSpace(cmd *cobra.Command, args []string) 
 func (ctrl *CLIController) CloudCommandList(cmd *cobra.Command, args []string) {
 	selector, err := models.ParseSelectorForCloudCommand(args[0])
 	if err != nil {
-		log.Fatalf("cloud: list commands: %v", err)
+		log.Fatalf("cloud: list commands: invalid cloud selector: %v", err)
 	}
 
 	cloud, err := core.CloudClient()
 	if err != nil {
-		log.Fatalf("cloud: list commands: %v", err)
+		log.Fatalf("cloud: list commands: cloud client: %v", err)
 	}
 
 	commands, err := cloud.CommandList(selector)
@@ -84,4 +84,62 @@ func (ctrl *CLIController) CloudCommandList(cmd *cobra.Command, args []string) {
 	}
 
 	tools.PrintCommandList(commands, viewSnippet, false)
+}
+
+func (ctrl *CLIController) CloudCommandCopy(cmd *cobra.Command, args []string) {
+	cmdSelector, err := models.ParseSelectorForCloudCommand(args[0])
+	if err != nil {
+		log.Fatalf("cloud: copy command: invalid cloud selector: %v", err)
+	}
+
+	spaceSelector, err := models.ParseSelectorMandatorySpace(args[1])
+	if err != nil {
+		log.Fatalf("cloud: copy command: invalid space selector: %v", err)
+	}
+
+	cbox := core.LoadCbox("")
+
+	space, err := cbox.SpaceFind(spaceSelector.Space)
+	if err != nil {
+		log.Fatalf("cloud: copy command: local space: %v", err)
+	}
+
+	cloud, err := core.CloudClient()
+	if err != nil {
+		log.Fatalf("cloud: copy command: cloud client: %v", err)
+	}
+
+	commands, err := cloud.CommandList(cmdSelector)
+	if err != nil {
+		log.Fatalf("cloud: copy command: retrieving matches: %v", err)
+	}
+
+	if len(commands) == 0 {
+		console.PrintError(fmt.Sprintf("Command '%s' not found", cmdSelector))
+	}
+
+	tools.PrintCommandList(commands, true, false)
+	fmt.Println()
+
+	if console.Confirm(fmt.Sprintf("Copy these commands into %s?", spaceSelector)) {
+
+		failures := false
+		for _, command := range commands {
+			err = space.CommandAdd(&command)
+			if err != nil {
+				failures = true
+				log.Printf("cloud: copy command: %v", err)
+			}
+		}
+
+		core.PersistCbox(cbox)
+
+		if failures {
+			console.PrintError("\nSome commands could not be stored")
+		} else {
+			console.PrintSuccess("Commands copied successfully!")
+		}
+	} else {
+		console.PrintError("Copy cancelled")
+	}
 }

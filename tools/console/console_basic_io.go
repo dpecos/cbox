@@ -184,9 +184,9 @@ func Confirm(label string) bool {
 }
 
 func PrintError(msg string) {
-	fmt.Printf("%s\n\n", ColorRed(msg))
+	fmt.Printf("%s\n", ColorRed(msg))
 }
 
 func PrintSuccess(msg string) {
-	fmt.Printf("%s\n\n", ColorGreen(msg))
+	fmt.Printf("%s\n", ColorGreen(msg))
 }

@@ -109,7 +109,7 @@ func (cloud *Cloud) PublishSpace(space *models.Space) error {
 
 	jsonSpace, err := json.Marshal(space)
 	if err != nil {
-		return fmt.Errorf("cloud: publish space: could not stringify object: %v", err)
+		return fmt.Errorf("could not stringify object: %v", err)
 	}
 
 	_, err = cloud.doRequest("POST", "/v1/spaces", string(jsonSpace))
@@ -125,7 +125,10 @@ func (cloud *Cloud) CommandList(selector *models.Selector) ([]models.Command, er
 	}
 
 	var commands []models.Command
-	json.Unmarshal([]byte(response), &commands)
+	err = json.Unmarshal([]byte(response), &commands)
+	if err != nil {
+		return nil, fmt.Errorf("could not parse response: %v", err)
+	}
 
 	return commands, nil
 }
