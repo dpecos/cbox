@@ -23,22 +23,7 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
-}
-
-func initConfig() {
-	cboxPath := core.CheckCboxDir("")
-
-	viper.AddConfigPath(cboxPath)
-	viper.SetConfigName("config")
-
-	if err := viper.ReadInConfig(); err != nil {
-		log.Fatal(err)
-	}
-
-	defaultSettings()
-}
-
-func defaultSettings() {
-	viper.SetDefault("cbox.default-space", "default")
+	cobra.OnInitialize(func() {
+		core.InitCBox("")
+	})
 }

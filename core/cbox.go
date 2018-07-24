@@ -8,6 +8,7 @@ import (
 	"github.com/dpecos/cbox/tools"
 	homedir "github.com/mitchellh/go-homedir"
 	uuid "github.com/satori/go.uuid"
+	"github.com/spf13/viper"
 )
 
 const CBOX_PATH = ".cbox"
@@ -73,4 +74,21 @@ func PersistCbox(cbox *models.CBox) {
 	for _, space := range cbox.Spaces {
 		SpaceStoreFile(&space)
 	}
+}
+
+func InitCBox(path string) {
+	cboxPath := CheckCboxDir(path)
+
+	viper.AddConfigPath(cboxPath)
+	viper.SetConfigName("config")
+
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatal(err)
+	}
+
+	defaultSettings()
+}
+
+func defaultSettings() {
+	viper.SetDefault("cbox.default-space", "default")
 }

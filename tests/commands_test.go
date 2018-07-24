@@ -32,6 +32,10 @@ func TestCommandCreationDeletion(t *testing.T) {
 
 	s, _ := cbox.SpaceFind(space.Label)
 
+	if s == nil {
+		t.Fatal("could not find space")
+	}
+
 	if len(space.Entries) != len(s.Entries) {
 		t.Fatal("space after persistance has different amount of commands")
 	}
