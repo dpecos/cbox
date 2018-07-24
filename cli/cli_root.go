@@ -35,4 +35,10 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatal(err)
 	}
+
+	defaultSettings()
+}
+
+func defaultSettings() {
+	viper.SetDefault("cbox.default-space", "default")
 }

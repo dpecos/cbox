@@ -82,3 +82,7 @@ func PrintSpace(header string, space *models.Space) {
 		fmt.Printf("%s\n\n", separatorColor("- - - - - - - - - - - -"))
 	}
 }
+
+func PrintSetting(config string, value string) {
+	fmt.Printf("%s -> %s\n", console.ColorGreen(config), console.ColorYellow(value))
+}

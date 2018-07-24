@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+
+	"github.com/spf13/viper"
 )
 
 type Selector struct {
@@ -23,14 +25,12 @@ func (selector *Selector) String() string {
 	return fmt.Sprintf("%s@%s", selector.Item, selector.Space)
 }
 
-const DEFAULT_SPACE_NAME = "default"
-
 func ParseSelector(str string) (*Selector, error) {
 	selector, err := parseSelector(str)
 
 	if err == nil {
 		if selector.Space == "" {
-			selector.Space = DEFAULT_SPACE_NAME
+			selector.Space = viper.GetString("cbox.default-space")
 		}
 	}
 
