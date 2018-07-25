@@ -118,7 +118,7 @@ func (ctrl *CLIController) CloudCommandCopy(cmd *cobra.Command, args []string) {
 		console.PrintError(fmt.Sprintf("Command '%s' not found", cmdSelector))
 	}
 
-	tools.PrintCommandList(commands, true, false)
+	tools.PrintCommandList(commands, false, false)
 	fmt.Println()
 
 	if console.Confirm(fmt.Sprintf("Copy these commands into %s?", spaceSelector)) {
