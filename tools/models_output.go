@@ -10,16 +10,17 @@ import (
 )
 
 var (
-	spaceIDColor     = console.ColorBoldBlack
-	spaceLabelColor  = console.ColorBlue
-	idColor          = console.ColorBoldBlack
-	labelColor       = console.ColorBlue
+	// spaceIDColor    = console.ColorBoldBlack
+	spaceLabelColor = console.ColorBlue
+	// idColor          = console.ColorBoldBlack
+	labelColor       = console.ColorBoldBlue
 	tagsColor        = console.ColorRed
 	descriptionColor = fmt.Sprintf
 	dateColor        = console.ColorBoldBlack
 	detailsColor     = console.ColorCyan
 	urlColor         = console.ColorGreen
 	separatorColor   = console.ColorYellow
+	starColor        = console.ColorBoldBlack
 )
 
 func PrintCommand(header string, cmd *models.Command, full bool, sourceOnly bool) {
@@ -33,15 +34,17 @@ func PrintCommand(header string, cmd *models.Command, full bool, sourceOnly bool
 		}
 
 		if !full {
-			fmt.Printf("* ")
+			fmt.Printf(starColor("* "))
 		}
 		t := cmd.CreatedAt.UTC().In(time.Local)
+
 		if len(cmd.Tags) != 0 {
 			tags := strings.Join(cmd.Tags, ", ")
-			fmt.Printf("%s - %s - %s (%s) %s\n", idColor(cmd.ID.String()), labelColor(cmd.Label), descriptionColor(cmd.Description), tagsColor(tags), dateColor(DateToString(t)))
+			fmt.Printf("%s - %s (%s) %s\n", labelColor(cmd.Label), descriptionColor(cmd.Description), tagsColor(tags), dateColor(DateToString(t)))
 		} else {
-			fmt.Printf("%s - %s - %s %s\n", idColor(cmd.ID.String()), labelColor(cmd.Label), descriptionColor(cmd.Description), dateColor(DateToString(t)))
+			fmt.Printf("%s - %s %s\n", labelColor(cmd.Label), descriptionColor(cmd.Description), dateColor(DateToString(t)))
 		}
+
 		if full {
 			if cmd.Details != "" {
 				fmt.Printf("\n%s\n", detailsColor(cmd.Details))
@@ -76,7 +79,7 @@ func PrintSpace(header string, space *models.Space) {
 		fmt.Printf(separatorColor("- - - %s - - -\n"), header)
 	}
 
-	fmt.Printf("%s - %s - %s\n", spaceIDColor(space.ID.String()), spaceLabelColor(space.Label), descriptionColor(space.Description))
+	fmt.Printf("%s - %s\n", spaceLabelColor(space.Label), descriptionColor(space.Description))
 
 	if header != "" {
 		fmt.Printf("%s\n\n", separatorColor("- - - - - - - - - - - -"))
