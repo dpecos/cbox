@@ -1,6 +1,6 @@
 BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 COMMIT=$(shell git rev-parse HEAD)
-TAG=$(shell git describe --tags)
+TAG=$(shell git describe --tags 2> /dev/null)
 BUILD=$(shell date +%FT%T%z)
 
 build-dev: version
