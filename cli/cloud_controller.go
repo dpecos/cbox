@@ -14,7 +14,7 @@ import (
 
 func (ctrl *CLIController) CloudLogin(cmd *cobra.Command, args []string) {
 	fmt.Println(tools.Logo)
-	fmt.Printf("Open this URL in a browser and follow the authentication process: \n\n%s\n\n", fmt.Sprintf("%s/auth/", core.SERVER_URL_DEV))
+	fmt.Printf("Open this URL in a browser and follow the authentication process: \n\n%s\n\n", fmt.Sprintf("%s/auth/", core.CloudURL()))
 
 	jwt := console.ReadString("JWT Token")
 	fmt.Println()

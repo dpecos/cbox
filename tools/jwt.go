@@ -7,20 +7,12 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
-const (
-	SERVER_KEY_DEV = `-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3PqZEDzJ2E8le5aFs8Tw
-Um0tcUrc+614d9fseI6pmVOTKcNWTgktNX9rTz/B4JTCws3/8erqMVkwuz1vhH6S
-iY+BUyn24g44/szZtVc0RgZVqLnZ87nsWvL2C+M1L4AiIgAwyElOFY5MCuknXMxD
-oYOmobEYbJry4+ZkraUUzCGgWIDoYK8j/JzG63mw6QUZPO9fKSgUPDyjh6NAOq2c
-+4WcdG2Ss0mseYeUXjUW0S2IZTXkYcfqJyXjDgCNSUGUzA5+NwKyjl5Sijr55ULD
-wUMqJYfjFEGN4HlIqA80PHpQqjiWtAekZNRbfu0yhUW1s1ZUQchw1R7LF28aq5Bo
-8wIDAQAB
------END PUBLIC KEY-----`
+var (
+	CloudJWTKey string
 )
 
 func VerifyJWT(jwtToken string) (string, string, string, error) {
-	publicKey, err := jwt.ParseRSAPublicKeyFromPEM([]byte(SERVER_KEY_DEV))
+	publicKey, err := jwt.ParseRSAPublicKeyFromPEM([]byte(CloudJWTKey))
 	if err != nil {
 		return "", "", "", err
 	}

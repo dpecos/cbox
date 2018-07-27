@@ -9,7 +9,7 @@ import (
 
 func main() {
 	// log.SetPrefix("\x1b[31;1mcbox error: ")
-	log.SetPrefix(console.ColorBgBoldRed("\nError:") + " ")
+	log.SetPrefix(console.ColorBoldRed("\nError:") + " ")
 	log.SetFlags(0)
 
 	cli.Execute()

@@ -16,7 +16,6 @@ import (
 )
 
 const (
-	SERVER_URL_DEV      = "https://api.dev.cbox.dplabs.io"
 	SETTINGS_USER_ID    = "cloud.auth.user.id"
 	SETTINGS_USER_LOGIN = "cloud.auth.user.login"
 	SETTINGS_USER_NAME  = "cloud.auth.user.name"
@@ -56,7 +55,7 @@ func CloudClient() (*Cloud, error) {
 		return nil, fmt.Errorf("cloud: user not authenticated")
 	}
 
-	url, err := url.Parse(SERVER_URL_DEV)
+	url, err := url.Parse(CloudURL())
 	if err != nil {
 		return nil, fmt.Errorf("cloud: could not parse server's URL: %v", err)
 	}

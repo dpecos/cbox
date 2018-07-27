@@ -1,11 +1,22 @@
+BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 COMMIT=$(shell git rev-parse HEAD)
+TAG=$(shell git describe --tags)
 BUILD=$(shell date +%FT%T%z)
 
-build:
-	go build -ldflags "-X github.com/dpecos/cbox/cli.cboxVersion=$(COMMIT) -X github.com/dpecos/cbox/cli.cboxBuild=$(BUILD)"
+build-dev: version
+	go build -ldflags "-X github.com/dpecos/cbox/core.Version=$(VERSION) -X github.com/dpecos/cbox/core.Build=$(BUILD)"
 
-install:
-	go install -ldflags "-X github.com/dpecos/cbox/cli.cboxBuild=$(BUILD)"
+build-prod: version
+	go build -ldflags "-X github.com/dpecos/cbox/core.Version=$(VERSION) -X github.com/dpecos/cbox/core.Build=$(BUILD) -X github.com/dpecos/cbox/core.Env=prod"
+
+install-dev: version
+	go install -ldflags "-X github.com/dpecos/cbox/core.Version=$(VERSION) -X github.com/dpecos/cbox/core.Build=$(BUILD)"
+
+install-prod: version
+	go install -ldflags "-X github.com/dpecos/cbox/core.Version=$(VERSION) -X github.com/dpecos/cbox/core.Build=$(BUILD) -X github.com/dpecos/cbox/core.Env=prod"
+
+version:
+  VERSION := $(if $(TAG),$(TAG),$(BRANCH)-$(COMMIT))
 
 test:
 	go test ./...

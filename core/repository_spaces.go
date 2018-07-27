@@ -12,9 +12,11 @@ import (
 	"github.com/dpecos/cbox/models"
 )
 
-const SPACES_PATH = "spaces"
-const DEFAULT_SPACE_ID = "default"
-const DEFAULT_SPACE_DESCRIPTION = "Default space to store commands"
+const (
+	SPACES_PATH               = "spaces"
+	DEFAULT_SPACE_ID          = "default"
+	DEFAULT_SPACE_DESCRIPTION = "Default space to store commands"
+)
 
 func resolveSpaceFile(spaceName string) string {
 	spacePath := path.Join(SPACES_PATH, spaceName+".json")
