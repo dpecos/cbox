@@ -72,18 +72,26 @@ func CloudClient() (*Cloud, error) {
 	return &cloud, nil
 }
 
-func (cloud *Cloud) doRequest(method string, path string, body string) (string, error) {
+func (cloud *Cloud) doRequest(method string, path string, query map[string]string, body string) (string, error) {
 	rel := &url.URL{Path: path}
-	u := cloud.baseURL.ResolveReference(rel)
+	url := cloud.baseURL.ResolveReference(rel)
 
 	var jsonStr = []byte(body)
 
-	req, err := http.NewRequest(method, u.String(), bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest(method, url.String(), bytes.NewBuffer(jsonStr))
 	if err != nil {
 		return "", err
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Authorization", "Bearer "+cloud.token)
+
+	if len(query) != 0 {
+		q := req.URL.Query()
+		for param, value := range query {
+			q.Add(param, value)
+		}
+		req.URL.RawQuery = q.Encode()
+	}
 
 	resp, err := cloud.httpClient.Do(req)
 	if err != nil {
@@ -104,21 +112,43 @@ func (cloud *Cloud) doRequest(method string, path string, body string) (string, 
 	return "", fmt.Errorf("rest: request failed with '%s' (code: %d):\n%s", resp.Status, resp.StatusCode, console.ColorRed(bodyString))
 }
 
-func (cloud *Cloud) PublishSpace(space *models.Space) error {
+func (cloud *Cloud) SpacePublish(space *models.Space) error {
 
 	jsonSpace, err := json.Marshal(space)
 	if err != nil {
 		return fmt.Errorf("could not stringify object: %v", err)
 	}
 
-	_, err = cloud.doRequest("POST", "/v1/spaces", string(jsonSpace))
+	_, err = cloud.doRequest("POST", "/v1/spaces", nil, string(jsonSpace))
 
 	return err
 }
 
+func (cloud *Cloud) SpaceClone(selector *models.Selector) (*models.Space, error) {
+
+	query := make(map[string]string)
+	query["selector"] = selector.String()
+
+	response, err := cloud.doRequest("GET", "/v1/spaces", query, "")
+	if err != nil {
+		return nil, err
+	}
+
+	var space models.Space
+	err = json.Unmarshal([]byte(response), &space)
+	if err != nil {
+		return nil, fmt.Errorf("could not parse response: %v", err)
+	}
+
+	return &space, err
+}
+
 func (cloud *Cloud) CommandList(selector *models.Selector) ([]models.Command, error) {
 
-	response, err := cloud.doRequest("POST", "/v1/commands", selector.String())
+	query := make(map[string]string)
+	query["selector"] = selector.String()
+
+	response, err := cloud.doRequest("GET", "/v1/commands", query, "")
 	if err != nil {
 		return nil, err
 	}

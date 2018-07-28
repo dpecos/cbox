@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/dpecos/cbox/core"
 	"github.com/dpecos/cbox/models"
@@ -34,7 +35,7 @@ func (ctrl *CLIController) CloudLogout(cmd *cobra.Command, args []string) {
 	console.PrintSuccess("Successfully logged out from cbox cloud. See you back soon!")
 }
 
-func (ctrl *CLIController) CloudPublishSpace(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) {
 	selector, err := models.ParseSelectorMandatorySpace(args[0])
 	if err != nil {
 		log.Fatalf("cloud: publish space: %v", err)
@@ -56,7 +57,7 @@ func (ctrl *CLIController) CloudPublishSpace(cmd *cobra.Command, args []string) 
 		if err != nil {
 			log.Fatalf("cloud: publish space: %v", err)
 		}
-		err = cloud.PublishSpace(space)
+		err = cloud.SpacePublish(space)
 		if err != nil {
 			log.Fatalf("cloud: publish space: %v", err)
 		}
@@ -64,6 +65,41 @@ func (ctrl *CLIController) CloudPublishSpace(cmd *cobra.Command, args []string) 
 		console.PrintSuccess("Space published successfully!")
 	} else {
 		console.PrintError("Publish cancelled")
+	}
+}
+
+func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
+	selector, err := models.ParseSelectorForCloudCommand(args[0])
+	if err != nil {
+		log.Fatalf("cloud: clone space: invalid cloud selector: %v", err)
+	}
+
+	cloud, err := core.CloudClient()
+	if err != nil {
+		log.Fatalf("cloud: clone space: cloud client: %v", err)
+	}
+
+	space, err := cloud.SpaceClone(selector)
+	if err != nil {
+		log.Fatalf("cloud: clone space: %v", err)
+	}
+
+	tools.PrintSpace("Space to clone", space)
+
+	if console.Confirm("Clone?") {
+		cbox := core.LoadCbox("")
+		err := cbox.SpaceAdd(space)
+		for err != nil {
+			console.PrintError("Space already found in your cbox. Try a different one")
+			space.Label = strings.ToLower(console.ReadString("Label"))
+			err = cbox.SpaceAdd(space)
+		}
+
+		core.PersistCbox(cbox)
+
+		console.PrintSuccess("Space cloned successfully!")
+	} else {
+		console.PrintError("Clone cancelled")
 	}
 }
 
