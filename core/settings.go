@@ -3,6 +3,8 @@ package core
 import (
 	"fmt"
 
+	"github.com/dpecos/cbox/tools/console"
+
 	"github.com/dpecos/cbox/tools"
 )
 
@@ -42,6 +44,9 @@ func CloudURL() string {
 
 func init() {
 	if Env == "dev" {
+		fmt.Println()
+		fmt.Println(console.ColorBgRed("  !!! You are using a DEV version of cbox !!!   "))
+		fmt.Println()
 		tools.CloudJWTKey = cloudJWTDev
 	} else {
 		tools.CloudJWTKey = cloudJWTProd
