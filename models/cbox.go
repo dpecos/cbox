@@ -64,10 +64,10 @@ func (cbox *CBox) SpaceFind(spaceLocator string) (*Space, error) {
 	return &cbox.Spaces[pos], nil
 }
 
-func (cbox *CBox) SpaceAdd(space *Space) error {
+func (cbox *CBox) SpaceCreate(space *Space) error {
 	s, err := cbox.SpaceFind(space.Label)
 	if err == nil && s != nil {
-		return fmt.Errorf("space add: space with label '%s' already exists", space.Label)
+		return fmt.Errorf("space create: space with label '%s' already exists", space.Label)
 	}
 	if space.Entries == nil {
 		space.Entries = []Command{}
@@ -81,10 +81,10 @@ func (cbox *CBox) SpaceAdd(space *Space) error {
 	return nil
 }
 
-func (cbox *CBox) SpaceDelete(space *Space) error {
+func (cbox *CBox) SpaceDestroy(space *Space) error {
 	pos, err := cbox.spaceFindPositionByID(space.ID)
 	if err != nil {
-		return fmt.Errorf("space delete: could not found space with ID '%s'", space.ID)
+		return fmt.Errorf("space destroy: could not found space with ID '%s'", space.ID)
 	}
 
 	cbox.Spaces = append(cbox.Spaces[:pos], cbox.Spaces[pos+1:]...)

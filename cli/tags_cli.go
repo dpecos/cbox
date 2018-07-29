@@ -13,23 +13,6 @@ var tagsCmd = &cobra.Command{
 	Run:   ctrl.TagsList,
 }
 
-var tagCmd = &cobra.Command{
-	Use:     "tag",
-	Aliases: []string{"t"},
-	Args:    cobra.MinimumNArgs(2),
-	Short:   "Add tags to a command",
-	Long:    tools.Logo,
-	Run:     ctrl.TagsAdd,
-}
-
-var tagRemoveCmd = &cobra.Command{
-	Use:   "remove",
-	Args:  cobra.MinimumNArgs(2),
-	Short: "Removes tags from a command",
-	Long:  tools.Logo,
-	Run:   ctrl.TagsRemove,
-}
-
 var tagsDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Args:  cobra.ExactArgs(1),
@@ -41,7 +24,4 @@ var tagsDeleteCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(tagsCmd)
 	tagsCmd.AddCommand(tagsDeleteCmd)
-
-	rootCmd.AddCommand(tagCmd)
-	tagCmd.AddCommand(tagRemoveCmd)
 }

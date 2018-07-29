@@ -26,7 +26,7 @@ func TestSpaceCreationDeletion(t *testing.T) {
 		t.Errorf("could not find space by label: %v", err)
 	}
 
-	err = cbox.SpaceDelete(space)
+	err = cbox.SpaceDestroy(space)
 	if err != nil {
 		t.Error(err)
 	}
@@ -53,7 +53,7 @@ func TestSpaceLabelUniquenessOnCreation(t *testing.T) {
 	}
 	s2.ID = id
 
-	err := cbox.SpaceAdd(&s2)
+	err := cbox.SpaceCreate(&s2)
 	if err == nil {
 		t.Fatalf("space labels have to be unique")
 	}
@@ -70,7 +70,7 @@ func TestDeleteSpace(t *testing.T) {
 
 	expected := []string{"default", s1.Label, s3.Label}
 
-	cbox.SpaceDelete(s2)
+	cbox.SpaceDestroy(s2)
 	core.SpaceDeleteFile(s2)
 
 	reloadCBox()

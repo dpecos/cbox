@@ -13,12 +13,12 @@ var spacesCmd = &cobra.Command{
 	Run:   ctrl.SpacesList,
 }
 
-var spacesAddCmd = &cobra.Command{
-	Use:   "add",
+var spacesCreateCmd = &cobra.Command{
+	Use:   "create",
 	Args:  cobra.ExactArgs(0),
-	Short: "Add a new space to your cbox",
+	Short: "Creates a new space to your cbox",
 	Long:  tools.Logo,
-	Run:   ctrl.SpacesAdd,
+	Run:   ctrl.SpacesCreate,
 }
 
 var spacesEditCmd = &cobra.Command{
@@ -29,17 +29,17 @@ var spacesEditCmd = &cobra.Command{
 	Run:   ctrl.SpacesEdit,
 }
 
-var spacesDeleteCmd = &cobra.Command{
-	Use:   "delete",
+var spacesDestroyCmd = &cobra.Command{
+	Use:   "destroy",
 	Args:  cobra.ExactArgs(1),
-	Short: "Delete a space from your cbox",
+	Short: "Destroys a space from your cbox",
 	Long:  tools.Logo,
-	Run:   ctrl.SpacesDelete,
+	Run:   ctrl.SpacesDestroy,
 }
 
 func init() {
 	rootCmd.AddCommand(spacesCmd)
-	spacesCmd.AddCommand(spacesAddCmd)
+	spacesCmd.AddCommand(spacesCreateCmd)
 	spacesCmd.AddCommand(spacesEditCmd)
-	spacesCmd.AddCommand(spacesDeleteCmd)
+	spacesCmd.AddCommand(spacesDestroyCmd)
 }

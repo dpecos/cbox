@@ -20,18 +20,18 @@ func (ctrl *CLIController) SpacesList(cmd *cobra.Command, args []string) {
 	}
 }
 
-func (ctrl *CLIController) SpacesAdd(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) SpacesCreate(cmd *cobra.Command, args []string) {
 
 	cbox := core.LoadCbox("")
 
 	fmt.Println("Creating new space")
 	space := tools.ConsoleReadSpace()
 
-	err := cbox.SpaceAdd(space)
+	err := cbox.SpaceCreate(space)
 	for err != nil {
 		console.PrintError("Space already found in your cbox. Try a different one")
 		space.Label = strings.ToLower(console.ReadString("Label"))
-		err = cbox.SpaceAdd(space)
+		err = cbox.SpaceCreate(space)
 	}
 
 	core.PersistCbox(cbox)
@@ -84,36 +84,36 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 	}
 }
 
-func (ctrl *CLIController) SpacesDelete(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) SpacesDestroy(cmd *cobra.Command, args []string) {
 
 	selector, err := models.ParseSelectorMandatorySpace(args[0])
 	if err != nil {
-		log.Fatalf("delete space: %v", err)
+		log.Fatalf("destroy space: %v", err)
 	}
 
 	cbox := core.LoadCbox("")
 
 	space, err := cbox.SpaceFind(selector.Space)
 	if err != nil {
-		log.Fatalf("delete space: %v", err)
+		log.Fatalf("destroy space: %v", err)
 	}
 
-	tools.PrintSpace("Space to delete", space)
+	tools.PrintSpace("Space to destroy", space)
 
-	if console.Confirm("Are you sure you want to delete this space?") {
+	if console.Confirm("Are you sure you want to destroy this space?") {
 		// fix issue #52: when a space is removed, pointers to that position of memory change values
 		s := models.Space{
 			Label: space.Label,
 		}
 		s.ID = space.ID
 
-		err = cbox.SpaceDelete(&s)
+		err = cbox.SpaceDestroy(&s)
 		if err != nil {
-			log.Fatalf("delete space: %v", err)
+			log.Fatalf("destroy space: %v", err)
 		}
 		core.SpaceDeleteFile(&s)
 
-		console.PrintSuccess("Space deleted successfully!")
+		console.PrintSuccess("Space destroyed successfully!")
 	} else {
 		console.PrintError("Deletion cancelled")
 	}

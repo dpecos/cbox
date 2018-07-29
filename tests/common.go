@@ -58,7 +58,7 @@ func createSpace(t *testing.T) *models.Space {
 	}
 	space.ID = id
 
-	err := cbox.SpaceAdd(&space)
+	err := cbox.SpaceCreate(&space)
 
 	if err != nil {
 		t.Error(err)

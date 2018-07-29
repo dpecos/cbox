@@ -48,7 +48,7 @@ func CheckCboxDir(path string) string {
 		defaultSpace.ID = id
 
 		cbox := LoadCbox(path)
-		cbox.SpaceAdd(&defaultSpace)
+		cbox.SpaceCreate(&defaultSpace)
 		PersistCbox(cbox)
 	}
 
@@ -65,7 +65,7 @@ func LoadCbox(path string) *models.CBox {
 	spaces := SpaceListFiles()
 
 	for _, space := range spaces {
-		cbox.SpaceAdd(space)
+		cbox.SpaceCreate(space)
 	}
 	return &cbox
 }
