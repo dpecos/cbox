@@ -44,3 +44,11 @@ func (t *UnixTime) String() string {
 func (t *UnixTime) StringRaw() string {
 	return fmt.Sprintf("%d", time.Time(*t).UnixNano())
 }
+
+func (t *UnixTime) Equal(t2 UnixTime) bool {
+	return time.Time(*t).Equal(time.Time(t2))
+}
+
+func (t *UnixTime) After(t2 UnixTime) bool {
+	return time.Time(*t).After(time.Time(t2))
+}

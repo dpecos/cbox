@@ -13,18 +13,18 @@ func TestSpaceTimestamps(t *testing.T) {
 	tc := space.CreatedAt
 	tu := space.UpdatedAt
 
-	if tc != tu {
+	if !tc.Equal(tu) {
 		t.Errorf("creation and update timestamsp should be the same for new spaces")
 	}
 
 	reloadCBox()
 	s, _ := cbox.SpaceFind(space.ID.String())
 
-	if tc != s.CreatedAt {
+	if !tc.Equal(s.CreatedAt) {
 		t.Errorf("space creation timestamp changed after persisting and reloading cbox: '%s' - '%s'", tc.StringRaw(), s.CreatedAt.StringRaw())
 	}
 
-	if tu != s.UpdatedAt {
+	if !tu.Equal(s.UpdatedAt) {
 		t.Errorf("space update timestamp changed after persisting and reloading cbox: '%s' - '%s'", tu.StringRaw(), s.UpdatedAt.StringRaw())
 	}
 
@@ -45,11 +45,11 @@ func TestSpaceTimestamps(t *testing.T) {
 	reloadCBox()
 	s, _ = cbox.SpaceFind(space.ID.String())
 
-	if tc != s.CreatedAt {
+	if !tc.Equal(s.CreatedAt) {
 		t.Errorf("space creation timestamp changed after update: '%s' - '%s'", tc.StringRaw(), s.CreatedAt.StringRaw())
 	}
 
-	if tu == s.UpdatedAt {
+	if !s.UpdatedAt.After(tu) {
 		t.Errorf("space update timestamp did not change after update: '%s' - '%s'", tu.StringRaw(), s.UpdatedAt.StringRaw())
 	}
 }
@@ -65,19 +65,19 @@ func TestCommandTimestamps(t *testing.T) {
 	tcc := cmd.CreatedAt
 	tcu := cmd.UpdatedAt
 
-	if tsc != space.CreatedAt {
+	if !tsc.Equal(space.CreatedAt) {
 		t.Errorf("space creation timestamp changed after new command: '%s' - '%s'", tsc.StringRaw(), space.CreatedAt.StringRaw())
 	}
 
-	if tsu == space.UpdatedAt {
+	if !space.UpdatedAt.After(tsu) {
 		t.Errorf("space update timestamp did not change after new command: '%s' - '%s'", tsu.StringRaw(), space.UpdatedAt.StringRaw())
 	}
 
-	if tcc != tcu {
+	if !tcc.Equal(tcu) {
 		t.Errorf("command creation and update timestamsp should be the same for new commands")
 	}
 
-	if space.UpdatedAt != tcc {
+	if !space.UpdatedAt.Equal(tcc) {
 		t.Errorf("space update and last command creation timestamps should be the same")
 	}
 
@@ -91,15 +91,15 @@ func TestCommandTimestamps(t *testing.T) {
 		t.Errorf("failed to rename command: %v", err)
 	}
 
-	if tcc != cmd.CreatedAt {
+	if !tcc.Equal(cmd.CreatedAt) {
 		t.Errorf("command creation should not change after edition : '%s' - '%s'", tcc.StringRaw(), cmd.CreatedAt.StringRaw())
 	}
 
-	if tcu == cmd.UpdatedAt {
+	if !cmd.UpdatedAt.After(tcu) {
 		t.Errorf("command update should change after edition : '%s' - '%s'", tcu.StringRaw(), cmd.UpdatedAt.StringRaw())
 	}
 
-	if cmd.UpdatedAt != space.UpdatedAt {
+	if !cmd.UpdatedAt.Equal(space.UpdatedAt) {
 		t.Errorf("space and command should have same update time after changing the command: '%s' - '%s'", cmd.UpdatedAt.StringRaw(), space.UpdatedAt.StringRaw())
 	}
 
@@ -108,7 +108,7 @@ func TestCommandTimestamps(t *testing.T) {
 	tsu = space.UpdatedAt
 	space.CommandDelete(cmd)
 
-	if tsu == space.UpdatedAt {
+	if !space.UpdatedAt.After(tsu) {
 		t.Errorf("space update time should change after deleting command: '%s' - '%s'", tsu.StringRaw(), space.UpdatedAt.StringRaw())
 	}
 }
