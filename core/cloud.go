@@ -9,6 +9,7 @@ import (
 	"net/url"
 
 	"github.com/dpecos/cbox/tools/console"
+	uuid "github.com/satori/go.uuid"
 
 	"github.com/dpecos/cbox/models"
 	"github.com/dpecos/cbox/tools"
@@ -124,10 +125,15 @@ func (cloud *Cloud) SpacePublish(space *models.Space) error {
 	return err
 }
 
-func (cloud *Cloud) SpaceClone(selector *models.Selector) (*models.Space, error) {
+func (cloud *Cloud) SpaceRetrieve(selector *models.Selector, id *uuid.UUID) (*models.Space, error) {
 
 	query := make(map[string]string)
-	query["selector"] = selector.String()
+
+	if selector != nil {
+		query["selector"] = selector.String()
+	} else {
+		query["selector"] = id.String()
+	}
 
 	response, err := cloud.doRequest("GET", "/v1/spaces", query, "")
 	if err != nil {

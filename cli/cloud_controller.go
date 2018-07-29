@@ -79,7 +79,7 @@ func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: clone space: cloud client: %v", err)
 	}
 
-	space, err := cloud.SpaceClone(selector)
+	space, err := cloud.SpaceRetrieve(selector, nil)
 	if err != nil {
 		log.Fatalf("cloud: clone space: %v", err)
 	}
@@ -102,6 +102,41 @@ func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
 	} else {
 		console.PrintError("Clone cancelled")
 	}
+}
+
+func (ctrl *CLIController) CloudSpacePull(cmd *cobra.Command, args []string) {
+	selector, err := models.ParseSelectorMandatorySpace(args[0])
+	if err != nil {
+		log.Fatalf("cloud: pull space: invalid cloud selector: %v", err)
+	}
+
+	cloud, err := core.CloudClient()
+	if err != nil {
+		log.Fatalf("cloud: pull space: cloud client: %v", err)
+	}
+
+	cbox := core.LoadCbox("")
+
+	space, err := cbox.SpaceFind(selector.Space)
+	if err != nil {
+		log.Fatalf("cloud: pull space: %v", err)
+	}
+
+	spaceCloud, err := cloud.SpaceRetrieve(nil, &space.ID)
+	if err != nil {
+		log.Fatalf("cloud: pull space: %v", err)
+	}
+
+	// Note: Label is not overwritten because user can renamed his local copy of the space
+	space.Entries = spaceCloud.Entries
+	space.UpdatedAt = spaceCloud.UpdatedAt
+	space.Description = spaceCloud.Description
+
+	core.PersistCbox(cbox)
+
+	tools.PrintSpace("Pulled space", space)
+
+	console.PrintSuccess("Space pulled successfully!")
 }
 
 func (ctrl *CLIController) CloudCommandList(cmd *cobra.Command, args []string) {

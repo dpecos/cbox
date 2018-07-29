@@ -32,6 +32,13 @@ var cloudSpacePublishCmd = &cobra.Command{
 	Run:   ctrl.CloudSpacePublish,
 }
 
+var cloudSpacePullCmd = &cobra.Command{
+	Use:   "pull",
+	Args:  cobra.ExactArgs(1),
+	Short: "Pull latest changes of a cloud space",
+	Run:   ctrl.CloudSpacePull,
+}
+
 var cloudSpaceCloneCmd = &cobra.Command{
 	Use:   "clone",
 	Args:  cobra.ExactArgs(1),
@@ -61,6 +68,7 @@ func init() {
 	cloudCmd.AddCommand(cloudLoginCmd)
 	cloudCmd.AddCommand(cloudLogoutCmd)
 	cloudCmd.AddCommand(cloudSpacePublishCmd)
+	cloudCmd.AddCommand(cloudSpacePullCmd)
 	cloudCmd.AddCommand(cloudSpaceCloneCmd)
 	cloudCmd.AddCommand(cloudListCmd)
 	cloudCmd.AddCommand(cloudCopyCmd)
