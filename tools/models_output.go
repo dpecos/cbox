@@ -69,7 +69,7 @@ func PrintCommandList(commands []models.Command, full bool, sourceOnly bool) {
 }
 
 func PrintTag(tag string) {
-	fmt.Printf("%s\n", tagsColor(tag))
+	fmt.Printf("%s %s\n", starColor("*"), tagsColor(tag))
 }
 
 func PrintSpace(header string, space *models.Space) {

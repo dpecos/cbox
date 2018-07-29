@@ -28,7 +28,7 @@ func (ctrl *CLIController) TagsList(cmd *cobra.Command, args []string) {
 	sort.Strings(tags)
 
 	for _, tag := range tags {
-		fmt.Printf("%s\n", tag)
+		tools.PrintTag(tag)
 	}
 }
 
