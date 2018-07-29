@@ -13,7 +13,7 @@ var (
 
 var listCmd = &cobra.Command{
 	Use:     "list",
-	Aliases: []string{"l"},
+	Aliases: []string{"l", "ls"},
 	Args:    cobra.MaximumNArgs(1),
 	Short:   "List the content of a space in your cbox",
 	Long:    tools.Logo,

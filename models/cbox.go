@@ -2,7 +2,6 @@ package models
 
 import (
 	"fmt"
-	"time"
 
 	uuid "github.com/satori/go.uuid"
 )
@@ -73,9 +72,11 @@ func (cbox *CBox) SpaceAdd(space *Space) error {
 	if space.Entries == nil {
 		space.Entries = []Command{}
 	}
-	now := time.Now()
-	space.CreatedAt = now
-	space.UpdatedAt = now
+	if space.CreatedAt == NilUnixTime {
+		now := UnixTimeNow()
+		space.CreatedAt = now
+		space.UpdatedAt = now
+	}
 	cbox.Spaces = append(cbox.Spaces, *space)
 	return nil
 }
@@ -87,6 +88,17 @@ func (cbox *CBox) SpaceDelete(space *Space) error {
 	}
 
 	cbox.Spaces = append(cbox.Spaces[:pos], cbox.Spaces[pos+1:]...)
+
+	return nil
+}
+
+func (cbox *CBox) SpaceEdit(space *Space, previousLabel string) error {
+
+	if space.Label != previousLabel && len(cbox.SpaceLabels()) != len(cbox.Spaces) {
+		return fmt.Errorf("space edit: duplicate label '%s", space.Label)
+	}
+
+	space.UpdatedAt = UnixTimeNow()
 
 	return nil
 }

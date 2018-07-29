@@ -88,6 +88,7 @@ func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
 
 	if console.Confirm("Clone?") {
 		cbox := core.LoadCbox("")
+
 		err := cbox.SpaceAdd(space)
 		for err != nil {
 			console.PrintError("Space already found in your cbox. Try a different one")

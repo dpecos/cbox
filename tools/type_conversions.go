@@ -1,10 +1,8 @@
 package tools
 
 import (
-	"fmt"
 	"log"
 	"strconv"
-	"time"
 
 	"github.com/satori/go.uuid"
 )
@@ -23,8 +21,4 @@ func StringToUUID(str string) uuid.UUID {
 		log.Fatalf("str-uuid: could not parse UUID: %v", err)
 	}
 	return id
-}
-
-func DateToString(t time.Time) string {
-	return fmt.Sprintf("%d-%02d-%02d %02d:%02d:%02d", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second())
 }

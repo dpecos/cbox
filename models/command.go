@@ -1,9 +1,5 @@
 package models
 
-import (
-	"time"
-)
-
 type Command struct {
 	Meta
 	Label       string   `json:"label"`
@@ -26,7 +22,7 @@ func (command *Command) TagAdd(tag string) {
 
 	if !found {
 		command.Tags = append(command.Tags, tag)
-		command.UpdatedAt = time.Now()
+		command.UpdatedAt = UnixTimeNow()
 	}
 }
 
@@ -42,6 +38,6 @@ func (command *Command) TagDelete(tag string) {
 
 	if found != -1 {
 		command.Tags = append(command.Tags[:found], command.Tags[found+1:]...)
-		command.UpdatedAt = time.Now()
+		command.UpdatedAt = UnixTimeNow()
 	}
 }

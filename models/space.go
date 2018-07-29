@@ -3,7 +3,6 @@ package models
 import (
 	"fmt"
 	"log"
-	"time"
 
 	uuid "github.com/satori/go.uuid"
 )
@@ -24,9 +23,12 @@ func (space *Space) CommandAdd(command *Command) error {
 	if commandPresentInSpace(space, command.Label) {
 		return fmt.Errorf("add command: label '%s' already in use", command.Label)
 	}
-	now := time.Now()
-	command.CreatedAt = now
-	command.UpdatedAt = now
+	now := UnixTimeNow()
+	if command.CreatedAt == NilUnixTime {
+		command.CreatedAt = now
+		command.UpdatedAt = now
+	}
+	space.UpdatedAt = now
 	space.Entries = append(space.Entries, *command)
 
 	return nil
@@ -42,7 +44,10 @@ func (space *Space) CommandEdit(command *Command, previousLabel string) error {
 		}
 		command.Label = newLabel
 	}
-	command.UpdatedAt = time.Now()
+	now := UnixTimeNow()
+	command.UpdatedAt = now
+	space.UpdatedAt = now
+
 	return nil
 }
 
@@ -107,7 +112,7 @@ func (space *Space) CommandDelete(command *Command) {
 	if err != nil {
 		log.Fatalf("delete command: %v", err)
 	}
-
+	space.UpdatedAt = UnixTimeNow()
 	space.Entries = append(space.Entries[:pos], space.Entries[pos+1:]...)
 }
 

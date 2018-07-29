@@ -59,20 +59,23 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 
 	tools.ConsoleEditSpace(space)
 
-	if space.Label != selector.Space {
-		for len(cbox.SpaceLabels()) != len(cbox.Spaces) {
-			console.PrintError("Label already found in your cbox. Try a different one")
-			space.Label = strings.ToLower(console.ReadString("Label"))
-		}
-	}
-
 	tools.PrintSpace("Space after edition", space)
 
 	if console.Confirm("Update?") {
-		spaceToDelete := &models.Space{
-			Label: selector.Space,
+
+		err := cbox.SpaceEdit(space, selector.Space)
+		for err != nil {
+			console.PrintError("Label already found in your cbox. Try a different one")
+			space.Label = strings.ToLower(console.ReadString("Label"))
+			err = cbox.SpaceEdit(space, selector.Space)
 		}
-		core.SpaceDeleteFile(spaceToDelete)
+
+		if space.Label != selector.Space {
+			spaceToDelete := &models.Space{
+				Label: selector.Space,
+			}
+			core.SpaceDeleteFile(spaceToDelete)
+		}
 
 		core.PersistCbox(cbox)
 		console.PrintSuccess("Space updated successfully!")

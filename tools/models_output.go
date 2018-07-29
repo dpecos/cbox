@@ -3,7 +3,6 @@ package tools
 import (
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/dpecos/cbox/models"
 	"github.com/dpecos/cbox/tools/console"
@@ -11,7 +10,7 @@ import (
 
 var (
 	// spaceIDColor    = console.ColorBoldBlack
-	spaceLabelColor = console.ColorBlue
+	spaceLabelColor = console.ColorBoldGreen
 	// idColor          = console.ColorBoldBlack
 	labelColor       = console.ColorBoldBlue
 	tagsColor        = console.ColorRed
@@ -36,13 +35,12 @@ func PrintCommand(header string, cmd *models.Command, full bool, sourceOnly bool
 		if !full {
 			fmt.Printf(starColor("* "))
 		}
-		t := cmd.CreatedAt.UTC().In(time.Local)
 
 		if len(cmd.Tags) != 0 {
 			tags := strings.Join(cmd.Tags, ", ")
-			fmt.Printf("%s - %s (%s) %s\n", labelColor(cmd.Label), descriptionColor(cmd.Description), tagsColor(tags), dateColor(DateToString(t)))
+			fmt.Printf("%s - %s (%s) %s\n", labelColor(cmd.Label), descriptionColor(cmd.Description), tagsColor(tags), dateColor(cmd.CreatedAt.String()))
 		} else {
-			fmt.Printf("%s - %s %s\n", labelColor(cmd.Label), descriptionColor(cmd.Description), dateColor(DateToString(t)))
+			fmt.Printf("%s - %s %s\n", labelColor(cmd.Label), descriptionColor(cmd.Description), dateColor(cmd.CreatedAt.String()))
 		}
 
 		if full {
@@ -79,7 +77,7 @@ func PrintSpace(header string, space *models.Space) {
 		fmt.Printf(separatorColor("- - - %s - - -\n"), header)
 	}
 
-	fmt.Printf("%s - %s\n", spaceLabelColor(space.Label), descriptionColor(space.Description))
+	fmt.Printf("%s - %s %s\n", spaceLabelColor(space.Label), descriptionColor(space.Description), dateColor(space.CreatedAt.String()))
 
 	if header != "" {
 		fmt.Printf("%s\n\n", separatorColor("- - - - - - - - - - - -"))
