@@ -26,10 +26,11 @@ var cloudLogoutCmd = &cobra.Command{
 }
 
 var cloudSpacePublishCmd = &cobra.Command{
-	Use:   "publish",
-	Args:  cobra.ExactArgs(1),
-	Short: "Publish an space",
-	Run:   ctrl.CloudSpacePublish,
+	Use:     "publish",
+	Aliases: []string{"push"},
+	Args:    cobra.ExactArgs(1),
+	Short:   "Publish an space",
+	Run:     ctrl.CloudSpacePublish,
 }
 
 var cloudSpacePullCmd = &cobra.Command{
@@ -46,9 +47,9 @@ var cloudSpaceCloneCmd = &cobra.Command{
 	Run:   ctrl.CloudSpaceClone,
 }
 
-var cloudListCmd = &cobra.Command{
-	Use:     "list",
-	Aliases: []string{"l"},
+var cloudCommandsCmd = &cobra.Command{
+	Use:     "commands",
+	Aliases: []string{"c", "cmd", "list", "ls", "l"},
 	Args:    cobra.ExactArgs(1),
 	Short:   "List the content of a space from cbox cloud",
 	Long:    tools.Logo,
@@ -70,8 +71,8 @@ func init() {
 	cloudCmd.AddCommand(cloudSpacePublishCmd)
 	cloudCmd.AddCommand(cloudSpacePullCmd)
 	cloudCmd.AddCommand(cloudSpaceCloneCmd)
-	cloudCmd.AddCommand(cloudListCmd)
+	cloudCmd.AddCommand(cloudCommandsCmd)
 	cloudCmd.AddCommand(cloudCopyCmd)
 
-	cloudListCmd.Flags().BoolVarP(&viewSnippet, "view", "v", false, "Show all details about commands")
+	cloudCommandsCmd.Flags().BoolVarP(&viewSnippet, "view", "v", false, "Show all details about commands")
 }
