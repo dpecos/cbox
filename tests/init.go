@@ -21,6 +21,7 @@ func init() {
 }
 
 func setupTests() {
+	cbox = nil
 
 	os.RemoveAll("/tmp/.cbox")
 

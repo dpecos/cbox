@@ -101,11 +101,18 @@ func (ctrl *CLIController) SpacesDelete(cmd *cobra.Command, args []string) {
 	tools.PrintSpace("Space to delete", space)
 
 	if console.Confirm("Are you sure you want to delete this space?") {
-		err = cbox.SpaceDelete(space)
+		// fix issue #52: when a space is removed, pointers to that position of memory change values
+		s := models.Space{
+			Label: space.Label,
+		}
+		s.ID = space.ID
+
+		err = cbox.SpaceDelete(&s)
 		if err != nil {
 			log.Fatalf("delete space: %v", err)
 		}
-		core.SpaceDeleteFile(space)
+		core.SpaceDeleteFile(&s)
+
 		console.PrintSuccess("Space deleted successfully!")
 	} else {
 		console.PrintError("Deletion cancelled")

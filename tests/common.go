@@ -67,3 +67,26 @@ func createSpace(t *testing.T) *models.Space {
 	s, _ := cbox.SpaceFind(space.ID.String())
 	return s
 }
+
+func assertSliceEqual(a, b []string) bool {
+
+	if a == nil && b == nil {
+		return true
+	}
+
+	if a == nil || b == nil {
+		return false
+	}
+
+	if len(a) != len(b) {
+		return false
+	}
+
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+
+	return true
+}

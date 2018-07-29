@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"sort"
 	"testing"
 
 	"github.com/dpecos/cbox/core"
@@ -56,4 +57,31 @@ func TestSpaceLabelUniquenessOnCreation(t *testing.T) {
 	if err == nil {
 		t.Fatalf("space labels have to be unique")
 	}
+}
+
+func TestDeleteSpace(t *testing.T) {
+	setupTests()
+
+	s1 := createSpace(t)
+	s2 := createSpace(t)
+	s3 := createSpace(t)
+
+	reloadCBox()
+
+	expected := []string{"default", s1.Label, s3.Label}
+
+	cbox.SpaceDelete(s2)
+	core.SpaceDeleteFile(s2)
+
+	reloadCBox()
+
+	result := cbox.SpaceLabels()
+
+	sort.Strings(expected)
+	sort.Strings(result)
+
+	if !assertSliceEqual(expected, result) {
+		t.Errorf("space deletion did return a different result from expected: %v - %v", expected, result)
+	}
+
 }
