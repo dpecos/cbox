@@ -8,15 +8,14 @@ import (
 
 var (
 	NilUnixTime = UnixTime(time.Time{})
+	UnixTimeNow = func() UnixTime {
+		now := time.Now().Unix()
+		nowUnix := UnixTime(time.Unix(now, 0))
+		return nowUnix
+	}
 )
 
 type UnixTime time.Time
-
-func UnixTimeNow() UnixTime {
-	now := time.Now().Unix()
-	nowUnix := UnixTime(time.Unix(now, 0))
-	return nowUnix
-}
 
 func (t *UnixTime) MarshalJSON() ([]byte, error) {
 	ts := time.Time(*t).Unix()

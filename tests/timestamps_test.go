@@ -8,7 +8,18 @@ import (
 	"github.com/dpecos/cbox/models"
 )
 
+func setupMocks() {
+	var timeCounter = int64(1)
+	models.UnixTimeNow = func() models.UnixTime {
+		t := timeCounter
+		timeCounter += 1
+		return models.UnixTime(time.Unix(t, 0))
+	}
+}
+
 func TestSpaceTimestamps(t *testing.T) {
+	setupMocks()
+
 	space := createSpace(t)
 	tc := space.CreatedAt
 	tu := space.UpdatedAt
@@ -27,8 +38,6 @@ func TestSpaceTimestamps(t *testing.T) {
 	if !tu.Equal(s.UpdatedAt) {
 		t.Errorf("space update timestamp changed after persisting and reloading cbox: '%s' - '%s'", tu.StringRaw(), s.UpdatedAt.StringRaw())
 	}
-
-	time.Sleep(time.Second)
 
 	s.Label = s.Label + "-updated"
 
@@ -55,11 +64,11 @@ func TestSpaceTimestamps(t *testing.T) {
 }
 
 func TestCommandTimestamps(t *testing.T) {
+	setupMocks()
+
 	space := createSpace(t)
 	tsc := space.CreatedAt
 	tsu := space.UpdatedAt
-
-	time.Sleep(time.Second)
 
 	cmd := createCommand(t, space)
 	tcc := cmd.CreatedAt
@@ -81,8 +90,6 @@ func TestCommandTimestamps(t *testing.T) {
 		t.Errorf("space update and last command creation timestamps should be the same")
 	}
 
-	time.Sleep(time.Second)
-
 	previousLabel := cmd.Label
 	cmd.Label = cmd.Label + "-update"
 
@@ -102,8 +109,6 @@ func TestCommandTimestamps(t *testing.T) {
 	if !cmd.UpdatedAt.Equal(space.UpdatedAt) {
 		t.Errorf("space and command should have same update time after changing the command: '%s' - '%s'", cmd.UpdatedAt.StringRaw(), space.UpdatedAt.StringRaw())
 	}
-
-	time.Sleep(time.Second)
 
 	tsu = space.UpdatedAt
 	space.CommandDelete(cmd)
