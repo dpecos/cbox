@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/dpecos/cbox/models"
-	uuid "github.com/satori/go.uuid"
+	"github.com/gofrs/uuid"
 )
 
 func createCommand(t *testing.T, space *models.Space) *models.Command {

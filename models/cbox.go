@@ -3,7 +3,7 @@ package models
 import (
 	"fmt"
 
-	uuid "github.com/satori/go.uuid"
+	"github.com/gofrs/uuid"
 )
 
 type CBox struct {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	uuid "github.com/satori/go.uuid"
+	"github.com/gofrs/uuid"
 )
 
 type Space struct {

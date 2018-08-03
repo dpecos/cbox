@@ -6,8 +6,8 @@ import (
 
 	"github.com/dpecos/cbox/models"
 	"github.com/dpecos/cbox/tools"
+	"github.com/gofrs/uuid"
 	homedir "github.com/mitchellh/go-homedir"
-	uuid "github.com/satori/go.uuid"
 	"github.com/spf13/viper"
 )
 

@@ -9,7 +9,7 @@ import (
 	"net/url"
 
 	"github.com/dpecos/cbox/tools/console"
-	uuid "github.com/satori/go.uuid"
+	"github.com/gofrs/uuid"
 
 	"github.com/dpecos/cbox/models"
 	"github.com/dpecos/cbox/tools"

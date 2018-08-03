@@ -3,7 +3,7 @@ package tools
 import (
 	"strings"
 
-	"github.com/satori/go.uuid"
+	"github.com/gofrs/uuid"
 
 	"github.com/dpecos/cbox/models"
 	"github.com/dpecos/cbox/tools/console"

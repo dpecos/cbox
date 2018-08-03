@@ -4,7 +4,7 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/satori/go.uuid"
+	"github.com/gofrs/uuid"
 )
 
 func StringToInt(str string) int64 {

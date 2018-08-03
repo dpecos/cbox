@@ -6,7 +6,7 @@ import (
 
 	"github.com/dpecos/cbox/core"
 	"github.com/dpecos/cbox/models"
-	uuid "github.com/satori/go.uuid"
+	"github.com/gofrs/uuid"
 )
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
