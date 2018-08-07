@@ -16,12 +16,26 @@ import (
 	"github.com/spf13/viper"
 )
 
-const (
-	SETTINGS_USER_ID    = "cloud.auth.user.id"
-	SETTINGS_USER_LOGIN = "cloud.auth.user.login"
-	SETTINGS_USER_NAME  = "cloud.auth.user.name"
-	SETTINGS_JWT        = "cloud.auth.jwt"
+var (
+	cloudSettingsUserID    string
+	cloudSettingsUserLogin string
+	cloudSettingsUserName  string
+	cloudSettingsJWT       string
 )
+
+func readCloudConfig() {
+	var env = Env
+	if env != "" && env != "prod" {
+		env = "_" + env
+	}
+	if env == "prod" {
+		env = ""
+	}
+	cloudSettingsUserID = fmt.Sprintf("cloud%s.auth.user.id", env)
+	cloudSettingsUserLogin = fmt.Sprintf("cloud%s.auth.user.login", env)
+	cloudSettingsUserName = fmt.Sprintf("cloud%s.auth.user.name", env)
+	cloudSettingsJWT = fmt.Sprintf("cloud%s.auth.jwt", env)
+}
 
 type Cloud struct {
 	UserID     string
@@ -33,39 +47,45 @@ type Cloud struct {
 }
 
 func CloudLogin(jwt string) (string, string, string, error) {
+	readCloudConfig()
+
 	userID, login, name, err := tools.VerifyJWT(jwt)
 	if err != nil {
 		return "", "", "", err
 	}
-	viper.Set(SETTINGS_USER_ID, userID)
-	viper.Set(SETTINGS_USER_LOGIN, login)
-	viper.Set(SETTINGS_USER_NAME, name)
-	viper.Set(SETTINGS_JWT, jwt)
+	viper.Set(cloudSettingsUserID, userID)
+	viper.Set(cloudSettingsUserLogin, login)
+	viper.Set(cloudSettingsUserName, name)
+	viper.Set(cloudSettingsJWT, jwt)
 	return userID, login, name, nil
 }
 
 func CloudLogout() {
-	viper.Set(SETTINGS_USER_ID, "")
-	viper.Set(SETTINGS_USER_LOGIN, "")
-	viper.Set(SETTINGS_USER_NAME, "")
-	viper.Set(SETTINGS_JWT, "")
+	readCloudConfig()
+
+	viper.Set(cloudSettingsUserID, "")
+	viper.Set(cloudSettingsUserLogin, "")
+	viper.Set(cloudSettingsUserName, "")
+	viper.Set(cloudSettingsJWT, "")
 }
 
 func CloudClient() (*Cloud, error) {
-	if !viper.IsSet(SETTINGS_USER_ID) || !viper.IsSet(SETTINGS_USER_LOGIN) || !viper.IsSet(SETTINGS_USER_NAME) || !viper.IsSet(SETTINGS_JWT) {
-		return nil, fmt.Errorf("cloud: user not authenticated")
-	}
+	readCloudConfig()
 
 	url, err := url.Parse(CloudURL())
 	if err != nil {
 		return nil, fmt.Errorf("cloud: could not parse server's URL: %v", err)
 	}
 
+	if !viper.IsSet(cloudSettingsUserID) || !viper.IsSet(cloudSettingsUserLogin) || !viper.IsSet(cloudSettingsUserName) || !viper.IsSet(cloudSettingsJWT) {
+		return nil, fmt.Errorf("cloud: user not authenticated")
+	}
+
 	cloud := Cloud{
-		UserID:     viper.GetString(SETTINGS_USER_ID),
-		Login:      viper.GetString(SETTINGS_USER_LOGIN),
-		Name:       viper.GetString(SETTINGS_USER_NAME),
-		token:      viper.GetString(SETTINGS_JWT),
+		UserID:     viper.GetString(cloudSettingsUserID),
+		Login:      viper.GetString(cloudSettingsUserLogin),
+		Name:       viper.GetString(cloudSettingsUserName),
+		token:      viper.GetString(cloudSettingsJWT),
 		baseURL:    url,
 		httpClient: http.DefaultClient,
 	}

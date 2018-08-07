@@ -3,6 +3,8 @@ package core
 import (
 	"fmt"
 
+	"github.com/spf13/viper"
+
 	"github.com/dpecos/cbox/tools/console"
 
 	"github.com/dpecos/cbox/tools"
@@ -39,16 +41,14 @@ cQIDAQAB
 )
 
 func CloudURL() string {
-	return fmt.Sprintf(cloudURL, Env)
-}
-
-func init() {
-	if Env == "dev" {
+	if Env == "prod" {
+		tools.CloudJWTKey = cloudJWTProd
+	} else {
 		fmt.Println()
 		fmt.Println(console.ColorBgRed("  !!! You are using a DEV version of cbox !!!   "))
 		fmt.Println()
 		tools.CloudJWTKey = cloudJWTDev
-	} else {
-		tools.CloudJWTKey = cloudJWTProd
 	}
+
+	return fmt.Sprintf(cloudURL, viper.GetString("cbox.environment"))
 }

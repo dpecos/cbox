@@ -91,4 +91,9 @@ func InitCBox(path string) {
 
 func defaultSettings() {
 	viper.SetDefault("cbox.default-space", "default")
+	viper.SetDefault("cbox.environment", Env)
+
+	if viper.IsSet("cbox.environment") {
+		Env = viper.GetString("cbox.environment")
+	}
 }
