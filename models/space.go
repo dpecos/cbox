@@ -51,15 +51,22 @@ func (space *Space) CommandEdit(command *Command, previousLabel string) error {
 	return nil
 }
 
-func (space *Space) CommandList(tag string) []Command {
-	if tag == "" {
+func (space *Space) CommandList(item string) []Command {
+	if item == "" {
 		return space.Entries
 	}
 
 	var result []Command
 	for _, command := range space.Entries {
+		// match by label
+		if command.Label == item {
+			result = append(result, command)
+			continue
+		}
+
+		// match by tag
 		for _, t := range command.Tags {
-			if tag == t {
+			if item == t {
 				result = append(result, command)
 			}
 		}

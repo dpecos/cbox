@@ -48,6 +48,15 @@ func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) 
 		log.Fatalf("cloud: publish space: %v", err)
 	}
 
+	if selector.Item != "" {
+		commands := space.CommandList(selector.Item)
+		if len(commands) == 0 {
+			log.Fatalf("cloud: no local commands matched selector: %s", selector)
+		}
+
+		space.Entries = commands
+	}
+
 	tools.PrintSpace("Space", space)
 
 	if console.Confirm("Publish?") {
