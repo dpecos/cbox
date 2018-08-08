@@ -23,7 +23,7 @@ func (ctrl *CLIController) CommandList(cmd *cobra.Command, args []string) {
 
 	commands := space.CommandList(selector.Item)
 
-	tools.PrintCommandList(commands, viewSnippet, false)
+	tools.PrintCommandList("", commands, viewSnippet, false)
 }
 
 func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {

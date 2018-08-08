@@ -59,12 +59,20 @@ func PrintCommand(header string, cmd *models.Command, full bool, sourceOnly bool
 	}
 }
 
-func PrintCommandList(commands []models.Command, full bool, sourceOnly bool) {
+func PrintCommandList(header string, commands []models.Command, full bool, sourceOnly bool) {
+	if header != "" {
+		fmt.Printf(separatorColor("- - - %s - - -\n"), header)
+	}
+
 	for i, command := range commands {
 		PrintCommand("", &command, full, sourceOnly)
 		if full && i != len(commands)-1 {
 			fmt.Printf("\n%s\n\n", separatorColor("- - - - - - - - - - - -"))
 		}
+	}
+
+	if header != "" {
+		fmt.Printf("%s\n\n", separatorColor("- - - - - - - - - - - -"))
 	}
 }
 

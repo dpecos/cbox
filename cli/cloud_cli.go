@@ -29,8 +29,8 @@ var cloudSpacePublishCmd = &cobra.Command{
 	Use:     "publish",
 	Aliases: []string{"push"},
 	Args:    cobra.ExactArgs(1),
-	Short:   "Publish an space",
-	Run:     ctrl.CloudSpacePublish,
+	Short:   "Publish a command, tag or space",
+	Run:     ctrl.CloudItemPublish,
 }
 
 var cloudSpacePullCmd = &cobra.Command{
@@ -48,8 +48,8 @@ var cloudSpaceCloneCmd = &cobra.Command{
 }
 
 var cloudCommandsCmd = &cobra.Command{
-	Use:     "commands",
-	Aliases: []string{"c", "cmd", "list", "ls", "l"},
+	Use:     "list",
+	Aliases: []string{"c", "cmd", "commands", "ls", "l"},
 	Args:    cobra.ExactArgs(1),
 	Short:   "List the content of a space from cbox cloud",
 	Long:    tools.Logo,

@@ -54,7 +54,7 @@ func (cbox *CBox) SpaceFind(spaceLocator string) (*Space, error) {
 	if err != nil {
 		id, e := uuid.FromString(spaceLocator)
 		if e != nil {
-			return nil, fmt.Errorf("find command: %v", err)
+			return nil, fmt.Errorf("find space (uuid): %v", err)
 		}
 		pos, err = cbox.spaceFindPositionByID(id)
 		if err != nil {
