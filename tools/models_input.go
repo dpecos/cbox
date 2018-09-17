@@ -1,6 +1,7 @@
 package tools
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/gofrs/uuid"
@@ -27,6 +28,8 @@ func ConsoleReadCommand() *models.Command {
 			command.Tags = append(command.Tags, tag)
 		}
 	}
+
+	fmt.Println()
 
 	return &command
 }
