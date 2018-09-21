@@ -16,7 +16,6 @@ var (
 	tagsColor        = console.ColorRed
 	descriptionColor = fmt.Sprintf
 	dateColor        = console.ColorBoldBlack
-	detailsColor     = console.ColorCyan
 	urlColor         = console.ColorGreen
 	separatorColor   = console.ColorYellow
 	starColor        = console.ColorBoldBlack
@@ -44,9 +43,6 @@ func PrintCommand(header string, cmd *models.Command, full bool, sourceOnly bool
 		}
 
 		if full {
-			if cmd.Details != "" {
-				fmt.Printf("\n%s\n", detailsColor(cmd.Details))
-			}
 			if cmd.URL != "" {
 				fmt.Printf("\n%s\n", urlColor(cmd.URL))
 			}

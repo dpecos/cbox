@@ -5,7 +5,6 @@ type Command struct {
 	Label       string   `json:"label"`
 	Code        string   `json:"code"`
 	Description string   `json:"description"`
-	Details     string   `json:"details" dynamodbav:",omitempty"`
 	URL         string   `json:"url" dynamodbav:",omitempty"`
 	Tags        []string `json:"tags" dynamodbav:",omitempty"`
 }

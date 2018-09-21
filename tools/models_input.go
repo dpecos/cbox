@@ -15,7 +15,6 @@ func ConsoleReadCommand() *models.Command {
 	command := models.Command{
 		Label:       strings.ToLower(console.ReadString("Label", console.ONLY_VALID_CHARS, console.NOT_EMPTY_VALUES)),
 		Description: console.ReadString("Description"),
-		Details:     console.ReadString("Details", console.MULTILINE),
 		URL:         console.ReadString("URL"),
 		Code:        console.ReadString("Code / Command", console.MULTILINE, console.NOT_EMPTY_VALUES),
 		Tags:        []string{},
@@ -37,7 +36,6 @@ func ConsoleReadCommand() *models.Command {
 func ConsoleEditCommand(command *models.Command) {
 	command.Label = strings.ToLower(console.EditString("Label", command.Label, console.ONLY_VALID_CHARS, console.NOT_EMPTY_VALUES))
 	command.Description = console.EditString("Description", command.Description)
-	command.Details = console.EditString("Details", command.Details, console.MULTILINE)
 	command.URL = console.EditString("URL", command.URL)
 	command.Code = console.EditString("Code / Command", command.Code, console.MULTILINE, console.NOT_EMPTY_VALUES)
 }
