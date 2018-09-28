@@ -12,7 +12,6 @@ func createCommand(t *testing.T, space *models.Space) *models.Command {
 	command := models.Command{
 		Label:       randString(8),
 		Description: randString(15),
-		Details:     randString(15),
 		URL:         randString(15),
 		Code:        randString(30),
 		Tags:        []string{"test"},
@@ -101,7 +100,6 @@ func TestCommandLabelUniquenessOnCreation(t *testing.T) {
 	c2 := models.Command{
 		Label:       c1.Label,
 		Description: randString(15),
-		Details:     randString(15),
 		URL:         randString(15),
 		Code:        randString(30),
 		Tags:        []string{"test"},

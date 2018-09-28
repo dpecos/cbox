@@ -18,5 +18,8 @@ install-prod: version
 version:
   VERSION := $(if $(TAG),$(TAG),$(BRANCH)-$(COMMIT))
 
+check:
+	gosec ./...
+
 test:
 	go test ./...
