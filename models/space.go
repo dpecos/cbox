@@ -141,3 +141,17 @@ func (space *Space) TagsList(filterTag string) []string {
 
 	return result
 }
+
+func (space *Space) SearchCommands(criteria string) ([]Command, error) {
+	if criteria == "" {
+		return nil, fmt.Errorf("could not search with empty criteria")
+	}
+
+	var results []Command
+	for _, command := range space.Entries {
+		if command.Matches(criteria) {
+			results = append(results, command)
+		}
+	}
+	return results, nil
+}

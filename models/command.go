@@ -1,5 +1,7 @@
 package models
 
+import "strings"
+
 type Command struct {
 	Meta
 	Label       string   `json:"label"`
@@ -39,4 +41,14 @@ func (command *Command) TagDelete(tag string) {
 		command.Tags = append(command.Tags[:found], command.Tags[found+1:]...)
 		command.UpdatedAt = UnixTimeNow()
 	}
+}
+
+func (command *Command) Matches(criteria string) bool {
+	criteria = strings.ToLower(criteria)
+
+	matches := strings.Contains(strings.ToLower(command.Label), criteria)
+	matches = matches || strings.Contains(strings.ToLower(command.Description), criteria)
+	matches = matches || strings.Contains(strings.ToLower(command.Code), criteria)
+
+	return matches
 }

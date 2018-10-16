@@ -83,5 +83,24 @@ func TestDeleteSpace(t *testing.T) {
 	if !assertSliceEqual(expected, result) {
 		t.Errorf("space deletion did return a different result from expected: %v - %v", expected, result)
 	}
+}
 
+func TestSearch(t *testing.T) {
+	setupTests()
+
+	s1 := createSpace(t)
+	c1 := createCommand(t, s1)
+
+	reloadCBox()
+
+	criteria := c1.Label[0:3]
+	result, err := s1.SearchCommands(criteria)
+
+	if err != nil {
+		t.Errorf("space search errored: %s", err)
+	}
+
+	if len(result) != 1 || result[0].ID != c1.ID {
+		t.Errorf("space search did not return the expected command: %v", c1)
+	}
 }
