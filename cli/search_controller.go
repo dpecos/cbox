@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/dpecos/cbox/core"
 	"github.com/dpecos/cbox/tools"
@@ -17,10 +18,13 @@ func (ctrl *CLIController) SearchCommands(cmd *cobra.Command, args []string) {
 		sel = args[0]
 		criteria = args[1]
 	} else if len(args) == 1 {
+		if strings.Contains(args[0], "@") {
+			log.Fatalf("search: criteria not specified - this looks like a selector")
+		}
 		sel = ""
 		criteria = args[0]
 	} else {
-		log.Fatalf("search: inccorrect number of parameters: %d", len(args))
+		log.Fatal("search: criteria not specified")
 	}
 
 	selector := ctrl.parseSelector([]string{sel})
@@ -31,10 +35,15 @@ func (ctrl *CLIController) SearchCommands(cmd *cobra.Command, args []string) {
 		log.Fatalf("search: %v", err)
 	}
 
-	commands, err := space.SearchCommands(criteria)
+	commands, err := space.SearchCommands(selector.Item, criteria)
 	if err != nil {
 		log.Fatalf("search: %v", err)
 	}
 
-	tools.PrintCommandList(fmt.Sprintf("Results for \"%s\"", criteria), commands, viewSnippet, false)
+	if selector.Item != "" {
+		tools.PrintCommandList(fmt.Sprintf("Results for \"%s\" (within tag: %s)", criteria, selector.Item), commands, viewSnippet, false)
+	} else {
+		tools.PrintCommandList(fmt.Sprintf("Results for \"%s\"", criteria), commands, viewSnippet, false)
+	}
+
 }

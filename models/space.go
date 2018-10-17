@@ -65,10 +65,8 @@ func (space *Space) CommandList(item string) []Command {
 		}
 
 		// match by tag
-		for _, t := range command.Tags {
-			if item == t {
-				result = append(result, command)
-			}
+		if command.Tagged(item) {
+			result = append(result, command)
 		}
 	}
 	return result
@@ -142,13 +140,16 @@ func (space *Space) TagsList(filterTag string) []string {
 	return result
 }
 
-func (space *Space) SearchCommands(criteria string) ([]Command, error) {
+func (space *Space) SearchCommands(tag string, criteria string) ([]Command, error) {
 	if criteria == "" {
 		return nil, fmt.Errorf("could not search with empty criteria")
 	}
 
 	var results []Command
 	for _, command := range space.Entries {
+		if tag != "" && !command.Tagged(tag) {
+			continue
+		}
 		if command.Matches(criteria) {
 			results = append(results, command)
 		}

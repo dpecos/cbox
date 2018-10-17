@@ -52,3 +52,12 @@ func (command *Command) Matches(criteria string) bool {
 
 	return matches
 }
+
+func (command *Command) Tagged(tag string) bool {
+	for _, t := range command.Tags {
+		if t == tag {
+			return true
+		}
+	}
+	return false
+}

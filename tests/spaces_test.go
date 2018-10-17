@@ -94,13 +94,43 @@ func TestSearch(t *testing.T) {
 	reloadCBox()
 
 	criteria := c1.Label[0:3]
-	result, err := s1.SearchCommands(criteria)
+	result, err := s1.SearchCommands("", criteria)
 
 	if err != nil {
-		t.Errorf("space search errored: %s", err)
+		t.Errorf("space search error: %v", err)
 	}
 
 	if len(result) != 1 || result[0].ID != c1.ID {
 		t.Errorf("space search did not return the expected command: %v", c1)
+	}
+}
+
+func TestSearchWithinTag(t *testing.T) {
+	setupTests()
+
+	s1 := createSpace(t)
+	c1 := createCommand(t, s1)
+
+	reloadCBox()
+
+	criteria := c1.Label[0:3]
+	result, err := s1.SearchCommands("test", criteria)
+
+	if err != nil {
+		t.Errorf("space search error: %v", err)
+	}
+
+	if len(result) != 1 || result[0].ID != c1.ID {
+		t.Errorf("space search did not return the expected command: %v", c1)
+	}
+
+	result, err = s1.SearchCommands("non-existing", criteria)
+
+	if err != nil {
+		t.Errorf("space search error (non-existing): %v", err)
+	}
+
+	if len(result) != 0 {
+		t.Errorf("space search did return something for non-existing tag: %v", result)
 	}
 }
