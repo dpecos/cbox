@@ -4,7 +4,7 @@ import (
 	"log"
 	"path"
 
-	"github.com/dpecos/cbox/models"
+	"github.com/dpecos/cbox/pkg/models"
 	"github.com/dpecos/cbox/tools"
 	"github.com/gofrs/uuid"
 	homedir "github.com/mitchellh/go-homedir"

@@ -4,8 +4,8 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/dpecos/cbox/core"
-	"github.com/dpecos/cbox/models"
+	"github.com/dpecos/cbox/internal/core"
+	"github.com/dpecos/cbox/pkg/models"
 	"github.com/gofrs/uuid"
 )
 

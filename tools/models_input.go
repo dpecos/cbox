@@ -6,7 +6,7 @@ import (
 
 	"github.com/gofrs/uuid"
 
-	"github.com/dpecos/cbox/models"
+	"github.com/dpecos/cbox/pkg/models"
 	"github.com/dpecos/cbox/tools/console"
 )
 

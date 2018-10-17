@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dpecos/cbox/models"
+	"github.com/dpecos/cbox/pkg/models"
 	"github.com/dpecos/cbox/tools/console"
 )
 

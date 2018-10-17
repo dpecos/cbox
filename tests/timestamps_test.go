@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/dpecos/cbox/core"
-	"github.com/dpecos/cbox/models"
+	"github.com/dpecos/cbox/internal/core"
+	"github.com/dpecos/cbox/pkg/models"
 )
 
 func setupMocks() {

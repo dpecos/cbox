@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/dpecos/cbox/models"
+	"github.com/dpecos/cbox/pkg/models"
 )
 
 func expectSelector(t *testing.T, s *models.Selector, err error, item string, org string, user string, space string) {

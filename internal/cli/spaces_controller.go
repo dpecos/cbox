@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/dpecos/cbox/core"
-	"github.com/dpecos/cbox/models"
+	"github.com/dpecos/cbox/internal/core"
+	"github.com/dpecos/cbox/pkg/models"
 	"github.com/dpecos/cbox/tools"
 	"github.com/dpecos/cbox/tools/console"
 	"github.com/spf13/cobra"

@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/dpecos/cbox/cli"
+	"github.com/dpecos/cbox/internal/cli"
 	"github.com/dpecos/cbox/tools/console"
 )
 

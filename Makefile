@@ -4,16 +4,16 @@ TAG=$(shell git describe --tags 2> /dev/null)
 BUILD=$(shell date +%FT%T%z)
 
 build-dev: version
-	go build -ldflags "-X github.com/dpecos/cbox/core.Version=$(VERSION) -X github.com/dpecos/cbox/core.Build=$(BUILD)"
+	sh ./scripts/compile.sh build $(VERSION) $(BUILD) dev
 
 build-prod: version
-	go build -ldflags "-X github.com/dpecos/cbox/core.Version=$(VERSION) -X github.com/dpecos/cbox/core.Build=$(BUILD) -X github.com/dpecos/cbox/core.Env=prod"
+	sh ./scripts/compile.sh build $(VERSION) $(BUILD) prod
 
 install-dev: version
-	go install -ldflags "-X github.com/dpecos/cbox/core.Version=$(VERSION) -X github.com/dpecos/cbox/core.Build=$(BUILD)"
+	sh ./scripts/compile.sh install $(VERSION) $(BUILD) dev
 
 install-prod: version
-	go install -ldflags "-X github.com/dpecos/cbox/core.Version=$(VERSION) -X github.com/dpecos/cbox/core.Build=$(BUILD) -X github.com/dpecos/cbox/core.Env=prod"
+	sh ./scripts/compile.sh install $(VERSION) $(BUILD) prod
 
 version:
   VERSION := $(if $(TAG),$(TAG),$(BRANCH)-$(COMMIT))

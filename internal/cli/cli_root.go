@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/dpecos/cbox/core"
+	"github.com/dpecos/cbox/internal/core"
 	"github.com/dpecos/cbox/tools"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
