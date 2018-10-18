@@ -36,7 +36,7 @@ func TestCommandCreationDeletion(t *testing.T) {
 	}
 
 	if len(space.Entries) != len(s.Entries) {
-		t.Fatal("space after persistance has different amount of commands")
+		t.Fatal("space after persistence has different amount of commands")
 	}
 
 	c, err := s.CommandFind(command.ID.String())
