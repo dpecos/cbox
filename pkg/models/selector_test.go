@@ -1,12 +1,15 @@
-package tests
+package models
 
 import (
+	"github.com/spf13/viper"
 	"testing"
-
-	"github.com/dpecos/cbox/pkg/models"
 )
 
-func expectSelector(t *testing.T, s *models.Selector, err error, item string, org string, user string, space string) {
+func TestMain(m *testing.M) {
+	viper.SetDefault("cbox.default-space", "default")
+}
+
+func expectSelector(t *testing.T, s *Selector, err error, item string, org string, user string, space string) {
 	if err != nil {
 		t.Error("Error parsing selector", err)
 	}
@@ -19,51 +22,51 @@ func expectSelector(t *testing.T, s *models.Selector, err error, item string, or
 }
 
 func TestEmptySelector(t *testing.T) {
-	s, err := models.ParseSelector("")
+	s, err := ParseSelector("")
 	expectSelector(t, s, err, "", "", "", "default")
 }
 
 func TestSpaceSelector(t *testing.T) {
-	s, err := models.ParseSelector("@test")
+	s, err := ParseSelector("@test")
 	expectSelector(t, s, err, "", "", "", "test")
 }
 func TestTagSelector(t *testing.T) {
-	s, err := models.ParseSelector("test-tag")
+	s, err := ParseSelector("test-tag")
 	expectSelector(t, s, err, "test-tag", "", "", "default")
 }
 
 func TestTagSpaceSelector(t *testing.T) {
-	s, err := models.ParseSelector("test-tag@test")
+	s, err := ParseSelector("test-tag@test")
 	expectSelector(t, s, err, "test-tag", "", "", "test")
 }
 
 func TestMandatorySpaceSelector(t *testing.T) {
-	s, err := models.ParseSelectorMandatorySpace("@test")
+	s, err := ParseSelectorMandatorySpace("@test")
 	expectSelector(t, s, err, "", "", "", "test")
 }
 
 func TestMandatoryItemSelector(t *testing.T) {
-	s, err := models.ParseSelectorMandatoryItem("item@test")
+	s, err := ParseSelectorMandatoryItem("item@test")
 	expectSelector(t, s, err, "item", "", "", "test")
 }
 
 func TestUserSpaceSelector(t *testing.T) {
-	s, err := models.ParseSelectorMandatoryItem("item@user:space")
+	s, err := ParseSelectorMandatoryItem("item@user:space")
 	expectSelector(t, s, err, "item", "", "user", "space")
 }
 
 func TestOrgSpaceSelector(t *testing.T) {
-	s, err := models.ParseSelectorMandatoryItem("item@org/space")
+	s, err := ParseSelectorMandatoryItem("item@org/space")
 	expectSelector(t, s, err, "item", "org", "", "space")
 }
 
 func TestOrgUserSpaceSelector(t *testing.T) {
-	s, err := models.ParseSelectorMandatoryItem("item@org/user:space")
+	s, err := ParseSelectorMandatoryItem("item@org/user:space")
 	expectSelector(t, s, err, "item", "org", "user", "space")
 }
 
 func TestEmptyMandatorySpaceSelector(t *testing.T) {
-	_, err := models.ParseSelectorMandatorySpace("")
+	_, err := ParseSelectorMandatorySpace("")
 
 	if err == nil {
 		t.Error("Expected error was not created")
@@ -71,7 +74,7 @@ func TestEmptyMandatorySpaceSelector(t *testing.T) {
 }
 
 func TestEmptyMandatoryItem(t *testing.T) {
-	_, err := models.ParseSelectorMandatoryItem("@space")
+	_, err := ParseSelectorMandatoryItem("@space")
 
 	if err == nil {
 		t.Error("Expected error was not created")
@@ -79,7 +82,7 @@ func TestEmptyMandatoryItem(t *testing.T) {
 }
 
 func TestInvalidIdTagSelector(t *testing.T) {
-	_, err := models.ParseSelector("invalid%chars")
+	_, err := ParseSelector("invalid%chars")
 
 	if err == nil {
 		t.Error("Expected error was not created")
@@ -87,7 +90,7 @@ func TestInvalidIdTagSelector(t *testing.T) {
 }
 
 func TestInvalidEmptySpaceSelector(t *testing.T) {
-	_, err := models.ParseSelector("@")
+	_, err := ParseSelector("@")
 
 	if err == nil {
 		t.Error("Expected error was not created")
@@ -95,7 +98,7 @@ func TestInvalidEmptySpaceSelector(t *testing.T) {
 }
 
 func TestInvalidUppercaseSpaceSelector(t *testing.T) {
-	_, err := models.ParseSelector("Test")
+	_, err := ParseSelector("Test")
 
 	if err == nil {
 		t.Error("Expected error was not created")
@@ -103,7 +106,7 @@ func TestInvalidUppercaseSpaceSelector(t *testing.T) {
 }
 
 func TestInvalidCharacterInIDSelector(t *testing.T) {
-	_, err := models.ParseSelector("t/@space")
+	_, err := ParseSelector("t/@space")
 
 	if err == nil {
 		t.Error("Expected error was not created")
@@ -111,7 +114,7 @@ func TestInvalidCharacterInIDSelector(t *testing.T) {
 }
 
 func TestInvalidCharacter1InSpaceSelector(t *testing.T) {
-	_, err := models.ParseSelector("t@space/d/s")
+	_, err := ParseSelector("t@space/d/s")
 
 	if err == nil {
 		t.Error("Expected error was not created")
@@ -119,7 +122,7 @@ func TestInvalidCharacter1InSpaceSelector(t *testing.T) {
 }
 
 func TestInvalidCharacter2InSpaceSelector(t *testing.T) {
-	_, err := models.ParseSelector("t@space:d/s")
+	_, err := ParseSelector("t@space:d/s")
 
 	if err == nil {
 		t.Error("Expected error was not created")
@@ -127,7 +130,7 @@ func TestInvalidCharacter2InSpaceSelector(t *testing.T) {
 }
 
 func TestInvalidCharacter3InSpaceSelector(t *testing.T) {
-	_, err := models.ParseSelector("t@space:d:s")
+	_, err := ParseSelector("t@space:d:s")
 
 	if err == nil {
 		t.Error("Expected error was not created")
@@ -136,7 +139,7 @@ func TestInvalidCharacter3InSpaceSelector(t *testing.T) {
 
 func TestStringWithUser(t *testing.T) {
 	sel := "item@user:space"
-	s, _ := models.ParseSelectorMandatoryItem(sel)
+	s, _ := ParseSelectorMandatoryItem(sel)
 	str := s.String()
 
 	if sel != str {
@@ -146,7 +149,7 @@ func TestStringWithUser(t *testing.T) {
 
 func TestStringWithoutUser(t *testing.T) {
 	sel := "item@space"
-	s, _ := models.ParseSelectorMandatoryItem(sel)
+	s, _ := ParseSelectorMandatoryItem(sel)
 	str := s.String()
 
 	if sel != str {
@@ -156,7 +159,7 @@ func TestStringWithoutUser(t *testing.T) {
 
 func TestStringWithoutItem(t *testing.T) {
 	sel := "@space"
-	s, _ := models.ParseSelectorMandatorySpace(sel)
+	s, _ := ParseSelectorMandatorySpace(sel)
 	str := s.String()
 
 	if sel != str {
