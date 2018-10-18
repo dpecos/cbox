@@ -2,16 +2,19 @@ package pkg
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
-	"github.com/gofrs/uuid"
-
-	"github.com/dpecos/cbox/pkg/models"
 	"github.com/dpecos/cbox/internal/pkg/console"
+	"github.com/dpecos/cbox/pkg/models"
+	"github.com/gofrs/uuid"
 )
 
 func ConsoleReadCommand() *models.Command {
-	id, _ := uuid.NewV4()
+	id, err := uuid.NewV4()
+	if err != nil {
+		log.Fatalf("could not generate a new ID: %v", err)
+	}
 	command := models.Command{
 		Label:       strings.ToLower(console.ReadString("Label", console.ONLY_VALID_CHARS, console.NOT_EMPTY_VALUES)),
 		Description: console.ReadString("Description"),
@@ -41,7 +44,10 @@ func ConsoleEditCommand(command *models.Command) {
 }
 
 func ConsoleReadSpace() *models.Space {
-	id, _ := uuid.NewV4()
+	id, err := uuid.NewV4()
+	if err != nil {
+		log.Fatalf("could not generate a new ID: %v", err)
+	}
 	space := models.Space{
 		Label:       strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS)),
 		Description: console.ReadString("Description"),

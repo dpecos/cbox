@@ -29,7 +29,9 @@ To configure your bash shell to load completions for each session add to your ba
 . <(bitbucket completion)
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		rootCmd.GenBashCompletion(os.Stdout)
+		if err := rootCmd.GenBashCompletion(os.Stdout); err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 
@@ -37,7 +39,9 @@ func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatal(err)
 	}
-	viper.WriteConfig()
+	if err := viper.WriteConfig(); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func init() {

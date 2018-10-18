@@ -6,11 +6,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/dpecos/cbox/internal/pkg/console"
-
 	"github.com/dpecos/cbox/internal/app/core"
-	"github.com/dpecos/cbox/pkg/models"
 	"github.com/dpecos/cbox/internal/pkg"
+	"github.com/dpecos/cbox/internal/pkg/console"
+	"github.com/dpecos/cbox/pkg/models"
 	"github.com/spf13/cobra"
 )
 
@@ -94,7 +93,7 @@ func (ctrl *CLIController) TagsDelete(cmd *cobra.Command, args []string) {
 
 	selector, err := models.ParseSelectorMandatoryItem(args[0])
 	if err != nil {
-		log.Fatalf("delete tag: %v", err)
+		log.Fatalf("delete tags: %v", err)
 	}
 
 	cbox := core.LoadCbox("")
@@ -107,7 +106,10 @@ func (ctrl *CLIController) TagsDelete(cmd *cobra.Command, args []string) {
 	fmt.Printf("Deleting tags from space '%s'\n", space.Label)
 
 	for _, cmd := range commands {
-		command, _ := space.CommandFind(cmd.Label)
+		command, err := space.CommandFind(cmd.Label)
+		if err != nil {
+			log.Fatalf("delete tags: %v", err)
+		}
 		command.TagDelete(selector.Item)
 
 		pkg.PrintCommand("Untagged command", command, false, false)

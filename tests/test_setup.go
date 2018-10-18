@@ -2,6 +2,7 @@ package tests
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
 	"os"
 	"time"
@@ -23,7 +24,9 @@ func init() {
 func setupTests() {
 	cbox = nil
 
-	os.RemoveAll("/tmp/.cbox")
+	if err := os.RemoveAll("/tmp/.cbox"); err != nil {
+		log.Fatalf("could not clean cbox test directory: %v", err)
+	}
 
 	core.InitCBox("/tmp")
 	reloadCBox()

@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"log"
 	"math/rand"
 	"testing"
 
@@ -51,20 +52,26 @@ func createSpace(t *testing.T) *models.Space {
 		t.Fatal("cbox not initialized")
 	}
 
-	id, _ := uuid.NewV4()
+	id, err := uuid.NewV4()
+	if err != nil {
+		log.Fatalf("could not generate a new ID: %v", err)
+	}
 	space := models.Space{
 		Label:       randString(8),
 		Description: randString(15),
 	}
 	space.ID = id
 
-	err := cbox.SpaceCreate(&space)
+	err = cbox.SpaceCreate(&space)
 
 	if err != nil {
 		t.Error(err)
 	}
 
-	s, _ := cbox.SpaceFind(space.ID.String())
+	s, err := cbox.SpaceFind(space.ID.String())
+	if err != nil {
+		t.Fatalf("could not find space: %v", err)
+	}
 	return s
 }
 
