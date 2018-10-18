@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/dpecos/cbox/internal/core"
+	"github.com/dpecos/cbox/internal/app/core"
 	"github.com/dpecos/cbox/pkg/models"
 	"github.com/spf13/viper"
 )

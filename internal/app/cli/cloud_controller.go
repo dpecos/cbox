@@ -5,16 +5,16 @@ import (
 	"log"
 	"strings"
 
-	"github.com/dpecos/cbox/internal/core"
+	"github.com/dpecos/cbox/internal/app/core"
 	"github.com/dpecos/cbox/pkg/models"
-	"github.com/dpecos/cbox/tools"
-	"github.com/dpecos/cbox/tools/console"
+	"github.com/dpecos/cbox/internal/pkg"
+	"github.com/dpecos/cbox/internal/pkg/console"
 
 	"github.com/spf13/cobra"
 )
 
 func (ctrl *CLIController) CloudLogin(cmd *cobra.Command, args []string) {
-	fmt.Println(tools.Logo)
+	fmt.Println(pkg.Logo)
 	fmt.Printf("Open this URL in a browser and follow the authentication process: \n\n%s\n\n", fmt.Sprintf("%s/auth/", core.CloudURL()))
 
 	jwt := console.ReadString("JWT Token")
@@ -30,7 +30,7 @@ func (ctrl *CLIController) CloudLogin(cmd *cobra.Command, args []string) {
 }
 
 func (ctrl *CLIController) CloudLogout(cmd *cobra.Command, args []string) {
-	fmt.Println(tools.Logo)
+	fmt.Println(pkg.Logo)
 	core.CloudLogout()
 	console.PrintSuccess("Successfully logged out from cbox cloud. See you back soon!")
 }
@@ -48,7 +48,7 @@ func (ctrl *CLIController) CloudItemPublish(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: publish item: %v", err)
 	}
 
-	tools.PrintSpace("Space to publish", space)
+	pkg.PrintSpace("Space to publish", space)
 
 	if selector.Item != "" {
 		commands := space.CommandList(selector.Item)
@@ -59,7 +59,7 @@ func (ctrl *CLIController) CloudItemPublish(cmd *cobra.Command, args []string) {
 		space.Entries = commands
 	}
 
-	tools.PrintCommandList("Containing these commands", space.Entries, false, false)
+	pkg.PrintCommandList("Containing these commands", space.Entries, false, false)
 
 	if console.Confirm("Publish?") {
 		fmt.Printf("Publishing space '%s'...\n", space.Label)
@@ -95,8 +95,8 @@ func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: clone space: %v", err)
 	}
 
-	tools.PrintSpace("Space to clone", space)
-	tools.PrintCommandList("Containing these commands", space.Entries, false, false)
+	pkg.PrintSpace("Space to clone", space)
+	pkg.PrintCommandList("Containing these commands", space.Entries, false, false)
 
 	if console.Confirm("Clone?") {
 		cbox := core.LoadCbox("")
@@ -146,7 +146,7 @@ func (ctrl *CLIController) CloudSpacePull(cmd *cobra.Command, args []string) {
 
 	core.PersistCbox(cbox)
 
-	tools.PrintSpace("Pulled space", space)
+	pkg.PrintSpace("Pulled space", space)
 
 	console.PrintSuccess("Space pulled successfully!")
 }
@@ -167,7 +167,7 @@ func (ctrl *CLIController) CloudCommandList(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: list commands: %v", err)
 	}
 
-	tools.PrintCommandList("", commands, viewSnippet, false)
+	pkg.PrintCommandList("", commands, viewSnippet, false)
 }
 
 func (ctrl *CLIController) CloudCommandCopy(cmd *cobra.Command, args []string) {
@@ -202,7 +202,7 @@ func (ctrl *CLIController) CloudCommandCopy(cmd *cobra.Command, args []string) {
 		console.PrintError(fmt.Sprintf("Command '%s' not found", cmdSelector))
 	}
 
-	tools.PrintCommandList("Commands to copy", commands, false, false)
+	pkg.PrintCommandList("Commands to copy", commands, false, false)
 
 	if console.Confirm(fmt.Sprintf("Copy these commands into %s?", spaceSelector)) {
 

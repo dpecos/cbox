@@ -1,4 +1,4 @@
-package tools
+package pkg
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"github.com/gofrs/uuid"
 
 	"github.com/dpecos/cbox/pkg/models"
-	"github.com/dpecos/cbox/tools/console"
+	"github.com/dpecos/cbox/internal/pkg/console"
 )
 
 func ConsoleReadCommand() *models.Command {

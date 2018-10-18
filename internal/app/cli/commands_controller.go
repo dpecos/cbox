@@ -5,9 +5,9 @@ import (
 	"log"
 	"strings"
 
-	"github.com/dpecos/cbox/internal/core"
-	"github.com/dpecos/cbox/tools"
-	"github.com/dpecos/cbox/tools/console"
+	"github.com/dpecos/cbox/internal/app/core"
+	"github.com/dpecos/cbox/internal/pkg"
+	"github.com/dpecos/cbox/internal/pkg/console"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +23,7 @@ func (ctrl *CLIController) CommandList(cmd *cobra.Command, args []string) {
 
 	commands := space.CommandList(selector.Item)
 
-	tools.PrintCommandList("", commands, viewSnippet, false)
+	pkg.PrintCommandList("", commands, viewSnippet, false)
 }
 
 func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
@@ -37,7 +37,7 @@ func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 	}
 
 	fmt.Println("Creating new command")
-	command := tools.ConsoleReadCommand()
+	command := pkg.ConsoleReadCommand()
 
 	err = space.CommandAdd(command)
 	for err != nil {
@@ -47,7 +47,7 @@ func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 	}
 	core.PersistCbox(cbox)
 
-	tools.PrintCommand("New command", command, true, false)
+	pkg.PrintCommand("New command", command, true, false)
 
 	console.PrintSuccess("Command stored successfully!")
 }
@@ -70,9 +70,9 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 
 	previousCommandLabel := command.Label
 
-	tools.PrintCommand("Command to edit", command, true, false)
+	pkg.PrintCommand("Command to edit", command, true, false)
 
-	tools.ConsoleEditCommand(command)
+	pkg.ConsoleEditCommand(command)
 
 	err = space.CommandEdit(command, previousCommandLabel)
 	for err != nil {
@@ -81,7 +81,7 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 		err = space.CommandEdit(command, previousCommandLabel)
 	}
 
-	tools.PrintCommand("Command after edition", command, true, false)
+	pkg.PrintCommand("Command after edition", command, true, false)
 
 	if console.Confirm("Update?") {
 		core.PersistCbox(cbox)
@@ -106,7 +106,7 @@ func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
 		log.Fatalf("delete command: %v", err)
 	}
 
-	tools.PrintCommand("Command to delete ", command, true, false)
+	pkg.PrintCommand("Command to delete ", command, true, false)
 
 	if console.Confirm("Are you sure you want to delete this command?") {
 		space.CommandDelete(command)
@@ -132,5 +132,5 @@ func (ctrl *CLIController) CommandView(cmd *cobra.Command, args []string) {
 		log.Fatalf("view command: %v", err)
 	}
 
-	tools.PrintCommand("", command, true, sourceOnly)
+	pkg.PrintCommand("", command, true, sourceOnly)
 }

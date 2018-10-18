@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"github.com/dpecos/cbox/tools"
+	"github.com/dpecos/cbox/internal/pkg"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +16,7 @@ var commandsCmd = &cobra.Command{
 	Aliases: []string{"command", "c", "cmd", "list", "ls", "l"},
 	Args:    cobra.MaximumNArgs(1),
 	Short:   "List the content of a space in your cbox",
-	Long:    tools.Logo,
+	Long:    pkg.Logo,
 	Run:     ctrl.CommandList,
 }
 
@@ -24,7 +24,7 @@ var addCmd = &cobra.Command{
 	Use:   "add",
 	Args:  cobra.MaximumNArgs(1),
 	Short: "Add a new command to your cbox",
-	Long:  tools.Logo,
+	Long:  pkg.Logo,
 	Run:   ctrl.CommandAdd,
 }
 
@@ -33,7 +33,7 @@ var editCmd = &cobra.Command{
 	Aliases: []string{"e"},
 	Args:    cobra.ExactArgs(1),
 	Short:   "Edit a command from your cbox",
-	Long:    tools.Logo,
+	Long:    pkg.Logo,
 	Run:     ctrl.CommandEdit,
 }
 
@@ -42,7 +42,7 @@ var deleteCmd = &cobra.Command{
 	Aliases: []string{"del"},
 	Args:    cobra.ExactArgs(1),
 	Short:   "Delete a command from your cbox",
-	Long:    tools.Logo,
+	Long:    pkg.Logo,
 	Run:     ctrl.CommandDelete,
 }
 
@@ -51,7 +51,7 @@ var viewCmd = &cobra.Command{
 	Aliases: []string{"v"},
 	Args:    cobra.ExactArgs(1),
 	Short:   "View one command",
-	Long:    tools.Logo,
+	Long:    pkg.Logo,
 	Run:     ctrl.CommandView,
 }
 
@@ -60,7 +60,7 @@ var tagCmd = &cobra.Command{
 	Aliases: []string{"t"},
 	Args:    cobra.MinimumNArgs(2),
 	Short:   "Add tags to a command",
-	Long:    tools.Logo,
+	Long:    pkg.Logo,
 	Run:     ctrl.TagsAdd,
 }
 
@@ -68,7 +68,7 @@ var untagCmd = &cobra.Command{
 	Use:   "untag",
 	Args:  cobra.MinimumNArgs(2),
 	Short: "Removes tags from a command",
-	Long:  tools.Logo,
+	Long:  pkg.Logo,
 	Run:   ctrl.TagsRemove,
 }
 

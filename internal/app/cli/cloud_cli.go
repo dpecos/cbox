@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"github.com/dpecos/cbox/tools"
+	"github.com/dpecos/cbox/internal/pkg"
 	"github.com/spf13/cobra"
 )
 
@@ -52,7 +52,7 @@ var cloudCommandsCmd = &cobra.Command{
 	Aliases: []string{"c", "cmd", "commands", "ls", "l"},
 	Args:    cobra.ExactArgs(1),
 	Short:   "List the content of a space from cbox cloud",
-	Long:    tools.Logo,
+	Long:    pkg.Logo,
 	Run:     ctrl.CloudCommandList,
 }
 
@@ -60,7 +60,7 @@ var cloudCopyCmd = &cobra.Command{
 	Use:   "copy",
 	Args:  cobra.ExactArgs(2),
 	Short: "Copy a remote command into a local space",
-	Long:  tools.Logo,
+	Long:  pkg.Logo,
 	Run:   ctrl.CloudCommandCopy,
 }
 

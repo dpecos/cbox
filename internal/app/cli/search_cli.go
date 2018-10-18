@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"github.com/dpecos/cbox/tools"
+	"github.com/dpecos/cbox/internal/pkg"
 	"github.com/spf13/cobra"
 )
 
@@ -10,7 +10,7 @@ var searchCmd = &cobra.Command{
 	Aliases: []string{"s"},
 	Args:    cobra.MaximumNArgs(2),
 	Short:   "Search for commands in a given space",
-	Long:    tools.Logo,
+	Long:    pkg.Logo,
 	Run:     ctrl.SearchCommands,
 }
 

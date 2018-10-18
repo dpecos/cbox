@@ -8,11 +8,11 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/dpecos/cbox/tools/console"
+	"github.com/dpecos/cbox/internal/pkg/console"
 	"github.com/gofrs/uuid"
 
 	"github.com/dpecos/cbox/pkg/models"
-	"github.com/dpecos/cbox/tools"
+	"github.com/dpecos/cbox/internal/pkg"
 	"github.com/spf13/viper"
 )
 
@@ -49,7 +49,7 @@ type Cloud struct {
 func CloudLogin(jwt string) (string, string, string, error) {
 	readCloudConfig()
 
-	userID, login, name, err := tools.VerifyJWT(jwt)
+	userID, login, name, err := pkg.VerifyJWT(jwt)
 	if err != nil {
 		return "", "", "", err
 	}

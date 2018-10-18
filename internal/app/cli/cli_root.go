@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/dpecos/cbox/internal/core"
-	"github.com/dpecos/cbox/tools"
+	"github.com/dpecos/cbox/internal/app/core"
+	"github.com/dpecos/cbox/internal/pkg"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -13,7 +13,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "cbox",
 	Short: "",
-	Long:  tools.Logo,
+	Long:  pkg.Logo,
 }
 
 var completionCmd = &cobra.Command{

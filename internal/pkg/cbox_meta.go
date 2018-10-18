@@ -1,7 +1,7 @@
-package tools
+package pkg
 
 import (
-	"github.com/dpecos/cbox/tools/console"
+	"github.com/dpecos/cbox/internal/pkg/console"
 )
 
 var (

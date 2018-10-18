@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/dpecos/cbox/internal/core"
-	"github.com/dpecos/cbox/tools"
+	"github.com/dpecos/cbox/internal/app/core"
+	"github.com/dpecos/cbox/internal/pkg"
 	"github.com/spf13/cobra"
 )
 
@@ -41,9 +41,9 @@ func (ctrl *CLIController) SearchCommands(cmd *cobra.Command, args []string) {
 	}
 
 	if selector.Item != "" {
-		tools.PrintCommandList(fmt.Sprintf("Results for \"%s\" (within tag: %s)", criteria, selector.Item), commands, viewSnippet, false)
+		pkg.PrintCommandList(fmt.Sprintf("Results for \"%s\" (within tag: %s)", criteria, selector.Item), commands, viewSnippet, false)
 	} else {
-		tools.PrintCommandList(fmt.Sprintf("Results for \"%s\"", criteria), commands, viewSnippet, false)
+		pkg.PrintCommandList(fmt.Sprintf("Results for \"%s\"", criteria), commands, viewSnippet, false)
 	}
 
 }

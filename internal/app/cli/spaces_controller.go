@@ -5,10 +5,10 @@ import (
 	"log"
 	"strings"
 
-	"github.com/dpecos/cbox/internal/core"
+	"github.com/dpecos/cbox/internal/app/core"
 	"github.com/dpecos/cbox/pkg/models"
-	"github.com/dpecos/cbox/tools"
-	"github.com/dpecos/cbox/tools/console"
+	"github.com/dpecos/cbox/internal/pkg"
+	"github.com/dpecos/cbox/internal/pkg/console"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +16,7 @@ func (ctrl *CLIController) SpacesList(cmd *cobra.Command, args []string) {
 
 	spaces := core.SpaceListFiles()
 	for _, space := range spaces {
-		tools.PrintSpace("", space)
+		pkg.PrintSpace("", space)
 	}
 }
 
@@ -25,7 +25,7 @@ func (ctrl *CLIController) SpacesCreate(cmd *cobra.Command, args []string) {
 	cbox := core.LoadCbox("")
 
 	fmt.Println("Creating new space")
-	space := tools.ConsoleReadSpace()
+	space := pkg.ConsoleReadSpace()
 
 	err := cbox.SpaceCreate(space)
 	for err != nil {
@@ -36,7 +36,7 @@ func (ctrl *CLIController) SpacesCreate(cmd *cobra.Command, args []string) {
 
 	core.PersistCbox(cbox)
 
-	tools.PrintSpace("New space", space)
+	pkg.PrintSpace("New space", space)
 
 	console.PrintSuccess("Space successfully created!")
 }
@@ -55,11 +55,11 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 		log.Fatalf("edit space: %v", err)
 	}
 
-	tools.PrintSpace("Space to edit", space)
+	pkg.PrintSpace("Space to edit", space)
 
-	tools.ConsoleEditSpace(space)
+	pkg.ConsoleEditSpace(space)
 
-	tools.PrintSpace("Space after edition", space)
+	pkg.PrintSpace("Space after edition", space)
 
 	if console.Confirm("Update?") {
 
@@ -98,7 +98,7 @@ func (ctrl *CLIController) SpacesDestroy(cmd *cobra.Command, args []string) {
 		log.Fatalf("destroy space: %v", err)
 	}
 
-	tools.PrintSpace("Space to destroy", space)
+	pkg.PrintSpace("Space to destroy", space)
 
 	if console.Confirm("Are you sure you want to destroy this space?") {
 		// fix issue #52: when a space is removed, pointers to that position of memory change values

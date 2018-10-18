@@ -6,11 +6,11 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/dpecos/cbox/tools/console"
+	"github.com/dpecos/cbox/internal/pkg/console"
 
-	"github.com/dpecos/cbox/internal/core"
+	"github.com/dpecos/cbox/internal/app/core"
 	"github.com/dpecos/cbox/pkg/models"
-	"github.com/dpecos/cbox/tools"
+	"github.com/dpecos/cbox/internal/pkg"
 	"github.com/spf13/cobra"
 )
 
@@ -28,7 +28,7 @@ func (ctrl *CLIController) TagsList(cmd *cobra.Command, args []string) {
 	sort.Strings(tags)
 
 	for _, tag := range tags {
-		tools.PrintTag(tag)
+		pkg.PrintTag(tag)
 	}
 }
 
@@ -56,7 +56,7 @@ func (ctrl *CLIController) TagsAdd(cmd *cobra.Command, args []string) {
 
 	core.PersistCbox(cbox)
 
-	tools.PrintCommand("Tagged command", command, true, false)
+	pkg.PrintCommand("Tagged command", command, true, false)
 
 	console.PrintSuccess("Command tagged successfully!")
 }
@@ -85,7 +85,7 @@ func (ctrl *CLIController) TagsRemove(cmd *cobra.Command, args []string) {
 
 	core.PersistCbox(cbox)
 
-	tools.PrintCommand("Untagged command", command, true, false)
+	pkg.PrintCommand("Untagged command", command, true, false)
 
 	console.PrintSuccess("Command tag deleted successfully!")
 }
@@ -110,7 +110,7 @@ func (ctrl *CLIController) TagsDelete(cmd *cobra.Command, args []string) {
 		command, _ := space.CommandFind(cmd.Label)
 		command.TagDelete(selector.Item)
 
-		tools.PrintCommand("Untagged command", command, false, false)
+		pkg.PrintCommand("Untagged command", command, false, false)
 	}
 
 	core.PersistCbox(cbox)

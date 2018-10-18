@@ -5,7 +5,7 @@ import (
 	"path"
 
 	"github.com/dpecos/cbox/pkg/models"
-	"github.com/dpecos/cbox/tools"
+	"github.com/dpecos/cbox/internal/pkg"
 	"github.com/gofrs/uuid"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
@@ -33,13 +33,13 @@ func CheckCboxDir(path string) string {
 	basePath = path
 
 	cboxPath := resolveInCboxDir("")
-	tools.CreateDirectoryIfNotExists(cboxPath)
+	pkg.CreateDirectoryIfNotExists(cboxPath)
 
 	configFile := resolveInCboxDir("config.yml")
-	tools.CreateFileIfNotExists(configFile)
+	pkg.CreateFileIfNotExists(configFile)
 
 	spacesPath := resolveInCboxDir("spaces")
-	if tools.CreateDirectoryIfNotExists(spacesPath) {
+	if pkg.CreateDirectoryIfNotExists(spacesPath) {
 		id, _ := uuid.NewV4()
 		defaultSpace := models.Space{
 			Label:       DEFAULT_SPACE_ID,
