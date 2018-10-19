@@ -6,10 +6,9 @@ import (
 	"strings"
 
 	"github.com/dpecos/cbox/internal/app/core"
-	"github.com/dpecos/cbox/pkg/models"
 	"github.com/dpecos/cbox/internal/pkg"
 	"github.com/dpecos/cbox/internal/pkg/console"
-
+	"github.com/dpecos/cbox/pkg/models"
 	"github.com/spf13/cobra"
 )
 
@@ -41,9 +40,7 @@ func (ctrl *CLIController) CloudItemPublish(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: publish item: %v", err)
 	}
 
-	cbox := core.LoadCbox("")
-
-	space, err := cbox.SpaceFind(selector.Space)
+	space, err := cboxInstance.SpaceFind(selector.Space)
 	if err != nil {
 		log.Fatalf("cloud: publish item: %v", err)
 	}
@@ -99,16 +96,14 @@ func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
 	pkg.PrintCommandList("Containing these commands", space.Entries, false, false)
 
 	if console.Confirm("Clone?") {
-		cbox := core.LoadCbox("")
-
-		err := cbox.SpaceCreate(space)
+		err := cboxInstance.SpaceCreate(space)
 		for err != nil {
 			console.PrintError("Space already found in your cbox. Try a different one")
 			space.Label = strings.ToLower(console.ReadString("Label"))
-			err = cbox.SpaceCreate(space)
+			err = cboxInstance.SpaceCreate(space)
 		}
 
-		core.PersistCbox(cbox)
+		core.Save(cboxInstance)
 
 		console.PrintSuccess("Space cloned successfully!")
 	} else {
@@ -127,9 +122,7 @@ func (ctrl *CLIController) CloudSpacePull(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: pull space: cloud client: %v", err)
 	}
 
-	cbox := core.LoadCbox("")
-
-	space, err := cbox.SpaceFind(selector.Space)
+	space, err := cboxInstance.SpaceFind(selector.Space)
 	if err != nil {
 		log.Fatalf("cloud: pull space: %v", err)
 	}
@@ -144,7 +137,7 @@ func (ctrl *CLIController) CloudSpacePull(cmd *cobra.Command, args []string) {
 	space.UpdatedAt = spaceCloud.UpdatedAt
 	space.Description = spaceCloud.Description
 
-	core.PersistCbox(cbox)
+	core.Save(cboxInstance)
 
 	pkg.PrintSpace("Pulled space", space)
 
@@ -181,9 +174,7 @@ func (ctrl *CLIController) CloudCommandCopy(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: copy command: invalid space selector: %v", err)
 	}
 
-	cbox := core.LoadCbox("")
-
-	space, err := cbox.SpaceFind(spaceSelector.Space)
+	space, err := cboxInstance.SpaceFind(spaceSelector.Space)
 	if err != nil {
 		log.Fatalf("cloud: copy command: local space: %v", err)
 	}
@@ -215,7 +206,7 @@ func (ctrl *CLIController) CloudCommandCopy(cmd *cobra.Command, args []string) {
 			}
 		}
 
-		core.PersistCbox(cbox)
+		core.Save(cboxInstance)
 
 		if failures {
 			console.PrintError("\nSome commands could not be stored")

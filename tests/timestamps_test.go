@@ -20,7 +20,9 @@ func setupMocks() {
 func TestSpaceTimestamps(t *testing.T) {
 	setupMocks()
 
-	space := createSpace(t)
+	cboxInstance := initializeCBox()
+
+	space := createSpace(t, cboxInstance)
 	tc := space.CreatedAt
 	tu := space.UpdatedAt
 
@@ -28,20 +30,20 @@ func TestSpaceTimestamps(t *testing.T) {
 		t.Errorf("creation and update timestamsp should be the same for new spaces")
 	}
 
-	reloadCBox()
-	s, _ := cbox.SpaceFind(space.ID.String())
+	cboxInstance = reloadCBox(cboxInstance)
+	s, _ := cboxInstance.SpaceFind(space.ID.String())
 
 	if !tc.Equal(s.CreatedAt) {
-		t.Errorf("space creation timestamp changed after persisting and reloading cbox: '%s' - '%s'", tc.StringRaw(), s.CreatedAt.StringRaw())
+		t.Errorf("space creation timestamp changed after persisting and reloading cboxInstance: '%s' - '%s'", tc.StringRaw(), s.CreatedAt.StringRaw())
 	}
 
 	if !tu.Equal(s.UpdatedAt) {
-		t.Errorf("space update timestamp changed after persisting and reloading cbox: '%s' - '%s'", tu.StringRaw(), s.UpdatedAt.StringRaw())
+		t.Errorf("space update timestamp changed after persisting and reloading cboxInstance: '%s' - '%s'", tu.StringRaw(), s.UpdatedAt.StringRaw())
 	}
 
 	s.Label = s.Label + "-updated"
 
-	err := cbox.SpaceEdit(s, space.Label)
+	err := cboxInstance.SpaceEdit(s, space.Label)
 	if err != nil {
 		t.Errorf("failed to rename space: %v", err)
 	}
@@ -49,10 +51,10 @@ func TestSpaceTimestamps(t *testing.T) {
 	spaceToDelete := &models.Space{
 		Label: space.Label,
 	}
-	core.SpaceDeleteFile(spaceToDelete)
+	core.DeleteSpaceFile(spaceToDelete)
 
-	reloadCBox()
-	s, _ = cbox.SpaceFind(space.ID.String())
+	cboxInstance = reloadCBox(cboxInstance)
+	s, _ = cboxInstance.SpaceFind(space.ID.String())
 
 	if !tc.Equal(s.CreatedAt) {
 		t.Errorf("space creation timestamp changed after update: '%s' - '%s'", tc.StringRaw(), s.CreatedAt.StringRaw())
@@ -66,7 +68,9 @@ func TestSpaceTimestamps(t *testing.T) {
 func TestCommandTimestamps(t *testing.T) {
 	setupMocks()
 
-	space := createSpace(t)
+	cboxInstance := initializeCBox()
+
+	space := createSpace(t, cboxInstance)
 	tsc := space.CreatedAt
 	tsu := space.UpdatedAt
 

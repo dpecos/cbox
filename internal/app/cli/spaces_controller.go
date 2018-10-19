@@ -6,35 +6,30 @@ import (
 	"strings"
 
 	"github.com/dpecos/cbox/internal/app/core"
-	"github.com/dpecos/cbox/pkg/models"
 	"github.com/dpecos/cbox/internal/pkg"
 	"github.com/dpecos/cbox/internal/pkg/console"
+	"github.com/dpecos/cbox/pkg/models"
 	"github.com/spf13/cobra"
 )
 
 func (ctrl *CLIController) SpacesList(cmd *cobra.Command, args []string) {
-
-	spaces := core.SpaceListFiles()
-	for _, space := range spaces {
-		pkg.PrintSpace("", space)
+	for _, space := range cboxInstance.Spaces {
+		pkg.PrintSpace("", &space)
 	}
 }
 
 func (ctrl *CLIController) SpacesCreate(cmd *cobra.Command, args []string) {
-
-	cbox := core.LoadCbox("")
-
 	fmt.Println("Creating new space")
 	space := pkg.ConsoleReadSpace()
 
-	err := cbox.SpaceCreate(space)
+	err := cboxInstance.SpaceCreate(space)
 	for err != nil {
 		console.PrintError("Space already found in your cbox. Try a different one")
 		space.Label = strings.ToLower(console.ReadString("Label"))
-		err = cbox.SpaceCreate(space)
+		err = cboxInstance.SpaceCreate(space)
 	}
 
-	core.PersistCbox(cbox)
+	core.Save(cboxInstance)
 
 	pkg.PrintSpace("New space", space)
 
@@ -48,9 +43,7 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 		log.Fatalf("edit space: %v", err)
 	}
 
-	cbox := core.LoadCbox("")
-
-	space, err := cbox.SpaceFind(selector.Space)
+	space, err := cboxInstance.SpaceFind(selector.Space)
 	if err != nil {
 		log.Fatalf("edit space: %v", err)
 	}
@@ -63,21 +56,21 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 
 	if console.Confirm("Update?") {
 
-		err := cbox.SpaceEdit(space, selector.Space)
+		err := cboxInstance.SpaceEdit(space, selector.Space)
 		for err != nil {
 			console.PrintError("Label already found in your cbox. Try a different one")
 			space.Label = strings.ToLower(console.ReadString("Label"))
-			err = cbox.SpaceEdit(space, selector.Space)
+			err = cboxInstance.SpaceEdit(space, selector.Space)
 		}
 
 		if space.Label != selector.Space {
-			spaceToDelete := &models.Space{
+			spaceToDelete := models.Space{
 				Label: selector.Space,
 			}
-			core.SpaceDeleteFile(spaceToDelete)
+			core.DeleteSpaceFile(&spaceToDelete)
 		}
 
-		core.PersistCbox(cbox)
+		core.Save(cboxInstance)
 		console.PrintSuccess("Space updated successfully!")
 	} else {
 		console.PrintError("Edition cancelled")
@@ -91,9 +84,7 @@ func (ctrl *CLIController) SpacesDestroy(cmd *cobra.Command, args []string) {
 		log.Fatalf("destroy space: %v", err)
 	}
 
-	cbox := core.LoadCbox("")
-
-	space, err := cbox.SpaceFind(selector.Space)
+	space, err := cboxInstance.SpaceFind(selector.Space)
 	if err != nil {
 		log.Fatalf("destroy space: %v", err)
 	}
@@ -107,11 +98,11 @@ func (ctrl *CLIController) SpacesDestroy(cmd *cobra.Command, args []string) {
 		}
 		s.ID = space.ID
 
-		err = cbox.SpaceDestroy(&s)
+		err = cboxInstance.SpaceDestroy(&s)
 		if err != nil {
 			log.Fatalf("destroy space: %v", err)
 		}
-		core.SpaceDeleteFile(&s)
+		core.DeleteSpaceFile(&s)
 
 		console.PrintSuccess("Space destroyed successfully!")
 	} else {

@@ -15,8 +15,7 @@ func (ctrl *CLIController) CommandList(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelectorAllowEmpty(args)
 
-	cbox := core.LoadCbox("")
-	space, err := cbox.SpaceFind(selector.Space)
+	space, err := cboxInstance.SpaceFind(selector.Space)
 	if err != nil {
 		log.Fatalf("list commands: %v", err)
 	}
@@ -30,8 +29,7 @@ func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelectorAllowEmpty(args)
 
-	cbox := core.LoadCbox("")
-	space, err := cbox.SpaceFind(selector.Space)
+	space, err := cboxInstance.SpaceFind(selector.Space)
 	if err != nil {
 		log.Fatalf("add command: %v", err)
 	}
@@ -45,7 +43,7 @@ func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 		command.Label = strings.ToLower(console.ReadString("Label"))
 		err = space.CommandAdd(command)
 	}
-	core.PersistCbox(cbox)
+	core.Save(cboxInstance)
 
 	pkg.PrintCommand("New command", command, true, false)
 
@@ -56,9 +54,7 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelector(args)
 
-	cbox := core.LoadCbox("")
-
-	space, err := cbox.SpaceFind(selector.Space)
+	space, err := cboxInstance.SpaceFind(selector.Space)
 	if err != nil {
 		log.Fatalf("edit command: %v", err)
 	}
@@ -84,7 +80,7 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 	pkg.PrintCommand("Command after edition", command, true, false)
 
 	if console.Confirm("Update?") {
-		core.PersistCbox(cbox)
+		core.Save(cboxInstance)
 		console.PrintSuccess("Command updated successfully!")
 	} else {
 		console.PrintError("Edition cancelled")
@@ -95,8 +91,7 @@ func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelector(args)
 
-	cbox := core.LoadCbox("")
-	space, err := cbox.SpaceFind(selector.Space)
+	space, err := cboxInstance.SpaceFind(selector.Space)
 	if err != nil {
 		log.Fatalf("delete command: %v", err)
 	}
@@ -110,7 +105,7 @@ func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
 
 	if console.Confirm("Are you sure you want to delete this command?") {
 		space.CommandDelete(command)
-		core.PersistCbox(cbox)
+		core.Save(cboxInstance)
 		console.PrintSuccess("Command deleted successfully!")
 	} else {
 		console.PrintError("Deletion cancelled")
@@ -121,8 +116,7 @@ func (ctrl *CLIController) CommandView(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelector(args)
 
-	cbox := core.LoadCbox("")
-	space, err := cbox.SpaceFind(selector.Space)
+	space, err := cboxInstance.SpaceFind(selector.Space)
 	if err != nil {
 		log.Fatalf("view command: %v", err)
 	}

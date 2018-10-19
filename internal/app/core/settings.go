@@ -2,21 +2,27 @@ package core
 
 import (
 	"fmt"
-
-	"github.com/spf13/viper"
-
-	"github.com/dpecos/cbox/internal/pkg/console"
+	"log"
+	"path"
 
 	"github.com/dpecos/cbox/internal/pkg"
+	"github.com/dpecos/cbox/internal/pkg/console"
+	"github.com/dpecos/cbox/pkg/models"
+	"github.com/gofrs/uuid"
+	homedir "github.com/mitchellh/go-homedir"
+	"github.com/spf13/viper"
 )
 
 var (
-	Env     = "dev"
-	Version = "development"
-	Build   = "-"
+	Env               = "dev"
+	Version           = "development"
+	Build             = "-"
+	cboxWorkDirectory string
 )
 
 const (
+	cboxPath = ".cbox"
+
 	cloudJWTDev = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3PqZEDzJ2E8le5aFs8Tw
 Um0tcUrc+614d9fseI6pmVOTKcNWTgktNX9rTz/B4JTCws3/8erqMVkwuz1vhH6S
@@ -40,6 +46,19 @@ cQIDAQAB
 	cloudURL = "https://api.%s.cbox.dplabs.io"
 )
 
+func LoadSettings(path string) {
+	cboxPath := initializeWorkingDirectory(path)
+
+	viper.AddConfigPath(cboxPath)
+	viper.SetConfigName("config")
+
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatal(err)
+	}
+
+	defaultSettings()
+}
+
 func CloudURL() string {
 	if Env == "prod" {
 		pkg.CloudJWTKey = cloudJWTProd
@@ -51,4 +70,61 @@ func CloudURL() string {
 	}
 
 	return fmt.Sprintf(cloudURL, viper.GetString("cbox.environment"))
+}
+
+func initializeWorkingDirectory(path string) string {
+	cboxWorkDirectory = path
+
+	cboxPath := resolveInCboxDir("")
+	pkg.CreateDirectoryIfNotExists(cboxPath)
+
+	configFile := resolveInCboxDir(pathConfigFile)
+	pkg.CreateFileIfNotExists(configFile)
+
+	spacesPath := resolveInCboxDir(pathSpaces)
+	if pkg.CreateDirectoryIfNotExists(spacesPath) {
+		createDefaultSpace()
+	}
+
+	return cboxPath
+}
+
+func createDefaultSpace() {
+	id, err := uuid.NewV4()
+	if err != nil {
+		log.Fatalf("init: could not generate id: %v", err)
+	}
+	defaultSpace := models.Space{
+		Label:       defaultSpaceID,
+		Description: defaultSpaceDescription,
+	}
+	defaultSpace.ID = id
+
+	cboxInstance := Load()
+	err = cboxInstance.SpaceCreate(&defaultSpace)
+	if err != nil {
+		log.Fatalf("init: could not create space: %v", err)
+	}
+	Save(cboxInstance)
+}
+
+func defaultSettings() {
+	viper.SetDefault("cbox.default-space", "default")
+	viper.SetDefault("cbox.environment", Env)
+
+	if viper.IsSet("cbox.environment") {
+		Env = viper.GetString("cbox.environment")
+	}
+}
+
+func resolveInCboxDir(content string) string {
+	cboxBasePath := cboxWorkDirectory
+	if cboxBasePath == "" {
+		var err error
+		cboxBasePath, err = homedir.Dir()
+		if err != nil {
+			log.Fatalf("init: could not get HOME: %v", err)
+		}
+	}
+	return path.Join(cboxBasePath, cboxPath, content)
 }

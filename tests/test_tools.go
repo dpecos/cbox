@@ -5,7 +5,6 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/dpecos/cbox/internal/app/core"
 	"github.com/dpecos/cbox/pkg/models"
 	"github.com/gofrs/uuid"
 )
@@ -20,8 +19,8 @@ func randString(n int) string {
 	return string(b)
 }
 
-func findSpaceFile(space *models.Space) bool {
-	spaces := core.SpaceListFiles()
+func findSpaceFile(cboxInstance *models.CBox, space *models.Space) bool {
+	spaces := cboxInstance.Spaces
 
 	found := false
 	for _, s := range spaces {
@@ -33,23 +32,23 @@ func findSpaceFile(space *models.Space) bool {
 	return found
 }
 
-func assertSpaceFileExists(t *testing.T, space *models.Space) {
-	found := findSpaceFile(space)
+func assertSpaceFileExists(t *testing.T, cboxInstance *models.CBox, space *models.Space) {
+	found := findSpaceFile(cboxInstance, space)
 	if !found {
 		t.Fatal("space file could not be found (and should)")
 	}
 }
 
-func assertSpaceFileNotExists(t *testing.T, space *models.Space) {
-	found := findSpaceFile(space)
+func assertSpaceFileNotExists(t *testing.T, cboxInstance *models.CBox, space *models.Space) {
+	found := findSpaceFile(cboxInstance, space)
 	if found {
 		t.Fatal("new space found (and shouldn't)")
 	}
 }
 
-func createSpace(t *testing.T) *models.Space {
-	if cbox == nil {
-		t.Fatal("cbox not initialized")
+func createSpace(t *testing.T, cboxInstance *models.CBox) *models.Space {
+	if cboxInstance == nil {
+		t.Fatal("cboxInstance not initialized")
 	}
 
 	id, err := uuid.NewV4()
@@ -62,13 +61,13 @@ func createSpace(t *testing.T) *models.Space {
 	}
 	space.ID = id
 
-	err = cbox.SpaceCreate(&space)
+	err = cboxInstance.SpaceCreate(&space)
 
 	if err != nil {
 		t.Error(err)
 	}
 
-	s, err := cbox.SpaceFind(space.ID.String())
+	s, err := cboxInstance.SpaceFind(space.ID.String())
 	if err != nil {
 		t.Fatalf("could not find space: %v", err)
 	}

@@ -8,11 +8,10 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/dpecos/cbox/internal/pkg/console"
-	"github.com/gofrs/uuid"
-
-	"github.com/dpecos/cbox/pkg/models"
 	"github.com/dpecos/cbox/internal/pkg"
+	"github.com/dpecos/cbox/internal/pkg/console"
+	"github.com/dpecos/cbox/pkg/models"
+	"github.com/gofrs/uuid"
 	"github.com/spf13/viper"
 )
 

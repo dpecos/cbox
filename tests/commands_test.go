@@ -24,12 +24,14 @@ func createCommand(t *testing.T, space *models.Space) *models.Command {
 }
 
 func TestCommandCreationDeletion(t *testing.T) {
-	space := createSpace(t)
+	cboxInstance := initializeCBox()
+
+	space := createSpace(t, cboxInstance)
 	command := createCommand(t, space)
 
-	reloadCBox()
+	cboxInstance = reloadCBox(cboxInstance)
 
-	s, _ := cbox.SpaceFind(space.Label)
+	s, _ := cboxInstance.SpaceFind(space.Label)
 
 	if s == nil {
 		t.Fatal("could not find space")
@@ -51,7 +53,7 @@ func TestCommandCreationDeletion(t *testing.T) {
 
 	s.CommandDelete(c)
 
-	reloadCBox()
+	cboxInstance = reloadCBox(cboxInstance)
 
 	_, err = s.CommandFind(command.ID.String())
 	if err == nil {
@@ -62,12 +64,14 @@ func TestCommandCreationDeletion(t *testing.T) {
 }
 
 func TestCommandEdition(t *testing.T) {
-	space := createSpace(t)
+	cboxInstance := initializeCBox()
+
+	space := createSpace(t, cboxInstance)
 	command := createCommand(t, space)
 
-	reloadCBox()
+	cboxInstance = reloadCBox(cboxInstance)
 
-	s, _ := cbox.SpaceFind(space.Label)
+	s, _ := cboxInstance.SpaceFind(space.Label)
 	c, _ := s.CommandFind(command.ID.String())
 
 	previousLabel := c.Label
@@ -77,9 +81,9 @@ func TestCommandEdition(t *testing.T) {
 
 	space.CommandEdit(c, previousLabel)
 
-	reloadCBox()
+	cboxInstance = reloadCBox(cboxInstance)
 
-	s, _ = cbox.SpaceFind(space.Label)
+	s, _ = cboxInstance.SpaceFind(space.Label)
 
 	c, err := s.CommandFind(previousLabel)
 	if err == nil {
@@ -93,7 +97,9 @@ func TestCommandEdition(t *testing.T) {
 }
 
 func TestCommandLabelUniquenessOnCreation(t *testing.T) {
-	space := createSpace(t)
+	cboxInstance := initializeCBox()
+
+	space := createSpace(t, cboxInstance)
 	c1 := createCommand(t, space)
 
 	id, _ := uuid.NewV4()
@@ -113,7 +119,9 @@ func TestCommandLabelUniquenessOnCreation(t *testing.T) {
 }
 
 func TestCommandLabelUniquenessOnEdition(t *testing.T) {
-	space := createSpace(t)
+	cboxInstance := initializeCBox()
+
+	space := createSpace(t, cboxInstance)
 	c1 := createCommand(t, space)
 	c2 := createCommand(t, space)
 

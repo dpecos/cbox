@@ -5,7 +5,6 @@ import (
 	"log"
 	"strings"
 
-	"github.com/dpecos/cbox/internal/app/core"
 	"github.com/dpecos/cbox/internal/pkg"
 	"github.com/spf13/cobra"
 )
@@ -29,8 +28,7 @@ func (ctrl *CLIController) SearchCommands(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelector([]string{sel})
 
-	cbox := core.LoadCbox("")
-	space, err := cbox.SpaceFind(selector.Space)
+	space, err := cboxInstance.SpaceFind(selector.Space)
 	if err != nil {
 		log.Fatalf("search: %v", err)
 	}

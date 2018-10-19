@@ -11,20 +11,14 @@ import (
 	"github.com/dpecos/cbox/pkg/models"
 )
 
-const (
-	SPACES_PATH               = "spaces"
-	DEFAULT_SPACE_ID          = "default"
-	DEFAULT_SPACE_DESCRIPTION = "Default space to store commands"
-)
-
 func resolveSpaceFile(spaceName string) string {
-	spacePath := path.Join(SPACES_PATH, spaceName+".json")
+	spacePath := path.Join(pathSpaces, spaceName+".json")
 	return resolveInCboxDir(spacePath)
 }
 
-func SpaceListFiles() []*models.Space {
+func spacesLoad() []*models.Space {
 	spaces := []*models.Space{}
-	files, err := ioutil.ReadDir(resolveInCboxDir(SPACES_PATH))
+	files, err := ioutil.ReadDir(resolveInCboxDir(pathSpaces))
 	if err != nil {
 		log.Fatalf("repository: could not read spaces: %v", err)
 	}
@@ -33,34 +27,13 @@ func SpaceListFiles() []*models.Space {
 		extension := filepath.Ext(filename)
 		if extension == ".json" {
 			name := filename[0 : len(filename)-len(extension)]
-			spaces = append(spaces, SpaceLoadFile(name))
+			spaces = append(spaces, spaceLoadFile(name))
 		}
 	}
 	return spaces
 }
 
-func SpaceStoreFile(space *models.Space) {
-	raw, err := json.MarshalIndent(space, "", "  ")
-	if err != nil {
-		log.Fatalf("repository: store space '%s': could not generate JSON: %v", space.Label, err)
-	}
-
-	file := resolveSpaceFile(space.Label)
-	err = ioutil.WriteFile(file, raw, 0644)
-	if err != nil {
-		log.Fatalf("repository: store space '%s': could not write JSON file (%s): %v", space.Label, file, err)
-	}
-}
-
-func SpaceDeleteFile(space *models.Space) {
-	file := resolveSpaceFile(space.Label)
-	err := os.Remove(file)
-	if err != nil {
-		log.Fatalf("repository: delete space '%s': %v", space.Label, err)
-	}
-}
-
-func SpaceLoadFile(label string) *models.Space {
+func spaceLoadFile(label string) *models.Space {
 	raw, err := ioutil.ReadFile(resolveSpaceFile(label))
 	if err != nil {
 		log.Fatalf("repository: load space '%s': could not read file: %v", label, err)
@@ -78,4 +51,25 @@ func SpaceLoadFile(label string) *models.Space {
 	}
 
 	return &space
+}
+
+func spaceStoreFile(space *models.Space) {
+	raw, err := json.MarshalIndent(space, "", "  ")
+	if err != nil {
+		log.Fatalf("repository: store space '%s': could not generate JSON: %v", space.Label, err)
+	}
+
+	file := resolveSpaceFile(space.Label)
+	err = ioutil.WriteFile(file, raw, 0644)
+	if err != nil {
+		log.Fatalf("repository: store space '%s': could not write JSON file (%s): %v", space.Label, file, err)
+	}
+}
+
+func spaceDeleteFile(space *models.Space) {
+	file := resolveSpaceFile(space.Label)
+	err := os.Remove(file)
+	if err != nil {
+		log.Fatalf("repository: delete space '%s': %v", space.Label, err)
+	}
 }

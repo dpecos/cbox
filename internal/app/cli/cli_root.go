@@ -6,9 +6,12 @@ import (
 
 	"github.com/dpecos/cbox/internal/app/core"
 	"github.com/dpecos/cbox/internal/pkg"
+	"github.com/dpecos/cbox/pkg/models"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
+
+var cboxInstance *models.CBox
 
 var rootCmd = &cobra.Command{
 	Use:   "cbox",
@@ -46,7 +49,9 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(func() {
-		core.InitCBox("")
+		path := ""
+		core.LoadSettings(path)
+		cboxInstance = core.Load()
 	})
 
 	rootCmd.AddCommand(completionCmd)

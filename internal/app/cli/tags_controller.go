@@ -17,8 +17,7 @@ func (ctrl *CLIController) TagsList(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelectorAllowEmpty(args)
 
-	cbox := core.LoadCbox("")
-	space, err := cbox.SpaceFind(selector.Space)
+	space, err := cboxInstance.SpaceFind(selector.Space)
 	if err != nil {
 		log.Fatalf("list tags: %v", err)
 	}
@@ -35,9 +34,7 @@ func (ctrl *CLIController) TagsAdd(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelector(args)
 
-	cbox := core.LoadCbox("")
-
-	space, err := cbox.SpaceFind(selector.Space)
+	space, err := cboxInstance.SpaceFind(selector.Space)
 	if err != nil {
 		log.Fatalf("add tags: %v", err)
 	}
@@ -53,7 +50,7 @@ func (ctrl *CLIController) TagsAdd(cmd *cobra.Command, args []string) {
 		command.TagAdd(strings.ToLower(tag))
 	}
 
-	core.PersistCbox(cbox)
+	core.Save(cboxInstance)
 
 	pkg.PrintCommand("Tagged command", command, true, false)
 
@@ -64,9 +61,7 @@ func (ctrl *CLIController) TagsRemove(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelector(args)
 
-	cbox := core.LoadCbox("")
-
-	space, err := cbox.SpaceFind(selector.Space)
+	space, err := cboxInstance.SpaceFind(selector.Space)
 	if err != nil {
 		log.Fatalf("remove tags: %v", err)
 	}
@@ -82,7 +77,7 @@ func (ctrl *CLIController) TagsRemove(cmd *cobra.Command, args []string) {
 		command.TagDelete(tag)
 	}
 
-	core.PersistCbox(cbox)
+	core.Save(cboxInstance)
 
 	pkg.PrintCommand("Untagged command", command, true, false)
 
@@ -96,8 +91,7 @@ func (ctrl *CLIController) TagsDelete(cmd *cobra.Command, args []string) {
 		log.Fatalf("delete tags: %v", err)
 	}
 
-	cbox := core.LoadCbox("")
-	space, err := cbox.SpaceFind(selector.Space)
+	space, err := cboxInstance.SpaceFind(selector.Space)
 	if err != nil {
 		log.Fatalf("delete tags: %v", err)
 	}
@@ -115,7 +109,7 @@ func (ctrl *CLIController) TagsDelete(cmd *cobra.Command, args []string) {
 		pkg.PrintCommand("Untagged command", command, false, false)
 	}
 
-	core.PersistCbox(cbox)
+	core.Save(cboxInstance)
 
 	msg := fmt.Sprintf("\nTag '%s' successfully deleted from space '%s'!", selector.Item, selector.Space)
 	console.PrintSuccess(msg)

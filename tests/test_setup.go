@@ -1,7 +1,6 @@
 package tests
 
 import (
-	"fmt"
 	"log"
 	"math/rand"
 	"os"
@@ -9,36 +8,25 @@ import (
 
 	"github.com/dpecos/cbox/internal/app/core"
 	"github.com/dpecos/cbox/pkg/models"
-	"github.com/spf13/viper"
-)
-
-var (
-	cbox *models.CBox
 )
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
-	setupTests()
 }
 
-func setupTests() {
-	cbox = nil
-
+func initializeCBox() *models.CBox {
 	if err := os.RemoveAll("/tmp/.cbox"); err != nil {
 		log.Fatalf("could not clean cbox test directory: %v", err)
 	}
 
-	core.InitCBox("/tmp")
-	reloadCBox()
-
-	fmt.Println(viper.GetString("config.default-space"))
+	core.LoadSettings("/tmp")
+	return reloadCBox(nil)
 }
 
-func reloadCBox() {
+func reloadCBox(cbox *models.CBox) *models.CBox {
 	if cbox != nil {
-		core.PersistCbox(cbox)
+		core.Save(cbox)
 	}
 
-	core.CheckCboxDir("/tmp")
-	cbox = core.LoadCbox("/tmp")
+	return core.Load()
 }
