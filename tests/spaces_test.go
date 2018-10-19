@@ -101,7 +101,7 @@ func TestSearch(t *testing.T) {
 	result, err := s1.SearchCommands("", criteria)
 
 	if err != nil {
-		t.Errorf("space search error: %v", err)
+		t.Fatalf("space search error: %v", err)
 	}
 
 	if len(result) != 1 || result[0].ID != c1.ID {
@@ -131,7 +131,7 @@ func TestSearchWithinTag(t *testing.T) {
 	result, err = s1.SearchCommands("non-existing", criteria)
 
 	if err != nil {
-		t.Errorf("space search error (non-existing): %v", err)
+		t.Fatalf("space search error (non-existing): %v", err)
 	}
 
 	if len(result) != 0 {

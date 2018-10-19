@@ -190,3 +190,7 @@ func PrintError(msg string) {
 func PrintSuccess(msg string) {
 	fmt.Printf("%s\n", ColorGreen(msg))
 }
+
+func Debug(msg string) {
+	fmt.Printf("%s\n", ColorBoldBlack(msg))
+}

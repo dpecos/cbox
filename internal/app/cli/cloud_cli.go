@@ -29,8 +29,15 @@ var cloudSpacePublishCmd = &cobra.Command{
 	Use:     "publish",
 	Aliases: []string{"push"},
 	Args:    cobra.ExactArgs(1),
-	Short:   "Publish a command, tag or space",
-	Run:     ctrl.CloudItemPublish,
+	Short:   "Publish a command, tag or a whole space",
+	Run:     ctrl.CloudSpacePublish,
+}
+
+var cloudSpaceUnpublishCmd = &cobra.Command{
+	Use:   "unpublish",
+	Args:  cobra.ExactArgs(1),
+	Short: "Unpublish an space",
+	Run:   ctrl.CloudSpaceUnpublish,
 }
 
 var cloudSpacePullCmd = &cobra.Command{
@@ -69,6 +76,7 @@ func init() {
 	cloudCmd.AddCommand(cloudLoginCmd)
 	cloudCmd.AddCommand(cloudLogoutCmd)
 	cloudCmd.AddCommand(cloudSpacePublishCmd)
+	cloudCmd.AddCommand(cloudSpaceUnpublishCmd)
 	cloudCmd.AddCommand(cloudSpacePullCmd)
 	cloudCmd.AddCommand(cloudSpaceCloneCmd)
 	cloudCmd.AddCommand(cloudCommandsCmd)

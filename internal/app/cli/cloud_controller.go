@@ -14,7 +14,8 @@ import (
 
 func (ctrl *CLIController) CloudLogin(cmd *cobra.Command, args []string) {
 	fmt.Println(pkg.Logo)
-	fmt.Printf("Open this URL in a browser and follow the authentication process: \n\n%s\n\n", fmt.Sprintf("%s/auth/", core.CloudURL()))
+	url := fmt.Sprintf("%s/auth/", core.CloudURL())
+	fmt.Printf("Open this URL in a browser and follow the authentication process: \n\n%s\n\n", url)
 
 	jwt := console.ReadString("JWT Token")
 	fmt.Println()
@@ -34,7 +35,7 @@ func (ctrl *CLIController) CloudLogout(cmd *cobra.Command, args []string) {
 	console.PrintSuccess("Successfully logged out from cbox cloud. See you back soon!")
 }
 
-func (ctrl *CLIController) CloudItemPublish(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) {
 	selector, err := models.ParseSelectorMandatorySpace(args[0])
 	if err != nil {
 		log.Fatalf("cloud: publish item: %v", err)
@@ -56,7 +57,7 @@ func (ctrl *CLIController) CloudItemPublish(cmd *cobra.Command, args []string) {
 		space.Entries = commands
 	}
 
-	pkg.PrintCommandList("Containing these commands", space.Entries, false, false)
+	// pkg.PrintCommandList("Containing these commands", space.Entries, false, false)
 
 	if console.Confirm("Publish?") {
 		fmt.Printf("Publishing space '%s'...\n", space.Label)
@@ -72,7 +73,38 @@ func (ctrl *CLIController) CloudItemPublish(cmd *cobra.Command, args []string) {
 
 		console.PrintSuccess("Space published successfully!")
 	} else {
-		console.PrintError("Publish cancelled")
+		console.PrintError("Publishing cancelled")
+	}
+}
+
+func (ctrl *CLIController) CloudSpaceUnpublish(cmd *cobra.Command, args []string) {
+	selector, err := models.ParseSelectorMandatorySpace(args[0])
+	if err != nil {
+		log.Fatalf("cloud: unpublish item: %v", err)
+	}
+
+	_, err = cboxInstance.SpaceFind(selector.Space)
+	if err == nil {
+		fmt.Printf("Space to unpublish: %s - Local copy won't be deleted\n", selector.String())
+	} else {
+		fmt.Printf("Space to unpublish: %s - You don't have a local copy of the space\n", selector.String())
+	}
+
+	if console.Confirm("Unpublish?") {
+		fmt.Printf("Unpublishing space '%s'...\n", selector.String())
+
+		cloud, err := core.CloudClient()
+		if err != nil {
+			log.Fatalf("cloud: unpublish space: %v", err)
+		}
+		err = cloud.SpaceUnpublish(selector)
+		if err != nil {
+			log.Fatalf("cloud: unpublish space: %v", err)
+		}
+
+		console.PrintSuccess("Space unpublished successfully!")
+	} else {
+		console.PrintError("Unpublishing cancelled")
 	}
 }
 

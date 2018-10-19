@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 
 	"github.com/dpecos/cbox/internal/pkg"
@@ -113,6 +114,11 @@ func (cloud *Cloud) doRequest(method string, path string, query map[string]strin
 		req.URL.RawQuery = q.Encode()
 	}
 
+	if Env == "dev" {
+		strReq, _ := httputil.DumpRequest(req, true)
+		console.Debug(fmt.Sprintf("---\n\n%s---\n\n", string(strReq)))
+	}
+
 	resp, err := cloud.httpClient.Do(req)
 	if err != nil {
 		return "", err
@@ -140,6 +146,17 @@ func (cloud *Cloud) SpacePublish(space *models.Space) error {
 	}
 
 	_, err = cloud.doRequest("POST", "/v1/spaces", nil, string(jsonSpace))
+
+	return err
+}
+
+func (cloud *Cloud) SpaceUnpublish(selector *models.Selector) error {
+
+	query := make(map[string]string)
+
+	query["selector"] = selector.String()
+
+	_, err := cloud.doRequest("DELETE", "/v1/spaces", query, "")
 
 	return err
 }

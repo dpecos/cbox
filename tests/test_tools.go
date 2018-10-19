@@ -3,6 +3,7 @@ package tests
 import (
 	"log"
 	"math/rand"
+	"strings"
 	"testing"
 
 	"github.com/dpecos/cbox/pkg/models"
@@ -16,7 +17,7 @@ func randString(n int) string {
 	for i := range b {
 		b[i] = letterBytes[rand.Intn(len(letterBytes))]
 	}
-	return string(b)
+	return strings.ToLower(string(b))
 }
 
 func findSpaceFile(cboxInstance *models.CBox, space *models.Space) bool {

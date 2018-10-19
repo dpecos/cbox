@@ -99,7 +99,7 @@ func TestCommandTimestamps(t *testing.T) {
 
 	err := space.CommandEdit(cmd, previousLabel)
 	if err != nil {
-		t.Errorf("failed to rename command: %v", err)
+		t.Fatalf("failed to rename command: %v", err)
 	}
 
 	if !tcc.Equal(cmd.CreatedAt) {
