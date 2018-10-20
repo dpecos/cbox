@@ -83,11 +83,13 @@ func (ctrl *CLIController) CloudSpaceUnpublish(cmd *cobra.Command, args []string
 		log.Fatalf("cloud: unpublish item: %v", err)
 	}
 
+	pkg.PrintSelector("Space to unpublish", selector)
+
 	_, err = cboxInstance.SpaceFind(selector.Space)
 	if err == nil {
-		fmt.Printf("Space to unpublish: %s - Local copy won't be deleted\n", selector.String())
+		console.PrintInfo("Local copy won't be deleted\n")
 	} else {
-		fmt.Printf("Space to unpublish: %s - You don't have a local copy of the space\n", selector.String())
+		console.PrintWarning("You don't have a local copy of the space\n")
 	}
 
 	if console.Confirm("Unpublish?") {

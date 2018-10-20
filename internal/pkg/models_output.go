@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dpecos/cbox/pkg/models"
 	"github.com/dpecos/cbox/internal/pkg/console"
+	"github.com/dpecos/cbox/pkg/models"
 )
 
 var (
@@ -27,9 +27,7 @@ func PrintCommand(header string, cmd *models.Command, full bool, sourceOnly bool
 		fmt.Println(cmd.Code)
 	} else {
 
-		if header != "" {
-			fmt.Printf(separatorColor("- - - %s - - -\n"), header)
-		}
+		printHeader(header)
 
 		if !full {
 			fmt.Printf(starColor("* "))
@@ -49,16 +47,12 @@ func PrintCommand(header string, cmd *models.Command, full bool, sourceOnly bool
 			fmt.Printf("\n%s\n", cmd.Code)
 		}
 
-		if header != "" {
-			fmt.Printf("%s\n\n", separatorColor("- - - - - - - - - - - -"))
-		}
+		printFooter(header)
 	}
 }
 
 func PrintCommandList(header string, commands []models.Command, full bool, sourceOnly bool) {
-	if header != "" {
-		fmt.Printf(separatorColor("- - - %s - - -\n"), header)
-	}
+	printHeader(header)
 
 	for i, command := range commands {
 		PrintCommand("", &command, full, sourceOnly)
@@ -67,9 +61,7 @@ func PrintCommandList(header string, commands []models.Command, full bool, sourc
 		}
 	}
 
-	if header != "" {
-		fmt.Printf("%s\n\n", separatorColor("- - - - - - - - - - - -"))
-	}
+	printFooter(header)
 }
 
 func PrintTag(tag string) {
@@ -77,17 +69,29 @@ func PrintTag(tag string) {
 }
 
 func PrintSpace(header string, space *models.Space) {
-	if header != "" {
-		fmt.Printf(separatorColor("- - - %s - - -\n"), header)
-	}
-
+	printHeader(header)
 	fmt.Printf("%s - %s %s\n", spaceLabelColor(space.Label), descriptionColor(space.Description), dateColor(space.CreatedAt.String()))
+	printFooter(header)
+}
 
-	if header != "" {
-		fmt.Printf("%s\n\n", separatorColor("- - - - - - - - - - - -"))
-	}
+func PrintSelector(header string, selector *models.Selector) {
+	printHeader(header)
+	fmt.Printf("%s\n", spaceLabelColor(selector.String()))
+	printFooter(header)
 }
 
 func PrintSetting(config string, value string) {
 	fmt.Printf("%s -> %s\n", console.ColorGreen(config), console.ColorYellow(value))
+}
+
+func printHeader(header string) {
+	if header != "" {
+		fmt.Printf(separatorColor("- - - %s - - -\n"), header)
+	}
+}
+
+func printFooter(header string) {
+	if header != "" {
+		fmt.Printf("%s\n\n", separatorColor("- - - - - - - - - - - -"))
+	}
 }
