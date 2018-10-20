@@ -69,7 +69,7 @@ func CloudURL() string {
 		pkg.CloudJWTKey = cloudJWTDev
 	}
 
-	return fmt.Sprintf(cloudURL, viper.GetString("cbox.environment"))
+	return fmt.Sprintf(cloudURL, Env)
 }
 
 func initializeWorkingDirectory(path string) string {
@@ -114,6 +114,10 @@ func defaultSettings() {
 
 	if viper.IsSet("cbox.environment") {
 		Env = viper.GetString("cbox.environment")
+	}
+
+	if Version == "development" {
+		Env = "dev"
 	}
 }
 
