@@ -8,7 +8,6 @@ import (
 
 	"github.com/dpecos/cbox/internal/app/core"
 	"github.com/dpecos/cbox/pkg/models"
-	"github.com/spf13/viper"
 )
 
 const (
@@ -17,8 +16,6 @@ const (
 )
 
 func TestMain(m *testing.M) {
-	viper.SetDefault("cbox.environment", "dev")
-
 	if !strings.Contains(core.CloudURL(), "dev") {
 		panic("cloud dev environment not set properly")
 	}
@@ -81,5 +78,14 @@ func TestSpacePublishingDoesntChangeCreateUpdateDates(t *testing.T) {
 	err = cloud.SpaceUnpublish(selector)
 	if err != nil {
 		t.Fatalf("could not unpublish space: %v", err)
+	}
+
+	cloudCommands, err := cloud.CommandList(selector)
+	if err != nil {
+		t.Fatalf("could not retrieve space commands: %v", err)
+	}
+
+	if len(cloudCommands) != 0 {
+		t.Errorf("commands left behind in the cloud after deleting their space")
 	}
 }
