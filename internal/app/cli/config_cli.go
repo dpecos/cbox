@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"github.com/dpecos/cbox/internal/pkg"
 	"github.com/spf13/cobra"
 )
 
@@ -8,6 +9,7 @@ var configCmd = &cobra.Command{
 	Use:   "config",
 	Args:  cobra.ExactArgs(0),
 	Short: "Manage cbox settings",
+	Long:  pkg.Logo,
 }
 
 var setConfigCmd = &cobra.Command{

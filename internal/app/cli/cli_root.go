@@ -3,6 +3,7 @@ package cli
 import (
 	"log"
 	"os"
+	"strings"
 
 	"github.com/dpecos/cbox/internal/app/core"
 	"github.com/dpecos/cbox/internal/pkg"
@@ -11,12 +12,13 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cboxInstance *models.CBox
+var (
+	cboxInstance *models.CBox
+)
 
 var rootCmd = &cobra.Command{
-	Use:   "cbox",
-	Short: "",
-	Long:  pkg.Logo,
+	Use:  "cbox",
+	Long: pkg.Logo,
 }
 
 var completionCmd = &cobra.Command{
@@ -40,10 +42,15 @@ To configure your bash shell to load completions for each session add to your ba
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		log.Fatal(err)
-	}
-	if err := viper.WriteConfig(); err != nil {
-		log.Fatal(err)
+		if !strings.Contains(err.Error(), "unknown command") {
+			log.Fatal(err)
+		}
+	} else {
+		if cboxInstance != nil { // only if the config is initialized
+			if err := viper.WriteConfig(); err != nil {
+				log.Fatal(err)
+			}
+		}
 	}
 }
 

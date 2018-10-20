@@ -9,6 +9,7 @@ var cloudCmd = &cobra.Command{
 	Use:   "cloud",
 	Args:  cobra.ExactArgs(0),
 	Short: "Login & sync your spaces to the cloud",
+	Long:  pkg.Logo,
 }
 
 var cloudLoginCmd = &cobra.Command{
