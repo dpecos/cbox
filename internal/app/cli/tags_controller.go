@@ -47,7 +47,9 @@ func (ctrl *CLIController) TagsAdd(cmd *cobra.Command, args []string) {
 	fmt.Printf("Adding tags to command with label '%s'\n", command.Label)
 
 	for _, tag := range args[1:] {
-		command.TagAdd(strings.ToLower(tag))
+		if tag != "" {
+			command.TagAdd(strings.ToLower(tag))
+		}
 	}
 
 	core.Save(cboxInstance)
@@ -74,7 +76,9 @@ func (ctrl *CLIController) TagsRemove(cmd *cobra.Command, args []string) {
 	fmt.Printf("Removing tags from command with label '%s'\n", command.Label)
 
 	for _, tag := range args[1:] {
-		command.TagDelete(tag)
+		if tag != "" {
+			command.TagDelete(tag)
+		}
 	}
 
 	core.Save(cboxInstance)
