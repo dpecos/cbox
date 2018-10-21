@@ -1,5 +1,8 @@
 # cbox
 
+<div align="center"><img src="https://raw.githubusercontent.com/dpecos/cbox/master/docs/cbox.png"  width="250px"></div>
+
+
 [![Go Report Card](https://goreportcard.com/badge/github.com/dpecos/cbox)](https://goreportcard.com/report/github.com/dpecos/cbox)
 [![Travis](https://travis-ci.org/dpecos/cbox.svg?branch=master)](https://travis-ci.org/dpecos/cbox)
 
