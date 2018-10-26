@@ -6,11 +6,12 @@ import (
 )
 
 var spacesCmd = &cobra.Command{
-	Use:   "spaces",
-	Args:  cobra.ExactArgs(0),
-	Short: "Show available spaces in your cbox",
-	Long:  pkg.Logo,
-	Run:   ctrl.SpacesList,
+	Use:     "spaces",
+	Aliases: []string{"space"},
+	Args:    cobra.ExactArgs(0),
+	Short:   "Show available spaces in your cbox",
+	Long:    pkg.Logo,
+	Run:     ctrl.SpacesList,
 }
 
 var spacesCreateCmd = &cobra.Command{

@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"fmt"
 	"log"
 	"strings"
 
@@ -19,7 +18,8 @@ func (ctrl *CLIController) SpacesList(cmd *cobra.Command, args []string) {
 }
 
 func (ctrl *CLIController) SpacesCreate(cmd *cobra.Command, args []string) {
-	fmt.Println("Creating new space")
+	console.PrintAction("Creating new space")
+
 	space := pkg.ConsoleReadSpace()
 
 	err := cboxInstance.SpaceCreate(space)

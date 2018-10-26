@@ -41,6 +41,8 @@ func ConsoleEditCommand(command *models.Command) {
 	command.Description = console.EditString("Description", command.Description)
 	command.URL = console.EditString("URL", command.URL)
 	command.Code = console.EditString("Code / Command", command.Code, console.MULTILINE, console.NOT_EMPTY_VALUES)
+
+	fmt.Println()
 }
 
 func ConsoleReadSpace() *models.Space {
@@ -54,10 +56,15 @@ func ConsoleReadSpace() *models.Space {
 		Entries:     []models.Command{},
 	}
 	space.ID = id
+
+	fmt.Println()
+
 	return &space
 }
 
 func ConsoleEditSpace(space *models.Space) {
 	space.Label = strings.ToLower(console.EditString("Label", space.Label, console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
 	space.Description = console.EditString("Description", space.Description)
+
+	fmt.Println()
 }

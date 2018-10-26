@@ -128,6 +128,8 @@ func Confirm(label string) bool {
 	}
 	survey.AskOne(prompt, &response, nil)
 
+	fmt.Println()
+
 	return response
 }
 
@@ -152,5 +154,5 @@ func Debug(msg string) {
 }
 
 func PrintAction(msg string) {
-	fmt.Printf("%s\n\n", msg)
+	PrintInfo(fmt.Sprintf("%s\n", msg))
 }

@@ -60,7 +60,7 @@ func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) 
 	// pkg.PrintCommandList("Containing these commands", space.Entries, false, false)
 
 	if console.Confirm("Publish?") {
-		fmt.Printf("Publishing space '%s'...\n", space.Label)
+		console.PrintAction(fmt.Sprintf("Publishing space '%s'...", space.Label))
 
 		cloud, err := core.CloudClient()
 		if err != nil {
@@ -87,13 +87,13 @@ func (ctrl *CLIController) CloudSpaceUnpublish(cmd *cobra.Command, args []string
 
 	_, err = cboxInstance.SpaceFind(selector.Space)
 	if err == nil {
-		console.PrintInfo("Local copy won't be deleted\n")
+		console.PrintInfo("Local copy won't be deleted")
 	} else {
-		console.PrintWarning("You don't have a local copy of the space\n")
+		console.PrintWarning("You don't have a local copy of the space")
 	}
 
 	if console.Confirm("Unpublish?") {
-		fmt.Printf("Unpublishing space '%s'...\n", selector.String())
+		console.PrintAction(fmt.Sprintf("Unpublishing space '%s'...", selector.String()))
 
 		cloud, err := core.CloudClient()
 		if err != nil {
@@ -243,7 +243,7 @@ func (ctrl *CLIController) CloudCommandCopy(cmd *cobra.Command, args []string) {
 		core.Save(cboxInstance)
 
 		if failures {
-			console.PrintError("\nSome commands could not be stored")
+			console.PrintError("Some commands could not be stored")
 		} else {
 			console.PrintSuccess("Commands copied successfully!")
 		}
