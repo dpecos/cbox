@@ -1,18 +1,15 @@
 package console
 
 import (
-	"bufio"
 	"fmt"
-	"io"
 	"log"
-	"os"
 	"regexp"
 	"strings"
 
 	bitflag "github.com/mvpninjas/go-bitflag"
+	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
-const MSG_EMPTY_TO_FINISH = "Empty line to finish"
 const MSG_EDIT = "Ctrl+D to clear, Empty line to maintain"
 const MSG_EMPTY_NOT_ALLOWED = "Empty value not allowed, please try again"
 const MSG_NOT_VALID_CHARS = "Value contains not valid chars, please try again"
@@ -25,32 +22,74 @@ const (
 	ONLY_VALID_CHARS
 )
 
-func formatLabel(label string) string {
-	return fmt.Sprintf("%s: ", ColorBoldBlue(label))
-}
-
-func formatLabelDetails(label string, details string) string {
-	return fmt.Sprintf("%s %s: ", ColorBoldBlue(label), ColorBlue("("+details+")"))
-}
-
-func formatPreviousValue(label string, value string, multiline bool) string {
-	format := "%s: %s"
-	if multiline && value != "" {
-		format = "%s:\n%s"
-	}
-	return fmt.Sprintf(format, ColorCyan(label), value)
-}
-
-func formatQuestion(question string, options string) string {
-	return fmt.Sprintf("%s %s: ", ColorBoldMagenta(question), ColorMagenta(options))
-}
-
 func ReadString(label string, opts ...bitflag.Flag) string {
-	return readStringDetails(label, "", opts...)
+	var flags bitflag.Flag
+	flags.Set(opts...)
+
+	value, aborted := readStringDetails(label, "", flags)
+
+	if aborted && flags.Isset(NOT_EMPTY_VALUES) {
+		PrintError(MSG_EMPTY_NOT_ALLOWED)
+		value = ReadString(label, opts...)
+	} else if flags.Isset(NOT_EMPTY_VALUES) && strings.TrimSpace(value) == "" {
+		PrintError(MSG_EMPTY_NOT_ALLOWED)
+		value = ReadString(label, opts...)
+	} else if flags.Isset(ONLY_VALID_CHARS) && !checkValidChars(value) {
+		PrintError(MSG_NOT_VALID_CHARS)
+		value = ReadString(label, opts...)
+	}
+
+	return resolveEditionValue("", value, aborted)
 }
 
-func ReadStringDetails(label string, details string, opts ...bitflag.Flag) string {
-	return readStringDetails(label, details, opts...)
+func EditString(label string, previousValue string, opts ...bitflag.Flag) string {
+	var flags bitflag.Flag
+	flags.Set(opts...)
+
+	value, aborted := readStringDetails(label, previousValue, flags)
+
+	if aborted && flags.Isset(NOT_EMPTY_VALUES) {
+		PrintError(MSG_EMPTY_NOT_ALLOWED)
+		value = EditString(label, previousValue, opts...)
+	} else if flags.Isset(NOT_EMPTY_VALUES) && strings.TrimSpace(value) == "" {
+		PrintError(MSG_EMPTY_NOT_ALLOWED)
+		value = EditString(label, previousValue, opts...)
+	} else if flags.Isset(ONLY_VALID_CHARS) && !checkValidChars(value) {
+		PrintError(MSG_NOT_VALID_CHARS)
+		value = EditString(label, previousValue, opts...)
+	}
+
+	return resolveEditionValue(previousValue, value, aborted)
+}
+
+func readStringDetails(label string, previousValue string, flags bitflag.Flag) (string, bool) {
+	value := ""
+	aborted := false
+
+	var prompt survey.Prompt
+
+	if flags.Isset(MULTILINE) {
+		prompt = &survey.MultilineInput{
+			Message: label,
+			Default: previousValue,
+		}
+		// prompt = &survey.Editor{
+		// 	Message:       label,
+		// 	Default:       previousValue,
+		// 	AppendDefault: previousValue != "",
+		// }
+	} else {
+		prompt = &survey.Input{
+			Message: label,
+			Default: previousValue,
+		}
+	}
+
+	if err := survey.AskOne(prompt, &value, nil); err != nil {
+		aborted = true
+	}
+
+	return value, aborted
 }
 
 func checkValidChars(str string) bool {
@@ -64,101 +103,6 @@ func checkValidChars(str string) bool {
 	}
 
 	return true
-}
-
-func readStringDetails(label string, details string, opts ...bitflag.Flag) string {
-	var flags bitflag.Flag
-	flags.Set(opts...)
-
-	if flags.Isset(MULTILINE) && details == "" {
-		details = MSG_EMPTY_TO_FINISH
-	}
-
-	value, _ := readString(label, details, flags.Isset(MULTILINE))
-
-	if flags.Isset(NOT_EMPTY_VALUES) && strings.TrimSpace(value) == "" {
-		PrintError(MSG_EMPTY_NOT_ALLOWED)
-		value = readStringDetails(label, details, opts...)
-	} else if flags.Isset(ONLY_VALID_CHARS) && !checkValidChars(value) {
-		PrintError(MSG_NOT_VALID_CHARS)
-		value = readStringDetails(label, details, opts...)
-	}
-
-	return value
-}
-
-func readString(label string, details string, multiline bool) (string, bool) {
-	if details != "" {
-		fmt.Print(formatLabelDetails(label, details))
-	} else {
-		fmt.Print(formatLabel(label))
-	}
-
-	if multiline {
-		fmt.Println()
-	}
-
-	if multiline {
-		return readStringMulti()
-	} else {
-		return readStringSimple()
-	}
-}
-
-func readStringSimple() (string, bool) {
-	reader := bufio.NewReader(os.Stdin)
-	val, err := reader.ReadString('\n')
-
-	if err == io.EOF {
-		return "", true
-	}
-	return strings.TrimSpace(val), false
-}
-
-func readStringMulti() (string, bool) {
-
-	reader := bufio.NewReader(os.Stdin)
-
-	arr := make([]string, 0)
-	for {
-		text, err := reader.ReadString('\n')
-		if err == io.EOF {
-			return "", true
-		}
-		if text != "\n" {
-			arr = append(arr, text)
-		} else {
-			break
-		}
-	}
-
-	val := strings.Join(arr, "")
-	return strings.TrimSpace(val), false
-}
-
-func EditString(label string, previousValue string, opts ...bitflag.Flag) string {
-	var flags bitflag.Flag
-	flags.Set(opts...)
-
-	value := editString(label, previousValue, flags.Isset(MULTILINE))
-
-	if flags.Isset(NOT_EMPTY_VALUES) && strings.TrimSpace(value) == "" {
-		PrintError(MSG_EMPTY_NOT_ALLOWED)
-		value = EditString(label, previousValue, opts...)
-	} else if flags.Isset(ONLY_VALID_CHARS) && !checkValidChars(value) {
-		PrintError(MSG_NOT_VALID_CHARS)
-		value = EditString(label, previousValue, opts...)
-	}
-
-	return value
-}
-
-func editString(label string, previousValue string, multiline bool) string {
-	fmt.Println(formatPreviousValue("Previous value of "+label, previousValue, multiline))
-	val, aborted := readString("New value for "+label, MSG_EDIT, multiline)
-	fmt.Println()
-
-	return resolveEditionValue(previousValue, val, aborted)
 }
 
 func resolveEditionValue(previousValue string, newValue string, aborted bool) string {
@@ -177,10 +121,14 @@ func resolveEditionValue(previousValue string, newValue string, aborted bool) st
 }
 
 func Confirm(label string) bool {
-	fmt.Printf(formatQuestion(label, "y/n"))
-	val, _ := readStringSimple()
-	fmt.Println()
-	return val == "y"
+	response := false
+
+	prompt := &survey.Confirm{
+		Message: label,
+	}
+	survey.AskOne(prompt, &response, nil)
+
+	return response
 }
 
 func PrintError(msg string) {
@@ -201,4 +149,8 @@ func PrintWarning(msg string) {
 
 func Debug(msg string) {
 	fmt.Printf("%s\n", ColorBoldBlack(msg))
+}
+
+func PrintAction(msg string) {
+	fmt.Printf("%s\n\n", msg)
 }
