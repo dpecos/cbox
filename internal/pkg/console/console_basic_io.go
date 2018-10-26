@@ -39,7 +39,7 @@ func ReadString(label string, opts ...bitflag.Flag) string {
 		value = ReadString(label, opts...)
 	}
 
-	return resolveEditionValue("", value, aborted)
+	return value
 }
 
 func EditString(label string, previousValue string, opts ...bitflag.Flag) string {
@@ -87,6 +87,7 @@ func readStringDetails(label string, previousValue string, flags bitflag.Flag) (
 
 	if err := survey.AskOne(prompt, &value, nil); err != nil {
 		aborted = true
+		value = ""
 	}
 
 	return value, aborted
@@ -154,5 +155,5 @@ func Debug(msg string) {
 }
 
 func PrintAction(msg string) {
-	PrintInfo(fmt.Sprintf("%s\n", msg))
+	fmt.Printf("** %s **\n\n", ColorBoldYellow(msg))
 }
