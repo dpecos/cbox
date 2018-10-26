@@ -12,7 +12,6 @@ import (
 )
 
 func (ctrl *CLIController) CommandList(cmd *cobra.Command, args []string) {
-
 	selector := ctrl.parseSelectorAllowEmpty(args)
 
 	space, err := cboxInstance.SpaceFind(selector.Space)
@@ -26,6 +25,7 @@ func (ctrl *CLIController) CommandList(cmd *cobra.Command, args []string) {
 }
 
 func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
+	console.PrintAction("Adding a new commands")
 
 	selector := ctrl.parseSelectorAllowEmpty(args)
 
@@ -52,6 +52,7 @@ func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 }
 
 func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
+	console.PrintAction("Editing a command")
 
 	selector := ctrl.parseSelector(args)
 
@@ -89,6 +90,7 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 }
 
 func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
+	console.PrintAction("Deleting a command")
 
 	selector := ctrl.parseSelector(args)
 
@@ -114,7 +116,6 @@ func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
 }
 
 func (ctrl *CLIController) CommandView(cmd *cobra.Command, args []string) {
-
 	selector := ctrl.parseSelector(args)
 
 	space, err := cboxInstance.SpaceFind(selector.Space)

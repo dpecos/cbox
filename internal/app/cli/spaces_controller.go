@@ -37,6 +37,7 @@ func (ctrl *CLIController) SpacesCreate(cmd *cobra.Command, args []string) {
 }
 
 func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
+	console.PrintAction("Editing an space")
 
 	selector, err := models.ParseSelectorMandatorySpace(args[0])
 	if err != nil {
@@ -78,6 +79,7 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 }
 
 func (ctrl *CLIController) SpacesDestroy(cmd *cobra.Command, args []string) {
+	console.PrintAction("Destroying an space")
 
 	selector, err := models.ParseSelectorMandatorySpace(args[0])
 	if err != nil {

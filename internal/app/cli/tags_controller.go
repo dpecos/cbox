@@ -14,7 +14,6 @@ import (
 )
 
 func (ctrl *CLIController) TagsList(cmd *cobra.Command, args []string) {
-
 	selector := ctrl.parseSelectorAllowEmpty(args)
 
 	space, err := cboxInstance.SpaceFind(selector.Space)
@@ -31,6 +30,7 @@ func (ctrl *CLIController) TagsList(cmd *cobra.Command, args []string) {
 }
 
 func (ctrl *CLIController) TagsAdd(cmd *cobra.Command, args []string) {
+	console.PrintAction("Adding new tags to a command")
 
 	selector := ctrl.parseSelector(args)
 
@@ -60,6 +60,7 @@ func (ctrl *CLIController) TagsAdd(cmd *cobra.Command, args []string) {
 }
 
 func (ctrl *CLIController) TagsRemove(cmd *cobra.Command, args []string) {
+	console.PrintAction("Removing tags from a command")
 
 	selector := ctrl.parseSelector(args)
 
@@ -89,6 +90,7 @@ func (ctrl *CLIController) TagsRemove(cmd *cobra.Command, args []string) {
 }
 
 func (ctrl *CLIController) TagsDelete(cmd *cobra.Command, args []string) {
+	console.PrintAction("Deleting tags from an space")
 
 	selector, err := models.ParseSelectorMandatoryItem(args[0])
 	if err != nil {

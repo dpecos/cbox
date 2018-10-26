@@ -36,6 +36,8 @@ func (ctrl *CLIController) CloudLogout(cmd *cobra.Command, args []string) {
 }
 
 func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) {
+	console.PrintAction("Publishing an space")
+
 	selector, err := models.ParseSelectorMandatorySpace(args[0])
 	if err != nil {
 		log.Fatalf("cloud: publish item: %v", err)
@@ -78,6 +80,8 @@ func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) 
 }
 
 func (ctrl *CLIController) CloudSpaceUnpublish(cmd *cobra.Command, args []string) {
+	console.PrintAction("Unpublishing an space")
+
 	selector, err := models.ParseSelectorMandatorySpace(args[0])
 	if err != nil {
 		log.Fatalf("cloud: unpublish item: %v", err)
@@ -111,6 +115,8 @@ func (ctrl *CLIController) CloudSpaceUnpublish(cmd *cobra.Command, args []string
 }
 
 func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
+	console.PrintAction("Cloning an space")
+
 	selector, err := models.ParseSelectorForCloudCommand(args[0])
 	if err != nil {
 		log.Fatalf("cloud: clone space: invalid cloud selector: %v", err)
@@ -146,6 +152,8 @@ func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
 }
 
 func (ctrl *CLIController) CloudSpacePull(cmd *cobra.Command, args []string) {
+	console.PrintAction("Pulling latest changes of an space")
+
 	selector, err := models.ParseSelectorMandatorySpace(args[0])
 	if err != nil {
 		log.Fatalf("cloud: pull space: invalid cloud selector: %v", err)
@@ -198,6 +206,8 @@ func (ctrl *CLIController) CloudCommandList(cmd *cobra.Command, args []string) {
 }
 
 func (ctrl *CLIController) CloudCommandCopy(cmd *cobra.Command, args []string) {
+	console.PrintAction("Copying cloud commands")
+
 	cmdSelector, err := models.ParseSelectorForCloudCommand(args[0])
 	if err != nil {
 		log.Fatalf("cloud: copy command: invalid cloud selector: %v", err)

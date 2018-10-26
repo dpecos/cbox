@@ -3,10 +3,9 @@ package cli
 import (
 	"fmt"
 
-	"github.com/dpecos/cbox/internal/pkg/console"
-
 	"github.com/dpecos/cbox/internal/app/core"
 	"github.com/dpecos/cbox/internal/pkg"
+	"github.com/dpecos/cbox/internal/pkg/console"
 	"github.com/spf13/cobra"
 )
 

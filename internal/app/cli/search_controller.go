@@ -10,7 +10,6 @@ import (
 )
 
 func (ctrl *CLIController) SearchCommands(cmd *cobra.Command, args []string) {
-
 	var sel, criteria string
 
 	if len(args) == 2 {
