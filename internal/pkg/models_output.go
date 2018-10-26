@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/dpecos/cbox/internal/pkg/console"
@@ -54,6 +55,8 @@ func PrintCommand(header string, cmd *models.Command, full bool, sourceOnly bool
 func PrintCommandList(header string, commands []models.Command, full bool, sourceOnly bool) {
 	printHeader(header)
 
+	sortCommands(commands)
+
 	for i, command := range commands {
 		PrintCommand("", &command, full, sourceOnly)
 		if full && i != len(commands)-1 {
@@ -94,4 +97,10 @@ func printFooter(header string) {
 	if header != "" {
 		fmt.Printf("%s\n\n", separatorColor("- - - - - - - - - - - -"))
 	}
+}
+
+func sortCommands(commands []models.Command) {
+	sort.Slice(commands, func(i, j int) bool {
+		return strings.Compare(commands[i].Label, commands[j].Label) == -1
+	})
 }
