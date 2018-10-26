@@ -40,6 +40,4 @@ func init() {
 		core.LoadSettings(path)
 		cboxInstance = core.Load()
 	})
-
-	rootCmd.AddCommand(completionCmd)
 }
