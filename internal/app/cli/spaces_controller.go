@@ -25,7 +25,7 @@ func (ctrl *CLIController) SpacesCreate(cmd *cobra.Command, args []string) {
 	err := cboxInstance.SpaceCreate(space)
 	for err != nil {
 		console.PrintError("Space already found in your cbox. Try a different one")
-		space.Label = strings.ToLower(console.ReadString("Label"))
+		space.Label = strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
 		err = cboxInstance.SpaceCreate(space)
 	}
 
@@ -60,7 +60,7 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 		err := cboxInstance.SpaceEdit(space, selector.Space)
 		for err != nil {
 			console.PrintError("Label already found in your cbox. Try a different one")
-			space.Label = strings.ToLower(console.ReadString("Label"))
+			space.Label = strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
 			err = cboxInstance.SpaceEdit(space, selector.Space)
 		}
 

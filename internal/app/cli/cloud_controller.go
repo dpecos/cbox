@@ -17,7 +17,7 @@ func (ctrl *CLIController) CloudLogin(cmd *cobra.Command, args []string) {
 	url := fmt.Sprintf("%s/auth/", core.CloudURL())
 	fmt.Printf("Open this URL in a browser and follow the authentication process: \n\n%s\n\n", url)
 
-	jwt := console.ReadString("JWT Token")
+	jwt := console.ReadString("JWT Token", console.NOT_EMPTY_VALUES)
 	fmt.Println()
 
 	_, _, name, err := core.CloudLogin(jwt)
@@ -139,7 +139,7 @@ func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
 		err := cboxInstance.SpaceCreate(space)
 		for err != nil {
 			console.PrintError("Space already found in your cbox. Try a different one")
-			space.Label = strings.ToLower(console.ReadString("Label"))
+			space.Label = strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
 			err = cboxInstance.SpaceCreate(space)
 		}
 
@@ -202,7 +202,7 @@ func (ctrl *CLIController) CloudCommandList(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: list commands: %v", err)
 	}
 
-	pkg.PrintCommandList("", commands, viewSnippet, false)
+	pkg.PrintCommandList(selector.String(), commands, viewSnippet, false)
 }
 
 func (ctrl *CLIController) CloudCommandCopy(cmd *cobra.Command, args []string) {

@@ -68,10 +68,16 @@ func readStringDetails(label string, previousValue string, flags bitflag.Flag) (
 
 	var prompt survey.Prompt
 
+	help := ""
+	if !flags.Isset(NOT_EMPTY_VALUES) {
+		help = "Ctrl+C clears this field"
+	}
+
 	if flags.Isset(MULTILINE) {
 		prompt = &survey.MultilineInput{
 			Message: label,
 			Default: previousValue,
+			Help:    help,
 		}
 		// prompt = &survey.Editor{
 		// 	Message:       label,
@@ -82,6 +88,7 @@ func readStringDetails(label string, previousValue string, flags bitflag.Flag) (
 		prompt = &survey.Input{
 			Message: label,
 			Default: previousValue,
+			Help:    help,
 		}
 	}
 

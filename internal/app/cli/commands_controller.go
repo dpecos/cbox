@@ -21,7 +21,7 @@ func (ctrl *CLIController) CommandList(cmd *cobra.Command, args []string) {
 
 	commands := space.CommandList(selector.Item)
 
-	pkg.PrintCommandList("", commands, viewSnippet, false)
+	pkg.PrintCommandList(selector.String(), commands, viewSnippet, false)
 }
 
 func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
@@ -41,7 +41,7 @@ func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 	err = space.CommandAdd(command)
 	for err != nil {
 		console.PrintError(fmt.Sprintf("Label '%s' already found in space. Try a different one", command.Label))
-		command.Label = strings.ToLower(console.ReadString("Label"))
+		command.Label = strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
 		err = space.CommandAdd(command)
 	}
 	core.Save(cboxInstance)
@@ -75,7 +75,7 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 	err = space.CommandEdit(command, previousCommandLabel)
 	for err != nil {
 		console.PrintError(fmt.Sprintf("Label '%s' already found in space. Try a different one", command.Label))
-		command.Label = strings.ToLower(console.ReadString("Label"))
+		command.Label = strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
 		err = space.CommandEdit(command, previousCommandLabel)
 	}
 

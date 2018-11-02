@@ -30,7 +30,7 @@ var addCmd = &cobra.Command{
 
 var editCmd = &cobra.Command{
 	Use:     "edit",
-	Aliases: []string{"e"},
+	Aliases: []string{"e", "ed"},
 	Args:    cobra.ExactArgs(1),
 	Short:   "Edit a command from your cbox",
 	Long:    pkg.Logo,
