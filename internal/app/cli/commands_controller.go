@@ -34,7 +34,7 @@ func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 		log.Fatalf("add command: %v", err)
 	}
 
-	console.PrintAction("Creating new command")
+	fmt.Printf("Creating new command...\n")
 
 	command := pkg.ConsoleReadCommand()
 

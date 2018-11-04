@@ -62,7 +62,7 @@ func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) 
 	// pkg.PrintCommandList("Containing these commands", space.Entries, false, false)
 
 	if console.Confirm("Publish?") {
-		console.PrintAction(fmt.Sprintf("Publishing space '%s'...", space.Label))
+		fmt.Printf("Publishing space '%s'...\n", space.Label)
 
 		cloud, err := core.CloudClient()
 		if err != nil {
@@ -97,7 +97,7 @@ func (ctrl *CLIController) CloudSpaceUnpublish(cmd *cobra.Command, args []string
 	}
 
 	if console.Confirm("Unpublish?") {
-		console.PrintAction(fmt.Sprintf("Unpublishing space '%s'...", selector.String()))
+		fmt.Printf("Unpublishing space '%s'...\n", selector.String())
 
 		cloud, err := core.CloudClient()
 		if err != nil {
