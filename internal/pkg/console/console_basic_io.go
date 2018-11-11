@@ -8,6 +8,7 @@ import (
 
 	bitflag "github.com/mvpninjas/go-bitflag"
 	survey "gopkg.in/AlecAivazis/survey.v1"
+	surveyCore "gopkg.in/AlecAivazis/survey.v1/core"
 )
 
 const MSG_EDIT = "Ctrl+D to clear, Empty line to maintain"
@@ -21,6 +22,10 @@ const (
 	MULTILINE
 	ONLY_VALID_CHARS
 )
+
+func init() {
+	surveyCore.SetFancyIcons()
+}
 
 func ReadString(label string, opts ...bitflag.Flag) string {
 	var flags bitflag.Flag
