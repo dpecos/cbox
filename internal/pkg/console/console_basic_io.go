@@ -79,7 +79,7 @@ func readStringDetails(label string, previousValue string, flags bitflag.Flag) (
 	}
 
 	if flags.Isset(MULTILINE) {
-		prompt = &survey.MultilineInput{
+		prompt = &survey.Multiline{
 			Message: label,
 			Default: previousValue,
 			Help:    help,
