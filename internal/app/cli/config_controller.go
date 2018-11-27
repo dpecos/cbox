@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"github.com/dpecos/cbox/internal/pkg"
+	"github.com/dplabs/cbox/internal/pkg"
 	"github.com/spf13/viper"
 
 	"github.com/spf13/cobra"

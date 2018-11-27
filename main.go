@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/dpecos/cbox/internal/app/cli"
-	"github.com/dpecos/cbox/internal/pkg/console"
+	"github.com/dplabs/cbox/internal/app/cli"
+	"github.com/dplabs/cbox/internal/pkg/console"
 )
 
 func main() {

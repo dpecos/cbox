@@ -1,7 +1,7 @@
 package pkg
 
 import (
-	"github.com/dpecos/cbox/internal/pkg/console"
+	"github.com/dplabs/cbox/internal/pkg/console"
 )
 
 var (

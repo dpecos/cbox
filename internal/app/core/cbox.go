@@ -3,7 +3,7 @@ package core
 import (
 	"log"
 
-	"github.com/dpecos/cbox/pkg/models"
+	"github.com/dplabs/cbox/pkg/models"
 )
 
 const (

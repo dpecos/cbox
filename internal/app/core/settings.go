@@ -5,9 +5,9 @@ import (
 	"log"
 	"path"
 
-	"github.com/dpecos/cbox/internal/pkg"
-	"github.com/dpecos/cbox/internal/pkg/console"
-	"github.com/dpecos/cbox/pkg/models"
+	"github.com/dplabs/cbox/internal/pkg"
+	"github.com/dplabs/cbox/internal/pkg/console"
+	"github.com/dplabs/cbox/pkg/models"
 	"github.com/gofrs/uuid"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"

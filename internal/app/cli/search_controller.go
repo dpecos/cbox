@@ -5,7 +5,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/dpecos/cbox/internal/pkg"
+	"github.com/dplabs/cbox/internal/pkg"
 	"github.com/spf13/cobra"
 )
 

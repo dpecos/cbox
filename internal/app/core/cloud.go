@@ -9,9 +9,9 @@ import (
 	"net/http/httputil"
 	"net/url"
 
-	"github.com/dpecos/cbox/internal/pkg"
-	"github.com/dpecos/cbox/internal/pkg/console"
-	"github.com/dpecos/cbox/pkg/models"
+	"github.com/dplabs/cbox/internal/pkg"
+	"github.com/dplabs/cbox/internal/pkg/console"
+	"github.com/dplabs/cbox/pkg/models"
 	"github.com/gofrs/uuid"
 	"github.com/spf13/viper"
 )

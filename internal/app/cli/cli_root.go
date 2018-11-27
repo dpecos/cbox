@@ -4,9 +4,9 @@ import (
 	"log"
 	"strings"
 
-	"github.com/dpecos/cbox/internal/app/core"
-	"github.com/dpecos/cbox/internal/pkg"
-	"github.com/dpecos/cbox/pkg/models"
+	"github.com/dplabs/cbox/internal/app/core"
+	"github.com/dplabs/cbox/internal/pkg"
+	"github.com/dplabs/cbox/pkg/models"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

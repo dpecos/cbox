@@ -3,7 +3,7 @@ package cli
 import (
 	"log"
 
-	"github.com/dpecos/cbox/pkg/models"
+	"github.com/dplabs/cbox/pkg/models"
 )
 
 type CLIController struct {

@@ -8,7 +8,7 @@ import (
 	"path"
 	"path/filepath"
 
-	"github.com/dpecos/cbox/pkg/models"
+	"github.com/dplabs/cbox/pkg/models"
 )
 
 func resolveSpaceFile(spaceName string) string {

@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/dpecos/cbox/internal/pkg/console"
-	"github.com/dpecos/cbox/pkg/models"
+	"github.com/dplabs/cbox/internal/pkg/console"
+	"github.com/dplabs/cbox/pkg/models"
 	"github.com/gofrs/uuid"
 )
 

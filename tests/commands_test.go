@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/dpecos/cbox/pkg/models"
+	"github.com/dplabs/cbox/pkg/models"
 	"github.com/gofrs/uuid"
 )
 

@@ -5,9 +5,9 @@ import (
 	"log"
 	"strings"
 
-	"github.com/dpecos/cbox/internal/app/core"
-	"github.com/dpecos/cbox/internal/pkg"
-	"github.com/dpecos/cbox/internal/pkg/console"
+	"github.com/dplabs/cbox/internal/app/core"
+	"github.com/dplabs/cbox/internal/pkg"
+	"github.com/dplabs/cbox/internal/pkg/console"
 	"github.com/spf13/cobra"
 )
 
