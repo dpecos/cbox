@@ -4,19 +4,19 @@ TAG=$(shell git describe --tags 2> /dev/null)
 BUILD=$(shell date +%FT%T%z)
 
 build-dev: version
-	sh ./scripts/compile.sh build $(VERSION) $(BUILD) dev
+	sh ./scripts/compile.sh build $(VERSION) $(BRANCH)-$(COMMIT)@$(BUILD) dev
 
 build-prod: version
-	sh ./scripts/compile.sh build $(VERSION) $(BUILD) prod
+	sh ./scripts/compile.sh build $(VERSION) $(BRANCH)-$(COMMIT)@$(BUILD) prod
 
 install-dev: version
-	sh ./scripts/compile.sh install $(VERSION) $(BUILD) dev
+	sh ./scripts/compile.sh install $(VERSION) $(BRANCH)-$(COMMIT)@$(BUILD) dev
 
 install-prod: version
-	sh ./scripts/compile.sh install $(VERSION) $(BUILD) prod
+	sh ./scripts/compile.sh install $(VERSION) $(BRANCH)-$(COMMIT)@$(BUILD) prod
 
 version:
-  VERSION := $(if $(TAG),$(TAG),$(BRANCH)-$(COMMIT))
+  VERSION := $(if $(TAG),$(TAG),0.0.0)
 
 check:
 	gosec ./...

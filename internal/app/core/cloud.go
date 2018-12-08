@@ -105,6 +105,7 @@ func (cloud *Cloud) doRequest(method string, path string, query map[string]strin
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Authorization", "Bearer "+cloud.token)
+	req.Header.Set("cbox-version", Version)
 
 	if len(query) != 0 {
 		q := req.URL.Query()
@@ -115,6 +116,8 @@ func (cloud *Cloud) doRequest(method string, path string, query map[string]strin
 	}
 
 	if Env == "dev" {
+		req.Header.Set("cbox-version", "0.0.0")
+
 		strReq, _ := httputil.DumpRequest(req, true)
 		console.Debug(fmt.Sprintf("---\n\n%s---\n\n", string(strReq)))
 	}
@@ -133,6 +136,8 @@ func (cloud *Cloud) doRequest(method string, path string, query map[string]strin
 
 	if resp.StatusCode == http.StatusOK {
 		return bodyString, nil
+	} else if resp.StatusCode == http.StatusNotAcceptable {
+		return "", fmt.Errorf("rest: client version not supported by server: %s\n%s", req.Header.Get("cbox-version"), console.ColorRed(bodyString))
 	}
 
 	return "", fmt.Errorf("rest: request failed with '%s' (code: %d):\n%s", resp.Status, resp.StatusCode, console.ColorRed(bodyString))
