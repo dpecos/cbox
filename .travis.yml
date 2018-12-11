@@ -3,7 +3,9 @@ language: go
 go:
   - "1.11"
 
-dist: trusty
+addons:
+  sonarcloud:
+    organization: "dplabs"
 
 git:
   depth: 1
