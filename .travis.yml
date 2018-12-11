@@ -3,6 +3,8 @@ language: go
 go:
   - "1.11"
 
+dist: trusty
+
 git:
   depth: 1
 
