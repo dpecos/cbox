@@ -73,7 +73,8 @@ func PrintTag(tag string) {
 
 func PrintSpace(header string, space *models.Space) {
 	printHeader(header)
-	fmt.Printf("%s - %s %s\n", spaceLabelColor(space.Label), descriptionColor(space.Description), dateColor(space.CreatedAt.String()))
+	timestamp := fmt.Sprintf("(Last updated: %s - Created: %s)", space.UpdatedAt.String(), space.CreatedAt.String())
+	fmt.Printf("%s - %s %s\n", spaceLabelColor(space.Label), descriptionColor(space.Description), dateColor(timestamp))
 	printFooter(header)
 }
 
