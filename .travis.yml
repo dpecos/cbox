@@ -3,12 +3,14 @@ language: go
 go:
   - "1.11"
 
+dist: trusty
+sudo: false
+
 git:
   depth: 1
 
-install:
-  - go get ./...
+install: true
 
 script:
-  - make test
+  - env GO111MODULE=on make test
   - sonar-scanner
