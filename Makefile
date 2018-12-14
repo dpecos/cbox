@@ -22,5 +22,4 @@ check:
 	gosec ./...
 
 test:
-	go test -json > report.json
-	go test -coverprofile=coverage.out -v ./...
+	sh ./scripts/test.sh

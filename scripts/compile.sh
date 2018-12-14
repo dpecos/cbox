@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+set -e
+set -x
+
 COMMAND=$1
 VERSION=$2
 BUILD=$3
