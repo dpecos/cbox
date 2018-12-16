@@ -6,10 +6,11 @@ import (
 )
 
 var cloudSpaceCmd = &cobra.Command{
-	Use:   "space",
-	Args:  cobra.ExactArgs(0),
-	Short: "Cloud operations for spaces",
-	Long:  pkg.Logo,
+	Use:     "spaces",
+	Aliases: []string{"space"},
+	Args:    cobra.ExactArgs(0),
+	Short:   "Cloud operations for spaces",
+	Long:    pkg.Logo,
 }
 
 var cloudSpaceInfoCmd = &cobra.Command{

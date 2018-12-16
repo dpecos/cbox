@@ -29,7 +29,7 @@ func (ctrl *CLIController) CloudSpaceInfo(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: space info: %v", err)
 	}
 
-	pkg.PrintSpace(fmt.Sprintf("Info of remote space %s", selector), space)
+	pkg.PrintSpace(selector.String(), space)
 }
 
 func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) {
