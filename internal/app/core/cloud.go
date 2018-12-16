@@ -166,7 +166,8 @@ func (cloud *Cloud) SpaceUnpublish(selector *models.Selector) error {
 	return err
 }
 
-func (cloud *Cloud) SpaceRetrieve(selector *models.Selector, id *uuid.UUID) (*models.Space, error) {
+// This method retrieves details about an space from the cloud, but not its entries
+func (cloud *Cloud) SpaceFind(selector *models.Selector, id *uuid.UUID) (*models.Space, error) {
 
 	query := make(map[string]string)
 
