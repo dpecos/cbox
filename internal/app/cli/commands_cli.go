@@ -21,18 +21,19 @@ var commandsCmd = &cobra.Command{
 }
 
 var addCmd = &cobra.Command{
-	Use:   "add",
-	Args:  cobra.MaximumNArgs(1),
-	Short: "Add a new command to your cbox",
-	Long:  pkg.Logo,
-	Run:   ctrl.CommandAdd,
+	Use:     "add",
+	Aliases: []string{"a"},
+	Args:    cobra.MaximumNArgs(1),
+	Short:   "Add a new command to your cbox",
+	Long:    pkg.Logo,
+	Run:     ctrl.CommandAdd,
 }
 
 var editCmd = &cobra.Command{
 	Use:     "edit",
 	Aliases: []string{"e", "ed"},
 	Args:    cobra.ExactArgs(1),
-	Short:   "Edit a command from your cbox",
+	Short:   "Edit a command of your cbox",
 	Long:    pkg.Logo,
 	Run:     ctrl.CommandEdit,
 }
@@ -41,7 +42,7 @@ var deleteCmd = &cobra.Command{
 	Use:     "delete",
 	Aliases: []string{"del"},
 	Args:    cobra.ExactArgs(1),
-	Short:   "Delete a command from your cbox",
+	Short:   "Delete a command of your cbox",
 	Long:    pkg.Logo,
 	Run:     ctrl.CommandDelete,
 }

@@ -15,7 +15,7 @@ var cloudCommandsCmd = &cobra.Command{
 
 var cloudCommandsListCmd = &cobra.Command{
 	Use:     "list",
-	Aliases: []string{"c", "cmd", "commands", "ls", "l"},
+	Aliases: []string{"ls", "l", "view"},
 	Args:    cobra.ExactArgs(1),
 	Short:   "List the content of a space from cbox cloud",
 	Long:    pkg.Logo,

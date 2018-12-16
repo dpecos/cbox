@@ -6,11 +6,12 @@ import (
 )
 
 var tagsCmd = &cobra.Command{
-	Use:   "tags",
-	Args:  cobra.MaximumNArgs(1),
-	Short: "List the tags available in your cbox",
-	Long:  pkg.Logo,
-	Run:   ctrl.TagsList,
+	Use:     "tags",
+	Aliases: []string{"tag"},
+	Args:    cobra.MaximumNArgs(1),
+	Short:   "List the tags available in your cbox",
+	Long:    pkg.Logo,
+	Run:     ctrl.TagsList,
 }
 
 var tagsDeleteCmd = &cobra.Command{
