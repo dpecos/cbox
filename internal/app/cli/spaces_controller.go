@@ -13,7 +13,7 @@ import (
 
 func (ctrl *CLIController) SpacesList(cmd *cobra.Command, args []string) {
 	for _, space := range cboxInstance.Spaces {
-		pkg.PrintSpace("", &space)
+		pkg.PrintSpace("", space)
 	}
 }
 

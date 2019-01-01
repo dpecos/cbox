@@ -16,7 +16,7 @@ const (
 
 func Load() *models.CBox {
 	cbox := models.CBox{
-		Spaces: []models.Space{},
+		Spaces: []*models.Space{},
 	}
 
 	spaces := spacesLoad()
@@ -32,7 +32,7 @@ func Load() *models.CBox {
 
 func Save(cbox *models.CBox) {
 	for _, space := range cbox.Spaces {
-		spaceStoreFile(&space)
+		spaceStoreFile(space)
 	}
 }
 

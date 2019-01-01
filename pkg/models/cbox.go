@@ -8,7 +8,7 @@ import (
 
 type CBox struct {
 	path   string
-	Spaces []Space
+	Spaces []*Space
 }
 
 func (cbox *CBox) spaceFindPositionByLabel(spaceLabel string) (int, error) {
@@ -61,7 +61,7 @@ func (cbox *CBox) SpaceFind(spaceLocator string) (*Space, error) {
 			return nil, fmt.Errorf("find space: %v", err)
 		}
 	}
-	return &cbox.Spaces[pos], nil
+	return cbox.Spaces[pos], nil
 }
 
 func (cbox *CBox) SpaceCreate(space *Space) error {
@@ -77,7 +77,7 @@ func (cbox *CBox) SpaceCreate(space *Space) error {
 		space.CreatedAt = now
 		space.UpdatedAt = now
 	}
-	cbox.Spaces = append(cbox.Spaces, *space)
+	cbox.Spaces = append(cbox.Spaces, space)
 	return nil
 }
 
