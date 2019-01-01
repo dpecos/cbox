@@ -27,7 +27,7 @@ func TestSpaceTimestamps(t *testing.T) {
 	tu := space.UpdatedAt
 
 	if !tc.Equal(tu) {
-		t.Errorf("creation and update timestamsp should be the same for new spaces")
+		t.Fatalf("creation and update timestamsp should be the same for new spaces")
 	}
 
 	cboxInstance = reloadCBox(cboxInstance)
@@ -45,7 +45,7 @@ func TestSpaceTimestamps(t *testing.T) {
 
 	err := cboxInstance.SpaceEdit(s, space.Label)
 	if err != nil {
-		t.Errorf("failed to rename space: %v", err)
+		t.Fatalf("failed to rename space: %v", err)
 	}
 
 	spaceToDelete := &models.Space{
@@ -54,7 +54,11 @@ func TestSpaceTimestamps(t *testing.T) {
 	core.DeleteSpaceFile(spaceToDelete)
 
 	cboxInstance = reloadCBox(cboxInstance)
-	s, _ = cboxInstance.SpaceFind(space.ID.String())
+	s, err = cboxInstance.SpaceFind(space.ID.String())
+
+	if err != nil {
+		t.Fatalf("could not find space: %v", err)
+	}
 
 	if !tc.Equal(s.CreatedAt) {
 		t.Errorf("space creation timestamp changed after update: '%s' - '%s'", tc.StringRaw(), s.CreatedAt.StringRaw())
@@ -78,6 +82,15 @@ func TestCommandTimestamps(t *testing.T) {
 	tcc := cmd.CreatedAt
 	tcu := cmd.UpdatedAt
 
+	c, err := space.CommandFind(cmd.Label)
+	if err != nil {
+		t.Fatalf("could not find space after creation: %v", err)
+	}
+
+	if cmd != c {
+		t.Fatalf("found space and created space are different references")
+	}
+
 	if !tsc.Equal(space.CreatedAt) {
 		t.Errorf("space creation timestamp changed after new command: '%s' - '%s'", tsc.StringRaw(), space.CreatedAt.StringRaw())
 	}
@@ -97,7 +110,8 @@ func TestCommandTimestamps(t *testing.T) {
 	previousLabel := cmd.Label
 	cmd.Label = cmd.Label + "-update"
 
-	err := space.CommandEdit(cmd, previousLabel)
+	err = space.CommandEdit(cmd, previousLabel)
+
 	if err != nil {
 		t.Fatalf("failed to rename command: %v", err)
 	}

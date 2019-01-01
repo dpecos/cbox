@@ -53,7 +53,7 @@ func ConsoleReadSpace() *models.Space {
 	space := models.Space{
 		Label:       strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS)),
 		Description: console.ReadString("Description"),
-		Entries:     []models.Command{},
+		Entries:     []*models.Command{},
 	}
 	space.ID = id
 

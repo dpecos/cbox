@@ -191,7 +191,7 @@ func (cloud *Cloud) SpaceFind(selector *models.Selector, id *uuid.UUID) (*models
 	return &space, err
 }
 
-func (cloud *Cloud) CommandList(selector *models.Selector) ([]models.Command, error) {
+func (cloud *Cloud) CommandList(selector *models.Selector) ([]*models.Command, error) {
 
 	query := make(map[string]string)
 	query["selector"] = selector.String()
@@ -201,7 +201,7 @@ func (cloud *Cloud) CommandList(selector *models.Selector) ([]models.Command, er
 		return nil, err
 	}
 
-	var commands []models.Command
+	var commands []*models.Command
 	err = json.Unmarshal([]byte(response), &commands)
 	if err != nil {
 		return nil, fmt.Errorf("could not parse response: %v", err)

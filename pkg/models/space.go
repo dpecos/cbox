@@ -9,9 +9,9 @@ import (
 
 type Space struct {
 	Meta
-	Label       string    `json:"label"`
-	Description string    `json:"description"`
-	Entries     []Command `json:"entries" dynamodbav:"-"`
+	Label       string     `json:"label"`
+	Description string     `json:"description"`
+	Entries     []*Command `json:"entries" dynamodbav:"-"`
 }
 
 func commandPresentInSpace(space *Space, commandLabel string) bool {
@@ -29,7 +29,7 @@ func (space *Space) CommandAdd(command *Command) error {
 		command.UpdatedAt = now
 	}
 	space.UpdatedAt = now
-	space.Entries = append(space.Entries, *command)
+	space.Entries = append(space.Entries, command)
 
 	return nil
 }
@@ -51,12 +51,12 @@ func (space *Space) CommandEdit(command *Command, previousLabel string) error {
 	return nil
 }
 
-func (space *Space) CommandList(item string) []Command {
+func (space *Space) CommandList(item string) []*Command {
 	if item == "" {
 		return space.Entries
 	}
 
-	var result []Command
+	var result []*Command
 	for _, command := range space.Entries {
 		// match by label
 		if command.Label == item {
@@ -109,7 +109,7 @@ func (space *Space) CommandFind(commandLocator string) (*Command, error) {
 			return nil, fmt.Errorf("find command: %v", err)
 		}
 	}
-	return &space.Entries[pos], nil
+	return space.Entries[pos], nil
 }
 
 func (space *Space) CommandDelete(command *Command) {
@@ -140,12 +140,12 @@ func (space *Space) TagsList(filterTag string) []string {
 	return result
 }
 
-func (space *Space) SearchCommands(tag string, criteria string) ([]Command, error) {
+func (space *Space) SearchCommands(tag string, criteria string) ([]*Command, error) {
 	if criteria == "" {
 		return nil, fmt.Errorf("could not search with empty criteria")
 	}
 
-	var results []Command
+	var results []*Command
 	for _, command := range space.Entries {
 		if tag != "" && !command.Tagged(tag) {
 			continue

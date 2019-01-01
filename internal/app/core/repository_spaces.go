@@ -47,7 +47,7 @@ func spaceLoadFile(label string) *models.Space {
 	}
 
 	if space.Entries == nil {
-		space.Entries = []models.Command{}
+		space.Entries = []*models.Command{}
 	}
 
 	return &space

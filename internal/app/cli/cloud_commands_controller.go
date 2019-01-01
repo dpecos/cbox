@@ -68,7 +68,7 @@ func (ctrl *CLIController) CloudCommandCopy(cmd *cobra.Command, args []string) {
 
 		failures := false
 		for _, command := range commands {
-			err = space.CommandAdd(&command)
+			err = space.CommandAdd(command)
 			if err != nil {
 				failures = true
 				log.Printf("cloud: copy command: %v", err)

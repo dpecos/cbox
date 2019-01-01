@@ -70,7 +70,7 @@ func (cbox *CBox) SpaceCreate(space *Space) error {
 		return fmt.Errorf("space create: space with label '%s' already exists", space.Label)
 	}
 	if space.Entries == nil {
-		space.Entries = []Command{}
+		space.Entries = []*Command{}
 	}
 	if space.CreatedAt == NilUnixTime {
 		now := UnixTimeNow()
