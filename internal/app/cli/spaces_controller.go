@@ -98,7 +98,6 @@ func (ctrl *CLIController) SpacesDestroy(cmd *cobra.Command, args []string) {
 		s := models.Space{
 			Label: space.Label,
 		}
-		s.ID = space.ID
 
 		err = cboxInstance.SpaceDestroy(&s)
 		if err != nil {

@@ -12,7 +12,6 @@ import (
 	"github.com/dplabs/cbox/internal/pkg"
 	"github.com/dplabs/cbox/internal/pkg/console"
 	"github.com/dplabs/cbox/pkg/models"
-	"github.com/gofrs/uuid"
 	"github.com/spf13/viper"
 )
 
@@ -167,15 +166,11 @@ func (cloud *Cloud) SpaceUnpublish(selector *models.Selector) error {
 }
 
 // This method retrieves details about an space from the cloud, but not its entries
-func (cloud *Cloud) SpaceFind(selector *models.Selector, id *uuid.UUID) (*models.Space, error) {
+func (cloud *Cloud) SpaceFind(selector *models.Selector) (*models.Space, error) {
 
 	query := make(map[string]string)
 
-	if selector != nil {
-		query["selector"] = selector.String()
-	} else {
-		query["selector"] = id.String()
-	}
+	query["selector"] = selector.String()
 
 	response, err := cloud.doRequest("GET", "/v1/spaces", query, "")
 	if err != nil {

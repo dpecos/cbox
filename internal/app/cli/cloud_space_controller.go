@@ -24,7 +24,7 @@ func (ctrl *CLIController) CloudSpaceInfo(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatalf("cloud: space info: %v", err)
 	}
-	space, err := cloud.SpaceFind(selector, nil)
+	space, err := cloud.SpaceFind(selector)
 	if err != nil {
 		log.Fatalf("cloud: space info: %v", err)
 	}
@@ -124,7 +124,7 @@ func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: clone space: cloud client: %v", err)
 	}
 
-	space, err := cloud.SpaceFind(selector, nil)
+	space, err := cloud.SpaceFind(selector)
 	if err != nil {
 		log.Fatalf("cloud: clone space: %v", err)
 	}
@@ -173,7 +173,7 @@ func (ctrl *CLIController) CloudSpacePull(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: pull space: %v", err)
 	}
 
-	spaceCloud, err := cloud.SpaceFind(nil, &space.ID)
+	spaceCloud, err := cloud.SpaceFind(selector)
 	if err != nil {
 		log.Fatalf("cloud: pull space: %v", err)
 	}

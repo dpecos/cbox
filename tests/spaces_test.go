@@ -6,7 +6,6 @@ import (
 
 	"github.com/dplabs/cbox/internal/app/core"
 	"github.com/dplabs/cbox/pkg/models"
-	"github.com/gofrs/uuid"
 )
 
 func TestSpaceCreationDeletion(t *testing.T) {
@@ -18,12 +17,7 @@ func TestSpaceCreationDeletion(t *testing.T) {
 
 	assertSpaceFileExists(t, cboxInstance, space)
 
-	s, err := cboxInstance.SpaceFind(space.ID.String())
-	if s == nil || err != nil {
-		t.Errorf("could not find space by ID: %v", err)
-	}
-
-	s, err = cboxInstance.SpaceFind(space.Label)
+	s, err := cboxInstance.SpaceFind(space.Label)
 	if s == nil || err != nil {
 		t.Errorf("could not find space by label: %v", err)
 	}
@@ -38,7 +32,7 @@ func TestSpaceCreationDeletion(t *testing.T) {
 
 	cboxInstance = reloadCBox(cboxInstance)
 
-	_, err = cboxInstance.SpaceFind(space.ID.String())
+	_, err = cboxInstance.SpaceFind(space.Label)
 	if err == nil {
 		t.Error("space still found after deleting it")
 	}
@@ -50,12 +44,10 @@ func TestSpaceLabelUniquenessOnCreation(t *testing.T) {
 
 	s1 := createSpace(t, cboxInstance)
 
-	id, _ := uuid.NewV4()
 	s2 := models.Space{
 		Label:       s1.Label,
 		Description: randString(15),
 	}
-	s2.ID = id
 
 	err := cboxInstance.SpaceCreate(&s2)
 	if err == nil {
@@ -104,7 +96,7 @@ func TestSearch(t *testing.T) {
 		t.Fatalf("space search error: %v", err)
 	}
 
-	if len(result) != 1 || result[0].ID != c1.ID {
+	if len(result) != 1 || result[0].Label != c1.Label {
 		t.Errorf("space search did not return the expected command: %v", c1)
 	}
 }
@@ -124,7 +116,7 @@ func TestSearchWithinTag(t *testing.T) {
 		t.Errorf("space search error: %v", err)
 	}
 
-	if len(result) != 1 || result[0].ID != c1.ID {
+	if len(result) != 1 || result[0].Label != c1.Label {
 		t.Errorf("space search did not return the expected command: %v", c1)
 	}
 

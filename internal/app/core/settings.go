@@ -8,7 +8,6 @@ import (
 	"github.com/dplabs/cbox/internal/pkg"
 	"github.com/dplabs/cbox/internal/pkg/console"
 	"github.com/dplabs/cbox/pkg/models"
-	"github.com/gofrs/uuid"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
@@ -90,18 +89,13 @@ func initializeWorkingDirectory(path string) string {
 }
 
 func createDefaultSpace() {
-	id, err := uuid.NewV4()
-	if err != nil {
-		log.Fatalf("init: could not generate id: %v", err)
-	}
 	defaultSpace := models.Space{
 		Label:       defaultSpaceID,
 		Description: defaultSpaceDescription,
 	}
-	defaultSpace.ID = id
 
 	cboxInstance := Load()
-	err = cboxInstance.SpaceCreate(&defaultSpace)
+	err := cboxInstance.SpaceCreate(&defaultSpace)
 	if err != nil {
 		log.Fatalf("init: could not create space: %v", err)
 	}

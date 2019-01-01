@@ -62,7 +62,7 @@ func TestSpacePublishingDoesntChangeCreateUpdateDates(t *testing.T) {
 		t.Fatalf("could not parse selector for cloud space: %v", err)
 	}
 
-	cloudSpace, err := cloud.SpaceFind(selector, nil)
+	cloudSpace, err := cloud.SpaceFind(selector)
 	if err != nil {
 		t.Fatalf("could not retrieve space: %v", err)
 	}

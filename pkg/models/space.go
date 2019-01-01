@@ -3,8 +3,6 @@ package models
 import (
 	"fmt"
 	"log"
-
-	"github.com/gofrs/uuid"
 )
 
 type Space struct {
@@ -84,36 +82,16 @@ func (space *Space) commandFindPositionByLabel(commandLabel string) (int, error)
 	return -1, fmt.Errorf("command with label '%s' not found", commandLabel)
 }
 
-func (space *Space) commandFindPositionByID(commandID uuid.UUID) (int, error) {
-	if commandID == uuid.Nil {
-		return -1, fmt.Errorf("could not search by empty ID")
-	}
-	for i, command := range space.Entries {
-		if command.ID == commandID {
-			return i, nil
-		}
-	}
-	return -1, fmt.Errorf("command with ID '%s' not found", commandID)
-}
-
-func (space *Space) CommandFind(commandLocator string) (*Command, error) {
-	pos, err := space.commandFindPositionByLabel(commandLocator)
+func (space *Space) CommandFind(label string) (*Command, error) {
+	pos, err := space.commandFindPositionByLabel(label)
 	if err != nil {
-		id, e := uuid.FromString(commandLocator)
-		if e != nil {
-			return nil, fmt.Errorf("find command: %v", err)
-		}
-
-		pos, err = space.commandFindPositionByID(id)
-		if err != nil {
-			return nil, fmt.Errorf("find command: %v", err)
-		}
+		return nil, fmt.Errorf("find command: %v", err)
 	}
 	return space.Entries[pos], nil
 }
 
 func (space *Space) CommandDelete(command *Command) {
-	pos, err := space.commandFindPositionByID(command.ID)
+	pos, err := space.commandFindPositionByLabel(command.Label)
 	if err != nil {
 		log.Fatalf("delete command: %v", err)
 	}

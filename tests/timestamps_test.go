@@ -31,7 +31,7 @@ func TestSpaceTimestamps(t *testing.T) {
 	}
 
 	cboxInstance = reloadCBox(cboxInstance)
-	s, _ := cboxInstance.SpaceFind(space.ID.String())
+	s, _ := cboxInstance.SpaceFind(space.Label)
 
 	if !tc.Equal(s.CreatedAt) {
 		t.Errorf("space creation timestamp changed after persisting and reloading cboxInstance: '%s' - '%s'", tc.StringRaw(), s.CreatedAt.StringRaw())
@@ -54,7 +54,7 @@ func TestSpaceTimestamps(t *testing.T) {
 	core.DeleteSpaceFile(spaceToDelete)
 
 	cboxInstance = reloadCBox(cboxInstance)
-	s, err = cboxInstance.SpaceFind(space.ID.String())
+	s, err = cboxInstance.SpaceFind(s.Label)
 
 	if err != nil {
 		t.Fatalf("could not find space: %v", err)

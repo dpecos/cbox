@@ -1,13 +1,11 @@
 package tests
 
 import (
-	"log"
 	"math/rand"
 	"strings"
 	"testing"
 
 	"github.com/dplabs/cbox/pkg/models"
-	"github.com/gofrs/uuid"
 )
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -25,7 +23,7 @@ func findSpaceFile(cboxInstance *models.CBox, space *models.Space) bool {
 
 	found := false
 	for _, s := range spaces {
-		if s.ID == space.ID {
+		if s.Label == space.Label {
 			found = true
 			break
 		}
@@ -52,23 +50,18 @@ func createSpace(t *testing.T, cboxInstance *models.CBox) *models.Space {
 		t.Fatal("cboxInstance not initialized")
 	}
 
-	id, err := uuid.NewV4()
-	if err != nil {
-		log.Fatalf("could not generate a new ID: %v", err)
-	}
 	space := models.Space{
 		Label:       randString(8),
 		Description: randString(15),
 	}
-	space.ID = id
 
-	err = cboxInstance.SpaceCreate(&space)
+	err := cboxInstance.SpaceCreate(&space)
 
 	if err != nil {
 		t.Error(err)
 	}
 
-	s, err := cboxInstance.SpaceFind(space.ID.String())
+	s, err := cboxInstance.SpaceFind(space.Label)
 	if err != nil {
 		t.Fatalf("could not find space: %v", err)
 	}

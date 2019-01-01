@@ -4,11 +4,9 @@ import (
 	"testing"
 
 	"github.com/dplabs/cbox/pkg/models"
-	"github.com/gofrs/uuid"
 )
 
 func createCommand(t *testing.T, space *models.Space) *models.Command {
-	id, _ := uuid.NewV4()
 	command := models.Command{
 		Label:       randString(8),
 		Description: randString(15),
@@ -16,7 +14,6 @@ func createCommand(t *testing.T, space *models.Space) *models.Command {
 		Code:        randString(30),
 		Tags:        []string{"test"},
 	}
-	command.ID = id
 
 	space.CommandAdd(&command)
 
@@ -41,12 +38,7 @@ func TestCommandCreationDeletion(t *testing.T) {
 		t.Fatal("space after persistence has different amount of commands")
 	}
 
-	c, err := s.CommandFind(command.ID.String())
-	if c == nil || err != nil {
-		t.Errorf("could not find command by ID: %v", err)
-	}
-
-	c, err = s.CommandFind(command.Label)
+	c, err := s.CommandFind(command.Label)
 	if c == nil || err != nil {
 		t.Errorf("could not find command by label: %v", err)
 	}
@@ -55,7 +47,7 @@ func TestCommandCreationDeletion(t *testing.T) {
 
 	cboxInstance = reloadCBox(cboxInstance)
 
-	_, err = s.CommandFind(command.ID.String())
+	_, err = s.CommandFind(command.Label)
 	if err == nil {
 		if err == nil {
 			t.Error("command still found after deleting it")
@@ -72,7 +64,7 @@ func TestCommandEdition(t *testing.T) {
 	cboxInstance = reloadCBox(cboxInstance)
 
 	s, _ := cboxInstance.SpaceFind(space.Label)
-	c, _ := s.CommandFind(command.ID.String())
+	c, _ := s.CommandFind(command.Label)
 
 	previousLabel := c.Label
 	newLabel := randString(8)
@@ -102,7 +94,6 @@ func TestCommandLabelUniquenessOnCreation(t *testing.T) {
 	space := createSpace(t, cboxInstance)
 	c1 := createCommand(t, space)
 
-	id, _ := uuid.NewV4()
 	c2 := models.Command{
 		Label:       c1.Label,
 		Description: randString(15),
@@ -110,7 +101,6 @@ func TestCommandLabelUniquenessOnCreation(t *testing.T) {
 		Code:        randString(30),
 		Tags:        []string{"test"},
 	}
-	c2.ID = id
 
 	err := space.CommandAdd(&c2)
 	if err == nil {

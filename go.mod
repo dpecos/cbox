@@ -14,14 +14,12 @@ require (
 	github.com/mattn/go-isatty v0.0.4 // indirect
 	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b // indirect
 	github.com/mitchellh/go-homedir v1.0.0
-	github.com/mitchellh/mapstructure v1.1.2 // indirect
 	github.com/mvpninjas/go-bitflag v0.0.0-20170304182127-02bc531a0674
-	github.com/spf13/cast v1.3.0 // indirect
+	github.com/spf13/afero v1.2.0 // indirect
 	github.com/spf13/cobra v0.0.3
-	github.com/spf13/pflag v1.0.3 // indirect
-	github.com/spf13/viper v1.2.1
-	golang.org/x/crypto v0.0.0-20181112202954-3d3f9f413869 // indirect
-	golang.org/x/sys v0.0.0-20181116161606-93218def8b18 // indirect
-	gopkg.in/AlecAivazis/survey.v1 v1.7.0
+	github.com/spf13/viper v1.3.1
+	github.com/ugorji/go/codec v0.0.0-20181209151446-772ced7fd4c2 // indirect
+	golang.org/x/sys v0.0.0-20181228144115-9a3f9b0469bb // indirect
+	gopkg.in/AlecAivazis/survey.v1 v1.7.1
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 )
