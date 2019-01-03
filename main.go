@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/dplabs/cbox/internal/app/cli"
-	"github.com/dplabs/cbox/internal/pkg/console"
+	"github.com/dplabs/cbox/src/cli"
+	"github.com/dplabs/cbox/src/tools/console"
 )
 
 func main() {

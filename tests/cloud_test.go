@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/dplabs/cbox/internal/app/core"
-	"github.com/dplabs/cbox/pkg/models"
+	"github.com/dplabs/cbox/src/core"
+	"github.com/dplabs/cbox/src/models"
 )
 
 const (

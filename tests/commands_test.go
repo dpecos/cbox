@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/dplabs/cbox/pkg/models"
+	"github.com/dplabs/cbox/src/models"
 )
 
 func createCommand(t *testing.T, space *models.Space) *models.Command {
