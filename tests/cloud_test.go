@@ -42,17 +42,9 @@ func TestSpacePublishingDoesntChangeCreateUpdateDates(t *testing.T) {
 
 	core.Save(cboxInstance)
 
-	_, _, _, err := core.CloudLogin(jwt)
-	if err != nil {
-		t.Fatalf("could not login: %v", err)
-	}
+	cloud := cloudConnect(jwt)
 
-	cloud, err := core.CloudClient()
-	if err != nil {
-		t.Fatalf("could create cloud client: %v", err)
-	}
-
-	err = cloud.SpacePublish(space)
+	err := cloud.SpacePublish(space)
 	if err != nil {
 		t.Fatalf("could not publish space: %v", err)
 	}
@@ -87,5 +79,99 @@ func TestSpacePublishingDoesntChangeCreateUpdateDates(t *testing.T) {
 
 	if len(cloudCommands) != 0 {
 		t.Errorf("commands left behind in the cloud after deleting their space")
+	}
+}
+
+func TestPublishingEmptySpace(t *testing.T) {
+	cboxInstance := initializeCBox()
+
+	space := createSpace(t, cboxInstance)
+
+	core.Save(cboxInstance)
+
+	cloud := cloudConnect(jwt)
+
+	err := cloud.SpacePublish(space)
+	if err != nil {
+		t.Fatalf("could not publish space: %v", err)
+	}
+
+	selector, err := models.ParseSelectorForCloudCommand(fmt.Sprintf("@%s:%s", "test", space.Label))
+	if err != nil {
+		t.Fatalf("could not parse selector for cloud space: %v", err)
+	}
+
+	err = cloud.SpaceUnpublish(selector)
+	if err != nil {
+		t.Errorf("could not unpublish space: %v", err)
+	}
+}
+
+func TestUnpublishingNonExistingSpace(t *testing.T) {
+	initializeCBox()
+
+	cloud := cloudConnect(jwt)
+
+	selector, err := models.ParseSelectorForCloudCommand(fmt.Sprintf("@%s:%s", "test", "this-space-doesnt-exist"))
+	if err != nil {
+		t.Fatalf("could not parse selector for cloud space: %v", err)
+	}
+
+	err = cloud.SpaceUnpublish(selector)
+	if err == nil {
+		t.Errorf("did not fail to unpublish a non existing space: %v", err)
+	}
+}
+
+func TestSpacePublishingDeletesLocallyDeletedCommands(t *testing.T) {
+	cboxInstance := initializeCBox()
+
+	space := createSpace(t, cboxInstance)
+	command := createCommand(t, space)
+
+	core.Save(cboxInstance)
+
+	cloud := cloudConnect(jwt)
+
+	err := cloud.SpacePublish(space)
+	if err != nil {
+		t.Fatalf("could not publish space: %v", err)
+	}
+
+	selector, err := models.ParseSelectorForCloudCommand(fmt.Sprintf("@%s:%s", "test", space.Label))
+	if err != nil {
+		t.Fatalf("could not parse selector for cloud space: %v", err)
+	}
+
+	commands, err := cloud.CommandList(selector)
+	if err != nil {
+		t.Fatalf("could not retrieve commands: %v", err)
+	}
+
+	if len(commands) != 1 || commands[0].Label != command.Label {
+		t.Errorf("failed to retrieved published commands: '%s'", command.Label)
+	}
+
+	space.CommandDelete(command)
+
+	cboxInstance = reloadCBox(cboxInstance)
+
+	err = cloud.SpacePublish(space)
+	if err != nil {
+		t.Fatalf("could not re-publish space: %v", err)
+	}
+
+	commands, err = cloud.CommandList(selector)
+	if err != nil {
+		t.Fatalf("could not retrieve commands: %v", err)
+	}
+
+	err = cloud.SpaceUnpublish(selector)
+	if err != nil {
+		t.Errorf("could not unpublish space: %v", err)
+	}
+
+	if len(commands) != 0 {
+		t.Errorf("locally deleted command retrieve after re-publishing: %v", commands)
 	}
 }

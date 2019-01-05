@@ -118,7 +118,7 @@ func (cloud *Cloud) doRequest(method string, path string, query map[string]strin
 		req.Header.Set("cbox-version", "0.0.0")
 
 		strReq, _ := httputil.DumpRequest(req, true)
-		console.Debug(fmt.Sprintf("---\n\n%s---\n\n", string(strReq)))
+		console.Debug(fmt.Sprintf("---\n\n%s~~~\n", string(strReq)))
 	}
 
 	resp, err := cloud.httpClient.Do(req)
@@ -132,6 +132,10 @@ func (cloud *Cloud) doRequest(method string, path string, query map[string]strin
 		return "", fmt.Errorf("rest: could not read response body: %v", err)
 	}
 	bodyString := string(bodyBytes)
+
+	if Env == "dev" {
+		console.Debug(fmt.Sprintf("%s\n\n---\n", bodyString))
+	}
 
 	if resp.StatusCode == http.StatusOK {
 		return bodyString, nil
@@ -196,6 +200,7 @@ func (cloud *Cloud) CommandList(selector *models.Selector) ([]*models.Command, e
 		return nil, err
 	}
 
+	fmt.Println()
 	var commands []*models.Command
 	err = json.Unmarshal([]byte(response), &commands)
 	if err != nil {

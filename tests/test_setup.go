@@ -23,6 +23,20 @@ func initializeCBox() *models.CBox {
 	return reloadCBox(nil)
 }
 
+func cloudConnect(jwt string) *core.Cloud {
+	_, _, _, err := core.CloudLogin(jwt)
+	if err != nil {
+		log.Fatalf("could not login: %v", err)
+	}
+
+	cloud, err := core.CloudClient()
+	if err != nil {
+		log.Fatalf("could create cloud client: %v", err)
+	}
+
+	return cloud
+}
+
 func reloadCBox(cbox *models.CBox) *models.CBox {
 	if cbox != nil {
 		core.Save(cbox)
