@@ -58,7 +58,7 @@ func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) 
 
 	// tools.PrintCommandList("Containing these commands", space.Entries, false, false)
 
-	if console.Confirm("Publish?") {
+	if answerAlwaysYes || console.Confirm("Publish?") {
 		fmt.Printf("Publishing space '%s'...\n", space.Label)
 
 		cloud, err := core.CloudClient()
@@ -93,7 +93,7 @@ func (ctrl *CLIController) CloudSpaceUnpublish(cmd *cobra.Command, args []string
 		console.PrintWarning("You don't have a local copy of the space")
 	}
 
-	if console.Confirm("Unpublish?") {
+	if answerAlwaysYes || console.Confirm("Unpublish?") {
 		fmt.Printf("Unpublishing space '%s'...\n", selector.String())
 
 		cloud, err := core.CloudClient()
@@ -139,7 +139,7 @@ func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
 	tools.PrintSpace("Space to clone", space)
 	tools.PrintCommandList("Containing these commands", space.Entries, false, false)
 
-	if console.Confirm("Clone?") {
+	if answerAlwaysYes || console.Confirm("Clone?") {
 		err := cboxInstance.SpaceCreate(space)
 		for err != nil {
 			console.PrintError("Space already found in your cbox. Try a different one")

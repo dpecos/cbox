@@ -55,7 +55,7 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 
 	tools.PrintSpace("Space after edition", space)
 
-	if console.Confirm("Update?") {
+	if answerAlwaysYes || console.Confirm("Update?") {
 
 		err := cboxInstance.SpaceEdit(space, selector.Space)
 		for err != nil {
@@ -93,7 +93,7 @@ func (ctrl *CLIController) SpacesDestroy(cmd *cobra.Command, args []string) {
 
 	tools.PrintSpace("Space to destroy", space)
 
-	if console.Confirm("Are you sure you want to destroy this space?") {
+	if answerAlwaysYes || console.Confirm("Are you sure you want to destroy this space?") {
 		// fix issue #52: when a space is removed, pointers to that position of memory change values
 		s := models.Space{
 			Label: space.Label,

@@ -13,7 +13,8 @@ import (
 )
 
 var (
-	cboxInstance *models.CBox
+	cboxInstance    *models.CBox
+	answerAlwaysYes bool
 )
 
 var rootCmd = &cobra.Command{
@@ -37,6 +38,7 @@ func Execute() {
 
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&console.DisableColors, "no-color", "", false, "Disable color in the output")
+	rootCmd.PersistentFlags().BoolVarP(&answerAlwaysYes, "yes", "", false, "Answer 'yes' to any question")
 
 	cobra.OnInitialize(func() {
 		path := ""

@@ -81,7 +81,7 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 
 	tools.PrintCommand("Command after edition", command, true, false)
 
-	if console.Confirm("Update?") {
+	if answerAlwaysYes || console.Confirm("Update?") {
 		core.Save(cboxInstance)
 		console.PrintSuccess("Command updated successfully!")
 	} else {
@@ -106,7 +106,7 @@ func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
 
 	tools.PrintCommand("Command to delete ", command, true, false)
 
-	if console.Confirm("Are you sure you want to delete this command?") {
+	if answerAlwaysYes || console.Confirm("Are you sure you want to delete this command?") {
 		space.CommandDelete(command)
 		core.Save(cboxInstance)
 		console.PrintSuccess("Command deleted successfully!")

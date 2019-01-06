@@ -64,7 +64,7 @@ func (ctrl *CLIController) CloudCommandCopy(cmd *cobra.Command, args []string) {
 
 	tools.PrintCommandList("Commands to copy", commands, false, false)
 
-	if console.Confirm(fmt.Sprintf("Copy these commands into %s?", spaceSelector)) {
+	if answerAlwaysYes || console.Confirm(fmt.Sprintf("Copy these commands into %s?", spaceSelector)) {
 
 		failures := false
 		for _, command := range commands {
