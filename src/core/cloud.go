@@ -118,7 +118,7 @@ func (cloud *Cloud) doRequest(method string, path string, query map[string]strin
 		req.Header.Set("cbox-version", "0.0.0")
 
 		strReq, _ := httputil.DumpRequest(req, true)
-		console.Debug(fmt.Sprintf("---\n\n%s~~~\n", string(strReq)))
+		console.Debug(fmt.Sprintf("---\n\n%s\n\n~~~\n", string(strReq)))
 	}
 
 	resp, err := cloud.httpClient.Do(req)

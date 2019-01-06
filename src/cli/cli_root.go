@@ -7,6 +7,7 @@ import (
 	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/models"
 	"github.com/dplabs/cbox/src/tools"
+	"github.com/dplabs/cbox/src/tools/console"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -35,6 +36,8 @@ func Execute() {
 }
 
 func init() {
+	rootCmd.PersistentFlags().BoolVarP(&console.DisableColors, "no-color", "", false, "Disable color in the output")
+
 	cobra.OnInitialize(func() {
 		path := ""
 		core.LoadSettings(path)
