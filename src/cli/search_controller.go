@@ -5,6 +5,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/dplabs/cbox/src/models"
 	"github.com/dplabs/cbox/src/tools"
 	"github.com/spf13/cobra"
 )
@@ -27,14 +28,25 @@ func (ctrl *CLIController) SearchCommands(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelector([]string{sel})
 
-	space, err := cboxInstance.SpaceFind(selector.Space)
-	if err != nil {
-		log.Fatalf("search: %v", err)
+	var spaces []*models.Space = []*models.Space{}
+	if sel != "" {
+		space, err := cboxInstance.SpaceFind(selector.Space)
+		if err != nil {
+			log.Fatalf("search: %v", err)
+		}
+		spaces = append(spaces, space)
+	} else {
+		spaces = cboxInstance.Spaces
 	}
 
-	commands, err := space.SearchCommands(selector.Item, criteria)
-	if err != nil {
-		log.Fatalf("search: %v", err)
+	var commands []*models.Command = []*models.Command{}
+	for _, space := range spaces {
+		var err error
+		cs, err := space.SearchCommands(selector.Item, criteria)
+		if err != nil {
+			log.Fatalf("search: %v", err)
+		}
+		commands = append(commands, cs...)
 	}
 
 	if selector.Item != "" {
