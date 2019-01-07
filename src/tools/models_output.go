@@ -15,6 +15,7 @@ var (
 	spaceLabelColor = console.ColorBoldGreen
 	// idColor          = console.ColorBoldBlack
 	labelColor       = console.ColorBoldBlue
+	spaceColor       = console.ColorBoldRed
 	tagsColor        = console.ColorRed
 	descriptionColor = fmt.Sprintf
 	dateColor        = console.ColorBoldBlack
@@ -39,11 +40,14 @@ func PrintCommand(header string, cmd *models.Command, full bool, sourceOnly bool
 			fmt.Printf(starColor("* "))
 		}
 
+		// cmdStr := fmt.Sprintf("%s%s", labelColor(cmd.Label), spaceColor(fmt.Sprintf("@%s:%s", cmd.Selector.User, cmd.Selector.Space)))
+		cmdStr := fmt.Sprintf("%s", labelColor(cmd.Label))
+
 		if len(cmd.Tags) != 0 {
 			tags := strings.Join(cmd.Tags, ", ")
-			fmt.Printf("%s - %s (%s) %s\n", labelColor(cmd.Label), descriptionColor(cmd.Description), tagsColor(tags), dateColor(cmd.CreatedAt.String()))
+			fmt.Printf("%s - %s (%s) %s\n", cmdStr, descriptionColor(cmd.Description), tagsColor(tags), dateColor(cmd.CreatedAt.String()))
 		} else {
-			fmt.Printf("%s - %s %s\n", labelColor(cmd.Label), descriptionColor(cmd.Description), dateColor(cmd.CreatedAt.String()))
+			fmt.Printf("%s - %s %s\n", cmdStr, descriptionColor(cmd.Description), dateColor(cmd.CreatedAt.String()))
 		}
 
 		if full {

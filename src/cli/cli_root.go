@@ -13,8 +13,9 @@ import (
 )
 
 var (
-	cboxInstance    *models.CBox
-	answerAlwaysYes bool
+	cboxInstance  *models.CBox
+	cloud         *core.Cloud
+	skipQuestions bool
 )
 
 var rootCmd = &cobra.Command{
@@ -38,11 +39,17 @@ func Execute() {
 
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&console.DisableColors, "no-color", "", false, "Disable color in the output")
-	rootCmd.PersistentFlags().BoolVarP(&answerAlwaysYes, "yes", "", false, "Answer 'yes' to any question")
+	rootCmd.PersistentFlags().BoolVarP(&skipQuestions, "yes", "", false, "Answer 'yes' to any question")
 
 	cobra.OnInitialize(func() {
 		path := ""
 		core.LoadSettings(path)
 		cboxInstance = core.Load()
+
+		var err error
+		cloud, err = core.CloudClient()
+		if err != nil {
+			log.Fatal(err)
+		}
 	})
 }

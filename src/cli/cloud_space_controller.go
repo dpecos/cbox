@@ -20,10 +20,6 @@ func (ctrl *CLIController) CloudSpaceInfo(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: space info: %v", err)
 	}
 
-	cloud, err := core.CloudClient()
-	if err != nil {
-		log.Fatalf("cloud: space info: %v", err)
-	}
 	space, err := cloud.SpaceFind(selector)
 	if err != nil {
 		log.Fatalf("cloud: space info: %v", err)
@@ -58,13 +54,9 @@ func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) 
 
 	// tools.PrintCommandList("Containing these commands", space.Entries, false, false)
 
-	if answerAlwaysYes || console.Confirm("Publish?") {
+	if skipQuestions || console.Confirm("Publish?") {
 		fmt.Printf("Publishing space '%s'...\n", space.Label)
 
-		cloud, err := core.CloudClient()
-		if err != nil {
-			log.Fatalf("cloud: publish space: %v", err)
-		}
 		err = cloud.SpacePublish(space)
 		if err != nil {
 			log.Fatalf("cloud: publish space: %v", err)
@@ -93,13 +85,9 @@ func (ctrl *CLIController) CloudSpaceUnpublish(cmd *cobra.Command, args []string
 		console.PrintWarning("You don't have a local copy of the space")
 	}
 
-	if answerAlwaysYes || console.Confirm("Unpublish?") {
+	if skipQuestions || console.Confirm("Unpublish?") {
 		fmt.Printf("Unpublishing space '%s'...\n", selector.String())
 
-		cloud, err := core.CloudClient()
-		if err != nil {
-			log.Fatalf("cloud: unpublish space: %v", err)
-		}
 		err = cloud.SpaceUnpublish(selector)
 		if err != nil {
 			log.Fatalf("cloud: unpublish space: %v", err)
@@ -119,11 +107,6 @@ func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: clone space: invalid cloud selector: %v", err)
 	}
 
-	cloud, err := core.CloudClient()
-	if err != nil {
-		log.Fatalf("cloud: clone space: cloud client: %v", err)
-	}
-
 	space, err := cloud.SpaceFind(selector)
 	if err != nil {
 		log.Fatalf("cloud: clone space: %v", err)
@@ -139,7 +122,7 @@ func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
 	tools.PrintSpace("Space to clone", space)
 	tools.PrintCommandList("Containing these commands", space.Entries, false, false)
 
-	if answerAlwaysYes || console.Confirm("Clone?") {
+	if skipQuestions || console.Confirm("Clone?") {
 		err := cboxInstance.SpaceCreate(space)
 		for err != nil {
 			console.PrintError("Space already found in your cbox. Try a different one")
@@ -161,11 +144,6 @@ func (ctrl *CLIController) CloudSpacePull(cmd *cobra.Command, args []string) {
 	selector, err := models.ParseSelectorMandatorySpace(args[0])
 	if err != nil {
 		log.Fatalf("cloud: pull space: invalid cloud selector: %v", err)
-	}
-
-	cloud, err := core.CloudClient()
-	if err != nil {
-		log.Fatalf("cloud: pull space: cloud client: %v", err)
 	}
 
 	space, err := cboxInstance.SpaceFind(selector.Space)

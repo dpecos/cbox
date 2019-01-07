@@ -17,11 +17,6 @@ func (ctrl *CLIController) CloudCommandList(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: list commands: invalid cloud selector: %v", err)
 	}
 
-	cloud, err := core.CloudClient()
-	if err != nil {
-		log.Fatalf("cloud: list commands: cloud client: %v", err)
-	}
-
 	commands, err := cloud.CommandList(selector)
 	if err != nil {
 		log.Fatalf("cloud: list commands: %v", err)
@@ -48,11 +43,6 @@ func (ctrl *CLIController) CloudCommandCopy(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: copy command: local space: %v", err)
 	}
 
-	cloud, err := core.CloudClient()
-	if err != nil {
-		log.Fatalf("cloud: copy command: cloud client: %v", err)
-	}
-
 	commands, err := cloud.CommandList(cmdSelector)
 	if err != nil {
 		log.Fatalf("cloud: copy command: retrieving matches: %v", err)
@@ -64,7 +54,7 @@ func (ctrl *CLIController) CloudCommandCopy(cmd *cobra.Command, args []string) {
 
 	tools.PrintCommandList("Commands to copy", commands, false, false)
 
-	if answerAlwaysYes || console.Confirm(fmt.Sprintf("Copy these commands into %s?", spaceSelector)) {
+	if skipQuestions || console.Confirm(fmt.Sprintf("Copy these commands into %s?", spaceSelector)) {
 
 		failures := false
 		for _, command := range commands {
