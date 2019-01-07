@@ -12,7 +12,7 @@ import (
 
 func (ctrl *CLIController) CloudLogin(cmd *cobra.Command, args []string) {
 	fmt.Println(tools.Logo)
-	url := fmt.Sprintf("%s/auth/", core.CloudURL())
+	url := fmt.Sprintf("%s/auth/", cloud.URL)
 	fmt.Printf("Open this URL in a browser and follow the authentication process: \n\n%s\n\n", url)
 
 	jwt := console.ReadString("JWT Token", console.NOT_EMPTY_VALUES)

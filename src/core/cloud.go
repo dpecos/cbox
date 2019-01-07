@@ -41,12 +41,17 @@ type Cloud struct {
 	Login      string
 	Name       string
 	token      string
+	URL        string
 	baseURL    *url.URL
 	httpClient *http.Client
 }
 
 func CloudLogin(jwt string) (string, string, string, error) {
 	readCloudConfig()
+
+	if tools.CloudJWTKey == "" {
+		cloudURL()
+	}
 
 	userID, login, name, err := tools.VerifyJWT(jwt)
 	if err != nil {
@@ -71,7 +76,9 @@ func CloudLogout() {
 func CloudClient() (*Cloud, error) {
 	readCloudConfig()
 
-	url, err := url.Parse(CloudURL())
+	serverURL := cloudURL()
+
+	baseUrl, err := url.Parse(serverURL)
 	if err != nil {
 		return nil, fmt.Errorf("cloud: could not parse server's URL: %v", err)
 	}
@@ -85,7 +92,8 @@ func CloudClient() (*Cloud, error) {
 		Login:      viper.GetString(cloudSettingsUserLogin),
 		Name:       viper.GetString(cloudSettingsUserName),
 		token:      viper.GetString(cloudSettingsJWT),
-		baseURL:    url,
+		URL:        serverURL,
+		baseURL:    baseUrl,
 		httpClient: http.DefaultClient,
 	}
 

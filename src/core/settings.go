@@ -42,7 +42,7 @@ eY5mkphAEDjPR6abKNHUejl4wh83Stg9AW3hEI0xU52gg4tkPEKOHhq1qYO0Alfz
 cQIDAQAB
 -----END PUBLIC KEY-----`
 
-	cloudURL = "https://api.%s.cbox.dplabs.io"
+	cloudServerURL = "https://api.%s.cbox.dplabs.io"
 )
 
 func LoadSettings(path string) {
@@ -58,17 +58,19 @@ func LoadSettings(path string) {
 	defaultSettings()
 }
 
-func CloudURL() string {
-	if Env == "prod" {
-		tools.CloudJWTKey = cloudJWTProd
-	} else {
-		fmt.Println()
-		fmt.Println(console.ColorBgRed("  !!! You are using a DEV version of cbox !!!   "))
-		fmt.Println()
-		tools.CloudJWTKey = cloudJWTDev
+func cloudURL() string {
+	if tools.CloudJWTKey == "" {
+		if Env == "prod" {
+			tools.CloudJWTKey = cloudJWTProd
+		} else {
+			fmt.Println()
+			fmt.Println(console.ColorBgRed("  !!! You are using a DEV version of cbox !!!   "))
+			fmt.Println()
+			tools.CloudJWTKey = cloudJWTDev
+		}
 	}
 
-	return fmt.Sprintf(cloudURL, Env)
+	return fmt.Sprintf(cloudServerURL, Env)
 }
 
 func initializeWorkingDirectory(path string) string {
