@@ -17,7 +17,7 @@ func TestSpaceCreationDeletion(t *testing.T) {
 
 	assertSpaceFileExists(t, cboxInstance, space)
 
-	s, err := cboxInstance.SpaceFind(space.Label)
+	s, err := cboxInstance.SpaceFind(space.Namespace, space.Label)
 	if s == nil || err != nil {
 		t.Errorf("could not find space by label: %v", err)
 	}
@@ -32,7 +32,7 @@ func TestSpaceCreationDeletion(t *testing.T) {
 
 	cboxInstance = reloadCBox(cboxInstance)
 
-	_, err = cboxInstance.SpaceFind(space.Label)
+	_, err = cboxInstance.SpaceFind(space.Namespace, space.Label)
 	if err == nil {
 		t.Error("space still found after deleting it")
 	}
@@ -45,6 +45,7 @@ func TestSpaceLabelUniquenessOnCreation(t *testing.T) {
 	s1 := createSpace(t, cboxInstance)
 
 	s2 := models.Space{
+		Namespace:   s1.Namespace,
 		Label:       s1.Label,
 		Description: randString(15),
 	}
@@ -64,7 +65,7 @@ func TestDeleteSpace(t *testing.T) {
 
 	cboxInstance = reloadCBox(cboxInstance)
 
-	expected := []string{"default", s1.Label, s3.Label}
+	expected := []string{"default", s1.String(), s3.String()}
 
 	cboxInstance.SpaceDestroy(s2)
 	core.DeleteSpaceFile(s2)

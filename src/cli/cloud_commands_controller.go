@@ -38,7 +38,7 @@ func (ctrl *CLIController) CloudCommandCopy(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: copy command: invalid space selector: %v", err)
 	}
 
-	space, err := cboxInstance.SpaceFind(spaceSelector.Space)
+	space, err := findSpace(spaceSelector)
 	if err != nil {
 		log.Fatalf("cloud: copy command: local space: %v", err)
 	}

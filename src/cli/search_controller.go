@@ -30,7 +30,7 @@ func (ctrl *CLIController) SearchCommands(cmd *cobra.Command, args []string) {
 
 	var spaces []*models.Space = []*models.Space{}
 	if sel != "" {
-		space, err := cboxInstance.SpaceFind(selector.Space)
+		space, err := findSpace(selector)
 		if err != nil {
 			log.Fatalf("search: %v", err)
 		}

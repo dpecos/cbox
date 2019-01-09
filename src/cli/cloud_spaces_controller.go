@@ -36,7 +36,7 @@ func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) 
 		log.Fatalf("cloud: publish space: %v", err)
 	}
 
-	space, err := cboxInstance.SpaceFind(selector.Space)
+	space, err := findSpace(selector)
 	if err != nil {
 		log.Fatalf("cloud: publish space: %v", err)
 	}
@@ -55,12 +55,18 @@ func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) 
 	// tools.PrintCommandList("Containing these commands", space.Entries, false, false)
 
 	if skipQuestions || console.Confirm("Publish?") {
-		fmt.Printf("Publishing space '%s'...\n", space.Label)
+		fmt.Printf("Publishing space '%s'...\n", space.String())
+
+		space.Namespace = cloud.Login
 
 		err = cloud.SpacePublish(space)
 		if err != nil {
 			log.Fatalf("cloud: publish space: %v", err)
 		}
+
+		cleanOldSpaceFile(space, selector)
+
+		core.Save(cboxInstance) // to store space's new namespace
 
 		console.PrintSuccess("Space published successfully!")
 	} else {
@@ -78,7 +84,7 @@ func (ctrl *CLIController) CloudSpaceUnpublish(cmd *cobra.Command, args []string
 
 	tools.PrintSelector("Space to unpublish", selector)
 
-	_, err = cboxInstance.SpaceFind(selector.Space)
+	_, err = findSpace(selector)
 	if err == nil {
 		console.PrintInfo("Local copy won't be deleted")
 	} else {
@@ -146,7 +152,7 @@ func (ctrl *CLIController) CloudSpacePull(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: pull space: invalid cloud selector: %v", err)
 	}
 
-	space, err := cboxInstance.SpaceFind(selector.Space)
+	space, err := findSpace(selector)
 	if err != nil {
 		log.Fatalf("cloud: pull space: %v", err)
 	}

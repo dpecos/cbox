@@ -14,14 +14,14 @@ import (
 func (ctrl *CLIController) CommandList(cmd *cobra.Command, args []string) {
 	selector := ctrl.parseSelectorAllowEmpty(args)
 
-	space, err := cboxInstance.SpaceFind(selector.Space)
+	space, err := findSpace(selector)
 	if err != nil {
 		log.Fatalf("list commands: %v", err)
 	}
 
 	commands := space.CommandList(selector.Item)
 
-	tools.PrintCommandList(selector.String(), commands, viewSnippet, false)
+	tools.PrintCommandList(space.String(), commands, viewSnippet, false)
 }
 
 func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
@@ -29,7 +29,7 @@ func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelectorAllowEmpty(args)
 
-	space, err := cboxInstance.SpaceFind(selector.Space)
+	space, err := findSpace(selector)
 	if err != nil {
 		log.Fatalf("add command: %v", err)
 	}
@@ -56,7 +56,7 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelector(args)
 
-	space, err := cboxInstance.SpaceFind(selector.Space)
+	space, err := findSpace(selector)
 	if err != nil {
 		log.Fatalf("edit command: %v", err)
 	}
@@ -94,7 +94,7 @@ func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
 
 	selector := ctrl.parseSelector(args)
 
-	space, err := cboxInstance.SpaceFind(selector.Space)
+	space, err := findSpace(selector)
 	if err != nil {
 		log.Fatalf("delete command: %v", err)
 	}
@@ -118,7 +118,7 @@ func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
 func (ctrl *CLIController) CommandView(cmd *cobra.Command, args []string) {
 	selector := ctrl.parseSelector(args)
 
-	space, err := cboxInstance.SpaceFind(selector.Space)
+	space, err := findSpace(selector)
 	if err != nil {
 		log.Fatalf("view command: %v", err)
 	}

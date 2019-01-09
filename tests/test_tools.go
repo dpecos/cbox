@@ -23,7 +23,7 @@ func findSpaceFile(cboxInstance *models.CBox, space *models.Space) bool {
 
 	found := false
 	for _, s := range spaces {
-		if s.Label == space.Label {
+		if s.Namespace == space.Namespace && s.Label == space.Label {
 			found = true
 			break
 		}
@@ -51,17 +51,17 @@ func createSpace(t *testing.T, cboxInstance *models.CBox) *models.Space {
 	}
 
 	space := models.Space{
+		Namespace:   randString(8),
 		Label:       randString(8),
 		Description: randString(15),
 	}
 
 	err := cboxInstance.SpaceCreate(&space)
-
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
-	s, err := cboxInstance.SpaceFind(space.Label)
+	s, err := cboxInstance.SpaceFind(space.Namespace, space.Label)
 	if err != nil {
 		t.Fatalf("could not find space: %v", err)
 	}

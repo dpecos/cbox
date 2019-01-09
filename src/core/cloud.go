@@ -50,7 +50,7 @@ func CloudLogin(jwt string) (string, string, string, error) {
 	readCloudConfig()
 
 	if tools.CloudJWTKey == "" {
-		cloudURL()
+		setupCloud()
 	}
 
 	userID, login, name, err := tools.VerifyJWT(jwt)
@@ -76,7 +76,7 @@ func CloudLogout() {
 func CloudClient() (*Cloud, error) {
 	readCloudConfig()
 
-	serverURL := cloudURL()
+	serverURL := setupCloud()
 
 	baseUrl, err := url.Parse(serverURL)
 	if err != nil {

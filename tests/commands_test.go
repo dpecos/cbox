@@ -28,7 +28,7 @@ func TestCommandCreationDeletion(t *testing.T) {
 
 	cboxInstance = reloadCBox(cboxInstance)
 
-	s, _ := cboxInstance.SpaceFind(space.Label)
+	s, _ := cboxInstance.SpaceFind(space.Namespace, space.Label)
 
 	if s == nil {
 		t.Fatal("could not find space")
@@ -63,7 +63,7 @@ func TestCommandEdition(t *testing.T) {
 
 	cboxInstance = reloadCBox(cboxInstance)
 
-	s, _ := cboxInstance.SpaceFind(space.Label)
+	s, _ := cboxInstance.SpaceFind(space.Namespace, space.Label)
 	c, _ := s.CommandFind(command.Label)
 
 	previousLabel := c.Label
@@ -75,7 +75,7 @@ func TestCommandEdition(t *testing.T) {
 
 	cboxInstance = reloadCBox(cboxInstance)
 
-	s, _ = cboxInstance.SpaceFind(space.Label)
+	s, _ = cboxInstance.SpaceFind(space.Namespace, space.Label)
 
 	c, err := s.CommandFind(previousLabel)
 	if err == nil {

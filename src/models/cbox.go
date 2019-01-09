@@ -9,23 +9,23 @@ type CBox struct {
 	Spaces []*Space
 }
 
-func (cbox *CBox) spaceFindPositionByLabel(spaceLabel string) (int, error) {
-	if spaceLabel == "" {
+func (cbox *CBox) spaceFindPositionByLabel(namespace string, label string) (int, error) {
+	if label == "" {
 		return -1, fmt.Errorf("could not search by empty label")
 	}
 	for i, space := range cbox.Spaces {
-		if space.Label == spaceLabel {
+		if space.Namespace == namespace && space.Label == label {
 			return i, nil
 		}
 	}
-	return -1, fmt.Errorf("space with label '%s' not found", spaceLabel)
+	return -1, fmt.Errorf("space '%s:%s' not found", namespace, label)
 }
 
 func (cbox *CBox) SpaceLabels() []string {
 	labels := make(map[string]bool)
 	for _, space := range cbox.Spaces {
-		if _, ok := labels[space.Label]; !ok {
-			labels[space.Label] = true
+		if _, ok := labels[space.String()]; !ok {
+			labels[space.String()] = true
 		}
 	}
 	result := []string{}
@@ -35,8 +35,8 @@ func (cbox *CBox) SpaceLabels() []string {
 	return result
 }
 
-func (cbox *CBox) SpaceFind(label string) (*Space, error) {
-	pos, err := cbox.spaceFindPositionByLabel(label)
+func (cbox *CBox) SpaceFind(namespace string, label string) (*Space, error) {
+	pos, err := cbox.spaceFindPositionByLabel(namespace, label)
 	if err != nil {
 		return nil, fmt.Errorf("find space: %v", err)
 	}
@@ -44,9 +44,9 @@ func (cbox *CBox) SpaceFind(label string) (*Space, error) {
 }
 
 func (cbox *CBox) SpaceCreate(space *Space) error {
-	s, err := cbox.SpaceFind(space.Label)
+	s, err := cbox.SpaceFind(space.Namespace, space.Label)
 	if err == nil && s != nil {
-		return fmt.Errorf("space create: space with label '%s' already exists", space.Label)
+		return fmt.Errorf("space create: space '%s' already exists", space.String())
 	}
 	if space.Entries == nil {
 		space.Entries = []*Command{}
@@ -61,9 +61,9 @@ func (cbox *CBox) SpaceCreate(space *Space) error {
 }
 
 func (cbox *CBox) SpaceDestroy(space *Space) error {
-	pos, err := cbox.spaceFindPositionByLabel(space.Label)
+	pos, err := cbox.spaceFindPositionByLabel(space.Namespace, space.Label)
 	if err != nil {
-		return fmt.Errorf("space destroy: could not found space with label '%s'", space.Label)
+		return fmt.Errorf("space destroy: could not found space '%s'", space.String())
 	}
 
 	cbox.Spaces = append(cbox.Spaces[:pos], cbox.Spaces[pos+1:]...)
@@ -71,10 +71,10 @@ func (cbox *CBox) SpaceDestroy(space *Space) error {
 	return nil
 }
 
-func (cbox *CBox) SpaceEdit(space *Space, previousLabel string) error {
+func (cbox *CBox) SpaceEdit(space *Space, previousNamespace string, previousLabel string) error {
 
-	if space.Label != previousLabel && len(cbox.SpaceLabels()) != len(cbox.Spaces) {
-		return fmt.Errorf("space edit: duplicate label '%s", space.Label)
+	if (space.Namespace != previousNamespace || space.Label != previousLabel) && len(cbox.SpaceLabels()) != len(cbox.Spaces) {
+		return fmt.Errorf("space edit: duplicate namespace/label '%s", space.String())
 	}
 
 	space.UpdatedAt = UnixTimeNow()

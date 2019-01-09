@@ -58,7 +58,7 @@ func LoadSettings(path string) {
 	defaultSettings()
 }
 
-func cloudURL() string {
+func setupCloud() string {
 	if tools.CloudJWTKey == "" {
 		if Env == "prod" {
 			tools.CloudJWTKey = cloudJWTProd
