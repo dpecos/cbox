@@ -59,11 +59,11 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 
 	if skipQuestions || console.Confirm("Update?") {
 
-		err := cboxInstance.SpaceEdit(space, selector.User, selector.Space)
+		err := cboxInstance.SpaceEdit(space, selector.Namespace, selector.Space)
 		for err != nil {
 			console.PrintError("Label already found in your cbox. Try a different one")
 			space.Label = strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
-			err = cboxInstance.SpaceEdit(space, selector.User, selector.Space)
+			err = cboxInstance.SpaceEdit(space, selector.Namespace, selector.Space)
 		}
 
 		cleanOldSpaceFile(space, selector)

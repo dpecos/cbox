@@ -9,18 +9,17 @@ import (
 )
 
 type Selector struct {
-	Item         string
-	Organization string
-	User         string
-	Space        string
+	Item      string
+	Namespace string
+	Space     string
 }
 
 func (selector *Selector) String() string {
 	if selector == nil {
 		return ""
 	}
-	if selector.User != "" {
-		return fmt.Sprintf("%s@%s:%s", selector.Item, selector.User, selector.Space)
+	if selector.Namespace != "" {
+		return fmt.Sprintf("%s@%s:%s", selector.Item, selector.Namespace, selector.Space)
 	}
 	return fmt.Sprintf("%s@%s", selector.Item, selector.Space)
 }
@@ -37,12 +36,12 @@ func ParseSelector(str string) (*Selector, error) {
 	return selector, err
 }
 
-func check(selector *Selector, str string, item bool, user bool, space bool) error {
+func check(selector *Selector, str string, item bool, namespace bool, space bool) error {
 	if item && selector.Item == "" {
 		return fmt.Errorf("item not specified in the selector: '%s'", str)
 	}
-	if user && selector.User == "" {
-		return fmt.Errorf("user not specified in the selector: '%s'", str)
+	if namespace && selector.Namespace == "" {
+		return fmt.Errorf("namespace not specified in the selector: '%s'", str)
 	}
 	if space && selector.Space == "" {
 		return fmt.Errorf("space not specified in the selector: '%s'", str)
@@ -100,7 +99,7 @@ func ParseSelectorForCloud(str string) (*Selector, error) {
 
 func parseSelector(str string) (*Selector, error) {
 
-	selectorRegexp, err := regexp.Compile("^(?P<item>[a-z0-9-]+)?(@(?P<organization>[a-z0-9-]+/)?((?P<user>[a-z0-9-]+):)?(?P<space>[a-z0-9-]+))?$")
+	selectorRegexp, err := regexp.Compile("^(?P<item>[a-z0-9-]+)?(@((?P<namespace>[a-z0-9-]+):)?(?P<space>[a-z0-9-]+))?$")
 	if err != nil {
 		log.Fatalf("parse selector: could not compile selector regexp: %v", err)
 	}
@@ -119,10 +118,9 @@ func parseSelector(str string) (*Selector, error) {
 	}
 
 	selector := Selector{
-		Item:         selectorMap["item"],
-		Organization: selectorMap["organization"],
-		User:         selectorMap["user"],
-		Space:        selectorMap["space"],
+		Item:      selectorMap["item"],
+		Namespace: selectorMap["namespace"],
+		Space:     selectorMap["space"],
 	}
 
 	return &selector, nil

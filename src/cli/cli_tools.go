@@ -6,7 +6,7 @@ import (
 )
 
 func findSpace(selector *models.Selector) (*models.Space, error) {
-	namespace := selector.User
+	namespace := selector.Namespace
 
 	space, err := cboxInstance.SpaceFind(namespace, selector.Space)
 
@@ -20,9 +20,9 @@ func findSpace(selector *models.Selector) (*models.Space, error) {
 }
 
 func cleanOldSpaceFile(space *models.Space, selector *models.Selector) {
-	if space.Label != selector.Space || (selector.User != "" && space.Namespace != selector.User) {
+	if space.Label != selector.Space || (selector.Namespace != "" && space.Namespace != selector.Namespace) {
 		spaceToDelete := models.Space{
-			Namespace: selector.User,
+			Namespace: selector.Namespace,
 			Label:     selector.Space,
 		}
 		core.DeleteSpaceFile(&spaceToDelete)

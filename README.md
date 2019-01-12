@@ -56,9 +56,9 @@ Important: don't commit these changes, development code must always point to the
 
 ## Documentation
 
-- [Spaces](./wiki/Spaces)
-- [Selectors](./wiki/Selectors)
-- [Settings](./wiki/Settings)
+- [Spaces](https://github.com/dplabs/cbox/wiki/Spaces)
+- [Selectors](https://github.com/dplabs/cbox/wiki/Selectors)
+- [Settings](https://github.com/dplabs/cbox/wiki/Settings)
 
 ## About
 
