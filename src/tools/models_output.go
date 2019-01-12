@@ -11,17 +11,15 @@ import (
 )
 
 var (
-	// spaceIDColor    = console.ColorBoldBlack
 	spaceColor          = console.ColorBoldGreen
 	spaceSeparatorColor = console.ColorBoldRed
-	// idColor          = console.ColorBoldBlack
-	labelColor       = console.ColorBoldBlue
-	tagsColor        = console.ColorRed
-	descriptionColor = fmt.Sprintf
-	dateColor        = console.ColorBoldBlack
-	urlColor         = console.ColorGreen
-	separatorColor   = console.ColorYellow
-	starColor        = console.ColorBoldBlack
+	labelColor          = console.ColorBoldBlue
+	tagsColor           = console.ColorRed
+	descriptionColor    = fmt.Sprintf
+	dateColor           = console.ColorBoldBlack
+	urlColor            = console.ColorGreen
+	separatorColor      = console.ColorYellow
+	starColor           = console.ColorBoldBlack
 )
 
 func PrintCommand(header string, cmd *models.Command, full bool, sourceOnly bool) {

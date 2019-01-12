@@ -78,6 +78,18 @@ func ParseSelectorForCloudCommand(str string) (*Selector, error) {
 	selector, err := ParseSelector(str)
 
 	if err == nil {
+		if err := check(selector, str, true, true, true); err != nil {
+			return nil, err
+		}
+	}
+
+	return selector, err
+}
+
+func ParseSelectorForCloud(str string) (*Selector, error) {
+	selector, err := ParseSelector(str)
+
+	if err == nil {
 		if err := check(selector, str, false, true, true); err != nil {
 			return nil, err
 		}

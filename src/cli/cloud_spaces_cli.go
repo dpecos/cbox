@@ -5,6 +5,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var organization string
+
 var cloudSpaceCmd = &cobra.Command{
 	Use:     "spaces",
 	Aliases: []string{"space"},
@@ -56,4 +58,6 @@ func init() {
 	cloudSpaceCmd.AddCommand(cloudSpaceUnpublishCmd)
 	cloudSpaceCmd.AddCommand(cloudSpacePullCmd)
 	cloudSpaceCmd.AddCommand(cloudSpaceCloneCmd)
+
+	cloudSpacePublishCmd.Flags().StringVarP(&organization, "organization", "o", "", "Publish under this organization")
 }

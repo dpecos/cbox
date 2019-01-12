@@ -41,6 +41,11 @@ func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) 
 		log.Fatalf("cloud: publish space: %v", err)
 	}
 
+	space.Namespace = cloud.Login
+	if organization != "" {
+		space.Namespace = organization
+	}
+
 	tools.PrintSpace("Space to publish", space)
 
 	if selector.Item != "" {
@@ -56,8 +61,6 @@ func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) 
 
 	if skipQuestions || console.Confirm("Publish?") {
 		fmt.Printf("Publishing space '%s'...\n", space.String())
-
-		space.Namespace = cloud.Login
 
 		err = cloud.SpacePublish(space)
 		if err != nil {
@@ -77,7 +80,7 @@ func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) 
 func (ctrl *CLIController) CloudSpaceUnpublish(cmd *cobra.Command, args []string) {
 	console.PrintAction("Unpublishing an space")
 
-	selector, err := models.ParseSelectorMandatorySpace(args[0])
+	selector, err := models.ParseSelectorForCloud(args[0])
 	if err != nil {
 		log.Fatalf("cloud: unpublish space: %v", err)
 	}

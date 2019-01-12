@@ -51,7 +51,7 @@ func createSpace(t *testing.T, cboxInstance *models.CBox) *models.Space {
 	}
 
 	space := models.Space{
-		Namespace:   randString(8),
+		Namespace:   "test",
 		Label:       randString(8),
 		Description: randString(15),
 	}

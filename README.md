@@ -4,7 +4,7 @@
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/dplabs/cbox)](https://goreportcard.com/report/github.com/dplabs/cbox)
 [![Travis](https://travis-ci.org/dplabs/cbox.svg?branch=master)](https://travis-ci.org/dplabs/cbox)
-[![Sonar](https://sonarcloud.io/api/project_badges/measure?project=dplabs_cbox&metric=alert_status)
+[![Sonar](https://sonarcloud.io/api/project_badges/measure?project=dplabs_cbox&metric=alert_status)](https://sonarcloud.io/api/project_badges/measure?project=dplabs_cbox&metric=alert_status)
 
 
 **cbox** helps you organizing and finding those useful commands you find time to time and would really love to store for future occassions.

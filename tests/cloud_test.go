@@ -61,7 +61,7 @@ func TestSpacePublishingDoesntChangeCreateUpdateDates(t *testing.T) {
 		t.Fatalf("could not publish space: %v", err)
 	}
 
-	selector, err := models.ParseSelectorForCloudCommand(fmt.Sprintf("@%s:%s", "test", space.Label))
+	selector, err := models.ParseSelectorForCloud(fmt.Sprintf("@%s:%s", "test", space.Label))
 	if err != nil {
 		t.Fatalf("could not parse selector for cloud space: %v", err)
 	}
@@ -106,7 +106,7 @@ func TestPublishingEmptySpace(t *testing.T) {
 		t.Fatalf("could not publish space: %v", err)
 	}
 
-	selector, err := models.ParseSelectorForCloudCommand(fmt.Sprintf("@%s:%s", "test", space.Label))
+	selector, err := models.ParseSelectorForCloud(fmt.Sprintf("@%s:%s", "test", space.Label))
 	if err != nil {
 		t.Fatalf("could not parse selector for cloud space: %v", err)
 	}
@@ -120,7 +120,7 @@ func TestPublishingEmptySpace(t *testing.T) {
 func TestUnpublishingNonExistingSpace(t *testing.T) {
 	initializeCBox()
 
-	selector, err := models.ParseSelectorForCloudCommand(fmt.Sprintf("@%s:%s", "test", "this-space-doesnt-exist"))
+	selector, err := models.ParseSelectorForCloud(fmt.Sprintf("@%s:%s", "test", "this-space-doesnt-exist"))
 	if err != nil {
 		t.Fatalf("could not parse selector for cloud space: %v", err)
 	}
@@ -143,7 +143,7 @@ func TestSpacePublishingDeletesLocallyDeletedCommands(t *testing.T) {
 		t.Fatalf("could not publish space: %v", err)
 	}
 
-	selector, err := models.ParseSelectorForCloudCommand(fmt.Sprintf("@%s:%s", "test", space.Label))
+	selector, err := models.ParseSelectorForCloud(fmt.Sprintf("@%s:%s", "test", space.Label))
 	if err != nil {
 		t.Fatalf("could not parse selector for cloud space: %v", err)
 	}
