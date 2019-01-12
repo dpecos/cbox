@@ -12,10 +12,10 @@ import (
 
 var (
 	// spaceIDColor    = console.ColorBoldBlack
-	spaceLabelColor = console.ColorBoldGreen
+	spaceColor          = console.ColorBoldGreen
+	spaceSeparatorColor = console.ColorBoldRed
 	// idColor          = console.ColorBoldBlack
 	labelColor       = console.ColorBoldBlue
-	spaceColor       = console.ColorBoldRed
 	tagsColor        = console.ColorRed
 	descriptionColor = fmt.Sprintf
 	dateColor        = console.ColorBoldBlack
@@ -40,8 +40,7 @@ func PrintCommand(header string, cmd *models.Command, full bool, sourceOnly bool
 			fmt.Printf(starColor("* "))
 		}
 
-		// cmdStr := fmt.Sprintf("%s%s", labelColor(cmd.Label), spaceColor(fmt.Sprintf("@%s:%s", cmd.Selector.User, cmd.Selector.Space)))
-		cmdStr := fmt.Sprintf("%s", labelColor(cmd.Label))
+		cmdStr := fmt.Sprintf("%s%s%s", labelColor(cmd.Label), spaceSeparatorColor("@"), spaceColor(cmd.Space.String()))
 
 		if len(cmd.Tags) != 0 {
 			tags := strings.Join(cmd.Tags, ", ")
@@ -85,13 +84,13 @@ func PrintTag(tag string) {
 func PrintSpace(header string, space *models.Space) {
 	printHeader(header)
 	timestamp := fmt.Sprintf("(Last updated: %s - Created: %s)", space.UpdatedAt.String(), space.CreatedAt.String())
-	fmt.Printf("%s - %s %s\n", spaceLabelColor(space.String()), descriptionColor(space.Description), dateColor(timestamp))
+	fmt.Printf("%s - %s %s\n", spaceColor(space.String()), descriptionColor(space.Description), dateColor(timestamp))
 	printFooter(header)
 }
 
 func PrintSelector(header string, selector *models.Selector) {
 	printHeader(header)
-	fmt.Printf("%s\n", spaceLabelColor(selector.String()))
+	fmt.Printf("%s\n", spaceColor(selector.String()))
 	printFooter(header)
 }
 

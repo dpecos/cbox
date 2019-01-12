@@ -64,6 +64,10 @@ func spaceLoadFile(namespace string, label string) *models.Space {
 		space.Entries = []*models.Command{}
 	}
 
+	for _, command := range space.Entries {
+		command.Space = &space
+	}
+
 	return &space
 }
 
