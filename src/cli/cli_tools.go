@@ -7,9 +7,14 @@ import (
 
 func findSpace(selector *models.Selector) (*models.Space, error) {
 	namespace := selector.User
-	if namespace == "" {
-		namespace = cloud.Login
+
+	space, err := cboxInstance.SpaceFind(namespace, selector.Space)
+
+	if namespace != "" || err == nil {
+		return space, err
 	}
+
+	namespace = cloud.Login
 
 	return cboxInstance.SpaceFind(namespace, selector.Space)
 }
