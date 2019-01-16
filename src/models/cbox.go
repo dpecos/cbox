@@ -18,7 +18,7 @@ func (cbox *CBox) spaceFindPositionByLabel(namespace string, label string) (int,
 			return i, nil
 		}
 	}
-	return -1, fmt.Errorf("space '%s:%s' not found", namespace, label)
+	return -1, fmt.Errorf("space '%s%s' not found", namespace, label)
 }
 
 func (cbox *CBox) SpaceLabels() []string {

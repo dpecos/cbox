@@ -1,11 +1,13 @@
-package models
+package models_test
 
 import (
 	"testing"
+
+	"github.com/dplabs/cbox/src/models"
 )
 
 func TestCommandMatches(t *testing.T) {
-	command := Command{
+	command := models.Command{
 		Label:       "label",
 		Description: "description",
 		Code:        "code",

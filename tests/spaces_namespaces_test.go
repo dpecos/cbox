@@ -59,7 +59,7 @@ func TestSpaceCreationSameLabelDifferentNamespace(t *testing.T) {
 	space1 := createSpace(t, cboxInstance)
 
 	space2 := models.Space{
-		Namespace: space1.Namespace + "-2",
+		Namespace: "diff-" + space1.Namespace,
 		Label:     space1.Label,
 	}
 

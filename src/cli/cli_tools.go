@@ -14,7 +14,7 @@ func findSpace(selector *models.Selector) (*models.Space, error) {
 		return space, err
 	}
 
-	namespace = cloud.Login
+	namespace = models.SUser(cloud.Login)
 
 	return cboxInstance.SpaceFind(namespace, selector.Space)
 }

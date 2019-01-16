@@ -15,7 +15,7 @@ type Space struct {
 
 func (space *Space) String() string {
 	if space.Namespace != "" {
-		return fmt.Sprintf("%s:%s", space.Namespace, space.Label)
+		return fmt.Sprintf("%s%s", space.Namespace, space.Label)
 	} else {
 		return space.Label
 	}

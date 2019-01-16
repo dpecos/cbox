@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/dplabs/cbox/src/models"
 )
@@ -11,6 +12,7 @@ import (
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 func randString(n int) string {
+	rand.Seed(time.Now().UTC().UnixNano())
 	b := make([]byte, n)
 	for i := range b {
 		b[i] = letterBytes[rand.Intn(len(letterBytes))]
@@ -51,7 +53,7 @@ func createSpace(t *testing.T, cboxInstance *models.CBox) *models.Space {
 	}
 
 	space := models.Space{
-		Namespace:   "test",
+		Namespace:   models.SUser("test"),
 		Label:       randString(8),
 		Description: randString(15),
 	}

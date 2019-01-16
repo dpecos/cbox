@@ -18,9 +18,8 @@ func (selector *Selector) String() string {
 	if selector == nil {
 		return ""
 	}
-	if selector.Namespace != "" {
-		return fmt.Sprintf("%s@%s:%s", selector.Item, selector.Namespace, selector.Space)
-	}
+	return fmt.Sprintf("%s@%s%s", selector.Item, selector.Namespace, selector.Space)
+
 	return fmt.Sprintf("%s@%s", selector.Item, selector.Space)
 }
 
@@ -99,7 +98,8 @@ func ParseSelectorForCloud(str string) (*Selector, error) {
 
 func parseSelector(str string) (*Selector, error) {
 
-	selectorRegexp, err := regexp.Compile("^(?P<item>[a-z0-9-]+)?(@((?P<namespace>[a-z0-9-]+):)?(?P<space>[a-z0-9-]+))?$")
+	// selectorRegexp, err := regexp.Compile("^(?P<item>[a-z0-9-]+)?(@((?P<namespace>[a-z0-9-]+)(?P<qualifier>[:/]))?(?P<space>[a-z0-9-]+))?$")
+	selectorRegexp, err := regexp.Compile("^(?P<item>[a-z0-9-]+)?(@(?P<namespace>[a-z0-9-]+[:/])?(?P<space>[a-z0-9-]+))?$")
 	if err != nil {
 		log.Fatalf("parse selector: could not compile selector regexp: %v", err)
 	}
@@ -122,6 +122,15 @@ func parseSelector(str string) (*Selector, error) {
 		Namespace: selectorMap["namespace"],
 		Space:     selectorMap["space"],
 	}
+
+	// if qualifier, ok := selectorMap["qualifier"]; ok {
+	// 	if qualifier == ":" {
+	// 		selector.Qualifier = "USER"
+	// 	} else if qualifier == "/" {
+	// 		selector.Qualifier = "ORGANIZATION"
+	// 	}
+	// 	selector.Namespace = selectorMap["namespace"]
+	// }
 
 	return &selector, nil
 }
