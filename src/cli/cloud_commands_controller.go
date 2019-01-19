@@ -12,7 +12,7 @@ import (
 )
 
 func (ctrl *CLIController) CloudCommandList(cmd *cobra.Command, args []string) {
-	selector, err := models.ParseSelectorForCloudCommand(args[0])
+	selector, err := models.ParseSelectorForCloud(args[0])
 	if err != nil {
 		log.Fatalf("cloud: list commands: invalid cloud selector: %v", err)
 	}

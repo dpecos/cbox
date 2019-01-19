@@ -15,7 +15,7 @@ import (
 func (ctrl *CLIController) CloudSpaceInfo(cmd *cobra.Command, args []string) {
 	console.PrintAction("Retrieving info of an space")
 
-	selector, err := models.ParseSelectorMandatorySpace(args[0])
+	selector, err := models.ParseSelectorForCloud(args[0])
 	if err != nil {
 		log.Fatalf("cloud: space info: %v", err)
 	}
@@ -111,7 +111,7 @@ func (ctrl *CLIController) CloudSpaceUnpublish(cmd *cobra.Command, args []string
 func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
 	console.PrintAction("Cloning an space")
 
-	selector, err := models.ParseSelectorForCloudCommand(args[0])
+	selector, err := models.ParseSelectorForCloud(args[0])
 	if err != nil {
 		log.Fatalf("cloud: clone space: invalid cloud selector: %v", err)
 	}
@@ -147,6 +147,7 @@ func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
 	}
 }
 
+// TODO: needed?
 func (ctrl *CLIController) CloudSpacePull(cmd *cobra.Command, args []string) {
 	console.PrintAction("Pulling latest changes of an space")
 
