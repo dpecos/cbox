@@ -28,76 +28,82 @@ func init() {
 }
 
 func ReadString(label string, opts ...bitflag.Flag) string {
+	return readString(label, false, opts...)
+}
+
+func readString(label string, dieOnAbort bool, opts ...bitflag.Flag) string {
 	var flags bitflag.Flag
 	flags.Set(opts...)
 
-	value, aborted := readStringDetails(label, "", flags)
+	value, aborted := readStringDetails(label, "", flags, dieOnAbort)
 
 	if aborted && flags.Isset(NOT_EMPTY_VALUES) {
 		PrintError(MSG_EMPTY_NOT_ALLOWED)
-		value = ReadString(label, opts...)
+		value = readString(label, true, opts...)
 	} else if flags.Isset(NOT_EMPTY_VALUES) && strings.TrimSpace(value) == "" {
 		PrintError(MSG_EMPTY_NOT_ALLOWED)
-		value = ReadString(label, opts...)
+		value = readString(label, false, opts...)
 	} else if flags.Isset(ONLY_VALID_CHARS) && !CheckValidChars(value) {
 		PrintError(MSG_NOT_VALID_CHARS)
-		value = ReadString(label, opts...)
+		value = readString(label, false, opts...)
 	}
 
 	return value
 }
 
 func EditString(label string, previousValue string, opts ...bitflag.Flag) string {
-	var flags bitflag.Flag
-	flags.Set(opts...)
-
-	value, aborted := readStringDetails(label, previousValue, flags)
-
-	if aborted && flags.Isset(NOT_EMPTY_VALUES) {
-		PrintError(MSG_EMPTY_NOT_ALLOWED)
-		value = EditString(label, previousValue, opts...)
-	} else if flags.Isset(NOT_EMPTY_VALUES) && strings.TrimSpace(value) == "" {
-		PrintError(MSG_EMPTY_NOT_ALLOWED)
-		value = EditString(label, previousValue, opts...)
-	} else if flags.Isset(ONLY_VALID_CHARS) && !CheckValidChars(value) {
-		PrintError(MSG_NOT_VALID_CHARS)
-		value = EditString(label, previousValue, opts...)
-	}
-
+	value, aborted := editString(label, previousValue, false, opts...)
 	return resolveEditionValue(previousValue, value, aborted)
 }
 
-func readStringDetails(label string, previousValue string, flags bitflag.Flag) (string, bool) {
+func editString(label string, previousValue string, dieOnAbort bool, opts ...bitflag.Flag) (string, bool) {
+	var flags bitflag.Flag
+	flags.Set(opts...)
+
+	value, aborted := readStringDetails(label, previousValue, flags, dieOnAbort)
+
+	if aborted && flags.Isset(NOT_EMPTY_VALUES) {
+		PrintError(MSG_EMPTY_NOT_ALLOWED)
+		return editString(label, previousValue, true, opts...)
+	} else if flags.Isset(ONLY_VALID_CHARS) && !CheckValidChars(value) {
+		PrintError(MSG_NOT_VALID_CHARS)
+		return editString(label, previousValue, false, opts...)
+	}
+
+	return value, aborted
+}
+
+func readStringDetails(label string, previousValue string, flags bitflag.Flag, dieOnAbort bool) (string, bool) {
 	value := ""
 	aborted := false
+
+	if dieOnAbort {
+		PrintWarning("cbox will terminate if you press Ctrl+C once more")
+	}
 
 	var prompt survey.Prompt
 
 	help := ""
 	if !flags.Isset(NOT_EMPTY_VALUES) {
-		help = "Ctrl+C clears this field"
+		help = "Blank entry keeps previous value. Ctrl+C clears it"
 	}
 
 	if flags.Isset(MULTILINE) {
 		prompt = &survey.Multiline{
 			Message: label,
-			Default: previousValue,
 			Help:    help,
 		}
-		// prompt = &survey.Editor{
-		// 	Message:       label,
-		// 	Default:       previousValue,
-		// 	AppendDefault: previousValue != "",
-		// }
 	} else {
 		prompt = &survey.Input{
 			Message: label,
-			Default: previousValue,
 			Help:    help,
 		}
 	}
 
 	if err := survey.AskOne(prompt, &value, nil); err != nil {
+		if dieOnAbort {
+			log.Fatal("cbox killed")
+		}
 		aborted = true
 		value = ""
 	}
@@ -118,9 +124,11 @@ func resolveEditionValue(previousValue string, newValue string, aborted bool) st
 	newValue = strings.TrimSpace(newValue)
 	if aborted {
 		// user wants to clear current value
+		PrintInfo("Value cleared")
 		return ""
 	} else {
 		if newValue == "" {
+			PrintInfo(fmt.Sprintf("Using previous value: '%s'", previousValue))
 			// user wants to keep current value
 			return previousValue
 		} else {
