@@ -11,16 +11,44 @@ import (
 )
 
 var (
-	spaceColor          = console.ColorBoldGreen
-	spaceSeparatorColor = console.ColorBoldRed
-	labelColor          = console.ColorBoldBlue
-	tagsColor           = console.ColorRed
-	descriptionColor    = fmt.Sprintf
-	dateColor           = console.ColorBoldBlack
-	urlColor            = console.ColorGreen
-	separatorColor      = console.ColorYellow
-	starColor           = console.ColorBoldBlack
+	spaceColor              = console.ColorBoldGreen
+	spaceSeparatorColor     = console.ColorBoldRed
+	namespaceSeparatorColor = console.ColorBoldWhite
+	labelColor              = console.ColorBoldBlue
+	tagsColor               = console.ColorRed
+	descriptionColor        = fmt.Sprintf
+	dateColor               = console.ColorBoldBlack
+	urlColor                = console.ColorGreen
+	separatorColor          = console.ColorYellow
+	starColor               = console.ColorBoldBlack
 )
+
+func selector(selector *models.Selector) string {
+	format := ""
+	parts := []interface{}{}
+
+	if selector.Item != "" {
+		format = "%s"
+		parts = append(parts, labelColor(selector.Item))
+	}
+
+	if selector.Space != "" {
+		format = format + "%s"
+		parts = append(parts, spaceSeparatorColor("@"))
+
+		if selector.NamespaceType == models.TypeNone {
+			format = format + "%s"
+			parts = append(parts, spaceColor(selector.Space))
+		} else if selector.NamespaceType == models.TypeUser {
+			format = format + "%s%s%s"
+			parts = append(parts, spaceColor(selector.Namespace), namespaceSeparatorColor(":"), spaceColor(selector.Space))
+		} else {
+			format = format + "%s%s%s"
+			parts = append(parts, spaceColor(selector.Namespace), namespaceSeparatorColor("/"), spaceColor(selector.Space))
+		}
+	}
+	return fmt.Sprintf(format, parts...)
+}
 
 func PrintCommand(header string, cmd *models.Command, full bool, sourceOnly bool) {
 
@@ -38,13 +66,11 @@ func PrintCommand(header string, cmd *models.Command, full bool, sourceOnly bool
 			fmt.Printf(starColor("* "))
 		}
 
-		cmdStr := fmt.Sprintf("%s%s%s", labelColor(cmd.Label), spaceSeparatorColor("@"), spaceColor(cmd.Space.String()))
-
 		if len(cmd.Tags) != 0 {
 			tags := strings.Join(cmd.Tags, ", ")
-			fmt.Printf("%s - %s (%s) %s\n", cmdStr, descriptionColor(cmd.Description), tagsColor(tags), dateColor(cmd.CreatedAt.String()))
+			fmt.Printf("%s - %s (%s) %s\n", selector(cmd.Selector), descriptionColor(cmd.Description), tagsColor(tags), dateColor(cmd.CreatedAt.String()))
 		} else {
-			fmt.Printf("%s - %s %s\n", cmdStr, descriptionColor(cmd.Description), dateColor(cmd.CreatedAt.String()))
+			fmt.Printf("%s - %s %s\n", selector(cmd.Selector), descriptionColor(cmd.Description), dateColor(cmd.CreatedAt.String()))
 		}
 
 		if full {
@@ -82,13 +108,13 @@ func PrintTag(tag string) {
 func PrintSpace(header string, space *models.Space) {
 	printHeader(header)
 	timestamp := fmt.Sprintf("(Last updated: %s - Created: %s)", space.UpdatedAt.String(), space.CreatedAt.String())
-	fmt.Printf("%s - %s %s\n", spaceColor(space.String()), descriptionColor(space.Description), dateColor(timestamp))
+	fmt.Printf("%s - %s %s\n", selector(space.Selector), descriptionColor(space.Description), dateColor(timestamp))
 	printFooter(header)
 }
 
-func PrintSelector(header string, selector *models.Selector) {
+func PrintSelector(header string, s *models.Selector) {
 	printHeader(header)
-	fmt.Printf("%s\n", spaceColor(selector.String()))
+	fmt.Printf("%s\n", selector(s))
 	printFooter(header)
 }
 

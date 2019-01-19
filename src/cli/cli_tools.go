@@ -6,25 +6,19 @@ import (
 )
 
 func findSpace(selector *models.Selector) (*models.Space, error) {
-	namespace := selector.Namespace
 
-	space, err := cboxInstance.SpaceFind(namespace, selector.Space)
+	space, err := cboxInstance.SpaceFind(selector.NamespaceType, selector.Namespace, selector.Space)
 
-	if namespace != "" || err == nil {
+	// if not namespace specified, maybe belongs to the logged in user
+	if selector.NamespaceType != models.TypeNone || err == nil {
 		return space, err
 	}
 
-	namespace = models.SUser(cloud.Login)
-
-	return cboxInstance.SpaceFind(namespace, selector.Space)
+	return cboxInstance.SpaceFind(models.TypeUser, cloud.Login, selector.Space)
 }
 
-func cleanOldSpaceFile(space *models.Space, selector *models.Selector) {
-	if space.Label != selector.Space || (selector.Namespace != "" && space.Namespace != selector.Namespace) {
-		spaceToDelete := models.Space{
-			Namespace: selector.Namespace,
-			Label:     selector.Space,
-		}
-		core.DeleteSpaceFile(&spaceToDelete)
+func cleanOldSpaceFile(space *models.Space, oldSelector *models.Selector) {
+	if space.Label != oldSelector.Space || (oldSelector.Namespace != "" && space.Selector.Namespace != oldSelector.Namespace) {
+		core.DeleteSpaceFile(oldSelector)
 	}
 }

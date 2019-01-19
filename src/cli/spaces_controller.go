@@ -22,12 +22,11 @@ func (ctrl *CLIController) SpacesCreate(cmd *cobra.Command, args []string) {
 
 	space := tools.ConsoleReadSpace()
 
-	space.Namespace = cloud.Login
-
 	err := cboxInstance.SpaceCreate(space)
 	for err != nil {
 		console.PrintError("Space already found in your cbox. Try a different one")
 		space.Label = strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
+		space.Selector.Space = space.Label
 		err = cboxInstance.SpaceCreate(space)
 	}
 
@@ -92,17 +91,11 @@ func (ctrl *CLIController) SpacesDestroy(cmd *cobra.Command, args []string) {
 	tools.PrintSpace("Space to destroy", space)
 
 	if skipQuestions || console.Confirm("Are you sure you want to destroy this space?") {
-		// fix issue #52: when a space is removed, pointers to that position of memory change values
-		s := models.Space{
-			Namespace: space.Namespace,
-			Label:     space.Label,
-		}
-
-		err = cboxInstance.SpaceDestroy(&s)
+		err = cboxInstance.SpaceDestroy(space)
 		if err != nil {
 			log.Fatalf("destroy space: %v", err)
 		}
-		core.DeleteSpaceFile(&s)
+		core.DeleteSpaceFile(space.Selector)
 
 		console.PrintSuccess("Space destroyed successfully!")
 	} else {

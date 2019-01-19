@@ -25,12 +25,35 @@ func findSpaceFile(cboxInstance *models.CBox, space *models.Space) bool {
 
 	found := false
 	for _, s := range spaces {
-		if s.Namespace == space.Namespace && s.Label == space.Label {
+		if s.Selector.Namespace == space.Selector.Namespace && s.Label == space.Label {
 			found = true
 			break
 		}
 	}
 	return found
+}
+
+func createSpace(t *testing.T, cboxInstance *models.CBox) *models.Space {
+	if cboxInstance == nil {
+		t.Fatal("cboxInstance not initialized")
+	}
+
+	space := models.Space{
+		Label:       randString(8),
+		Description: randString(15),
+	}
+	space.Selector = models.NewSelector(models.TypeUser, "test", space.Label, "")
+
+	err := cboxInstance.SpaceCreate(&space)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	s, err := cboxInstance.SpaceFind(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
+	if err != nil {
+		t.Fatalf("could not find space: %v", err)
+	}
+	return s
 }
 
 func assertSpaceFileExists(t *testing.T, cboxInstance *models.CBox, space *models.Space) {
@@ -45,29 +68,6 @@ func assertSpaceFileNotExists(t *testing.T, cboxInstance *models.CBox, space *mo
 	if found {
 		t.Fatal("new space found (and shouldn't)")
 	}
-}
-
-func createSpace(t *testing.T, cboxInstance *models.CBox) *models.Space {
-	if cboxInstance == nil {
-		t.Fatal("cboxInstance not initialized")
-	}
-
-	space := models.Space{
-		Namespace:   models.SUser("test"),
-		Label:       randString(8),
-		Description: randString(15),
-	}
-
-	err := cboxInstance.SpaceCreate(&space)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	s, err := cboxInstance.SpaceFind(space.Namespace, space.Label)
-	if err != nil {
-		t.Fatalf("could not find space: %v", err)
-	}
-	return s
 }
 
 func assertSliceEqual(a, b []string) bool {

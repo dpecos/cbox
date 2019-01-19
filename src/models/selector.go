@@ -8,19 +8,38 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	TypeNone = iota
+	TypeUser
+	TypeOrganization
+)
+
 type Selector struct {
-	Item      string
-	Namespace string
-	Space     string
+	Item          string
+	NamespaceType int
+	Namespace     string
+	Space         string
 }
 
 func (selector *Selector) String() string {
 	if selector == nil {
 		return ""
 	}
-	return fmt.Sprintf("%s@%s%s", selector.Item, selector.Namespace, selector.Space)
 
-	return fmt.Sprintf("%s@%s", selector.Item, selector.Space)
+	format := ""
+	parts := []interface{}{}
+	if selector.NamespaceType == TypeNone {
+		format = "%s@%s"
+		parts = append(parts, selector.Item, selector.Space)
+	} else if selector.NamespaceType == TypeUser {
+		format = "%s@%s:%s"
+		parts = append(parts, selector.Item, selector.Namespace, selector.Space)
+	} else {
+		format = "%s@%s/%s"
+		parts = append(parts, selector.Item, selector.Namespace, selector.Space)
+	}
+
+	return fmt.Sprintf(format, parts...)
 }
 
 func ParseSelector(str string) (*Selector, error) {
@@ -98,8 +117,7 @@ func ParseSelectorForCloud(str string) (*Selector, error) {
 
 func parseSelector(str string) (*Selector, error) {
 
-	// selectorRegexp, err := regexp.Compile("^(?P<item>[a-z0-9-]+)?(@((?P<namespace>[a-z0-9-]+)(?P<qualifier>[:/]))?(?P<space>[a-z0-9-]+))?$")
-	selectorRegexp, err := regexp.Compile("^(?P<item>[a-z0-9-]+)?(@(?P<namespace>[a-z0-9-]+[:/])?(?P<space>[a-z0-9-]+))?$")
+	selectorRegexp, err := regexp.Compile("^(?P<item>[a-z0-9-]+)?(@((?P<namespace>[a-z0-9-]+)(?P<type>[:/]))?(?P<space>[a-z0-9-]+))?$")
 	if err != nil {
 		log.Fatalf("parse selector: could not compile selector regexp: %v", err)
 	}
@@ -117,20 +135,28 @@ func parseSelector(str string) (*Selector, error) {
 		}
 	}
 
-	selector := Selector{
-		Item:      selectorMap["item"],
-		Namespace: selectorMap["namespace"],
-		Space:     selectorMap["space"],
+	selector := NewSelector(TypeNone, selectorMap["namespace"], selectorMap["space"], selectorMap["item"])
+
+	if selectorMap["type"] != "" {
+		if selectorMap["type"] == ":" {
+			selector.NamespaceType = TypeUser
+		} else {
+			selector.NamespaceType = TypeOrganization
+		}
 	}
 
-	// if qualifier, ok := selectorMap["qualifier"]; ok {
-	// 	if qualifier == ":" {
-	// 		selector.Qualifier = "USER"
-	// 	} else if qualifier == "/" {
-	// 		selector.Qualifier = "ORGANIZATION"
-	// 	}
-	// 	selector.Namespace = selectorMap["namespace"]
-	// }
+	return selector, nil
+}
 
-	return &selector, nil
+func NewSelector(namespaceType int, namespace string, space string, item string) *Selector {
+	return &Selector{
+		NamespaceType: namespaceType,
+		Namespace:     namespace,
+		Space:         space,
+		Item:          item,
+	}
+}
+
+func (selector *Selector) CloneForItem(item string) *Selector {
+	return NewSelector(selector.NamespaceType, selector.Namespace, selector.Space, item)
 }

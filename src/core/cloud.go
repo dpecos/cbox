@@ -215,5 +215,10 @@ func (cloud *Cloud) CommandList(selector *models.Selector) ([]*models.Command, e
 		return nil, fmt.Errorf("could not parse response: %v", err)
 	}
 
+	for _, command := range commands {
+		selector, _ := models.ParseSelector(command.ID)
+		command.Selector = selector
+	}
+
 	return commands, nil
 }

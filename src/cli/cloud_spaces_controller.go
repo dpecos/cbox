@@ -41,9 +41,11 @@ func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) 
 		log.Fatalf("cloud: publish space: %v", err)
 	}
 
-	space.Namespace = models.SUser(cloud.Login)
+	space.Selector.NamespaceType = models.TypeUser
+	space.Selector.Namespace = cloud.Login
 	if organization != "" {
-		space.Namespace = models.SOrganization(organization)
+		space.Selector.NamespaceType = models.TypeOrganization
+		space.Selector.Namespace = organization
 	}
 
 	tools.PrintSpace("Space to publish", space)

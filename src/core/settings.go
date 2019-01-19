@@ -95,6 +95,7 @@ func createDefaultSpace() {
 		Label:       defaultSpaceID,
 		Description: defaultSpaceDescription,
 	}
+	defaultSpace.Selector = models.NewSelector(models.TypeNone, "", defaultSpace.Label, "")
 
 	cboxInstance := Load()
 	err := cboxInstance.SpaceCreate(&defaultSpace)

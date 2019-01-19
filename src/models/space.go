@@ -7,18 +7,13 @@ import (
 
 type Space struct {
 	Meta
-	Namespace   string     `json:"namespace"`
 	Label       string     `json:"label"`
 	Description string     `json:"description"`
 	Entries     []*Command `json:"entries" dynamodbav:"-"`
 }
 
 func (space *Space) String() string {
-	if space.Namespace != "" {
-		return fmt.Sprintf("%s%s", space.Namespace, space.Label)
-	} else {
-		return space.Label
-	}
+	return space.Selector.String()
 }
 
 func commandPresentInSpace(space *Space, commandLabel string) bool {

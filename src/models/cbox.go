@@ -9,16 +9,16 @@ type CBox struct {
 	Spaces []*Space
 }
 
-func (cbox *CBox) spaceFindPositionByLabel(namespace string, label string) (int, error) {
+func (cbox *CBox) spaceFindPositionBySelector(namespaceType int, namespace string, label string) (int, error) {
 	if label == "" {
 		return -1, fmt.Errorf("could not search by empty label")
 	}
 	for i, space := range cbox.Spaces {
-		if space.Namespace == namespace && space.Label == label {
+		if space.Selector.NamespaceType == namespaceType && space.Selector.Namespace == namespace && space.Label == label {
 			return i, nil
 		}
 	}
-	return -1, fmt.Errorf("space '%s%s' not found", namespace, label)
+	return -1, fmt.Errorf("space '%s-%s' not found", namespace, label)
 }
 
 func (cbox *CBox) SpaceLabels() []string {
@@ -35,8 +35,8 @@ func (cbox *CBox) SpaceLabels() []string {
 	return result
 }
 
-func (cbox *CBox) SpaceFind(namespace string, label string) (*Space, error) {
-	pos, err := cbox.spaceFindPositionByLabel(namespace, label)
+func (cbox *CBox) SpaceFind(namespaceType int, namespace string, label string) (*Space, error) {
+	pos, err := cbox.spaceFindPositionBySelector(namespaceType, namespace, label)
 	if err != nil {
 		return nil, fmt.Errorf("find space: %v", err)
 	}
@@ -44,7 +44,7 @@ func (cbox *CBox) SpaceFind(namespace string, label string) (*Space, error) {
 }
 
 func (cbox *CBox) SpaceCreate(space *Space) error {
-	s, err := cbox.SpaceFind(space.Namespace, space.Label)
+	s, err := cbox.SpaceFind(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
 	if err == nil && s != nil {
 		return fmt.Errorf("space create: space '%s' already exists", space.String())
 	}
@@ -61,7 +61,7 @@ func (cbox *CBox) SpaceCreate(space *Space) error {
 }
 
 func (cbox *CBox) SpaceDestroy(space *Space) error {
-	pos, err := cbox.spaceFindPositionByLabel(space.Namespace, space.Label)
+	pos, err := cbox.spaceFindPositionBySelector(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
 	if err != nil {
 		return fmt.Errorf("space destroy: could not found space '%s'", space.String())
 	}
@@ -73,7 +73,7 @@ func (cbox *CBox) SpaceDestroy(space *Space) error {
 
 func (cbox *CBox) SpaceEdit(space *Space, previousNamespace string, previousLabel string) error {
 
-	if (space.Namespace != previousNamespace || space.Label != previousLabel) && len(cbox.SpaceLabels()) != len(cbox.Spaces) {
+	if (space.Selector.Namespace != previousNamespace || space.Label != previousLabel) && len(cbox.SpaceLabels()) != len(cbox.Spaces) {
 		return fmt.Errorf("space edit: duplicate namespace/label '%s", space.String())
 	}
 

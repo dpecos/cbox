@@ -14,6 +14,7 @@ func createCommand(t *testing.T, space *models.Space) *models.Command {
 		Code:        randString(30),
 		Tags:        []string{"test"},
 	}
+	command.Selector = space.Selector.CloneForItem(command.Label)
 
 	space.CommandAdd(&command)
 
@@ -28,7 +29,7 @@ func TestCommandCreationDeletion(t *testing.T) {
 
 	cboxInstance = reloadCBox(cboxInstance)
 
-	s, _ := cboxInstance.SpaceFind(space.Namespace, space.Label)
+	s, _ := cboxInstance.SpaceFind(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
 
 	if s == nil {
 		t.Fatal("could not find space")
@@ -63,8 +64,14 @@ func TestCommandEdition(t *testing.T) {
 
 	cboxInstance = reloadCBox(cboxInstance)
 
-	s, _ := cboxInstance.SpaceFind(space.Namespace, space.Label)
-	c, _ := s.CommandFind(command.Label)
+	s, err := cboxInstance.SpaceFind(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
+	if err != nil {
+		t.Fatal(err)
+	}
+	c, err := s.CommandFind(command.Label)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	previousLabel := c.Label
 	newLabel := randString(8)
@@ -75,9 +82,9 @@ func TestCommandEdition(t *testing.T) {
 
 	cboxInstance = reloadCBox(cboxInstance)
 
-	s, _ = cboxInstance.SpaceFind(space.Namespace, space.Label)
+	s, _ = cboxInstance.SpaceFind(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
 
-	c, err := s.CommandFind(previousLabel)
+	c, err = s.CommandFind(previousLabel)
 	if err == nil {
 		t.Fatalf("command found using old label")
 	}

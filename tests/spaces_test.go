@@ -17,7 +17,7 @@ func TestSpaceCreationDeletion(t *testing.T) {
 
 	assertSpaceFileExists(t, cboxInstance, space)
 
-	s, err := cboxInstance.SpaceFind(space.Namespace, space.Label)
+	s, err := cboxInstance.SpaceFind(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
 	if s == nil || err != nil {
 		t.Errorf("could not find space by label: %v", err)
 	}
@@ -26,13 +26,13 @@ func TestSpaceCreationDeletion(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	core.DeleteSpaceFile(space)
+	core.DeleteSpaceFile(space.Selector)
 
 	assertSpaceFileNotExists(t, cboxInstance, space)
 
 	cboxInstance = reloadCBox(cboxInstance)
 
-	_, err = cboxInstance.SpaceFind(space.Namespace, space.Label)
+	_, err = cboxInstance.SpaceFind(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
 	if err == nil {
 		t.Error("space still found after deleting it")
 	}
@@ -45,10 +45,12 @@ func TestSpaceLabelUniquenessOnCreation(t *testing.T) {
 	s1 := createSpace(t, cboxInstance)
 
 	s2 := models.Space{
-		Namespace:   s1.Namespace,
 		Label:       s1.Label,
 		Description: randString(15),
 	}
+
+	// clone the same selector
+	s2.Selector = s1.Selector.CloneForItem("")
 
 	err := cboxInstance.SpaceCreate(&s2)
 	if err == nil {
@@ -65,10 +67,10 @@ func TestDeleteSpace(t *testing.T) {
 
 	cboxInstance = reloadCBox(cboxInstance)
 
-	expected := []string{"default", s1.String(), s3.String()}
+	expected := []string{"@default", s1.String(), s3.String()}
 
 	cboxInstance.SpaceDestroy(s2)
-	core.DeleteSpaceFile(s2)
+	core.DeleteSpaceFile(s2.Selector)
 
 	cboxInstance = reloadCBox(cboxInstance)
 

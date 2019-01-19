@@ -9,7 +9,6 @@ type Command struct {
 	Description string   `json:"description"`
 	URL         string   `json:"url" dynamodbav:",omitempty"`
 	Tags        []string `json:"tags" dynamodbav:",omitempty"`
-	Space       *Space   `json:"-"`
 }
 
 func (command *Command) TagAdd(tag string) {

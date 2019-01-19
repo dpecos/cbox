@@ -36,6 +36,6 @@ func Save(cbox *models.CBox) {
 	}
 }
 
-func DeleteSpaceFile(space *models.Space) {
-	spaceDeleteFile(space)
+func DeleteSpaceFile(selector *models.Selector) {
+	spaceDeleteFile(selector)
 }

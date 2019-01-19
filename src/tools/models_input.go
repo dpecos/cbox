@@ -8,7 +8,7 @@ import (
 	"github.com/dplabs/cbox/src/tools/console"
 )
 
-func ConsoleReadCommand() *models.Command {
+func ConsoleReadCommand(space *models.Space) *models.Command {
 	command := models.Command{
 		Label:       strings.ToLower(console.ReadString("Label", console.ONLY_VALID_CHARS, console.NOT_EMPTY_VALUES)),
 		Description: console.ReadString("Description"),
@@ -23,6 +23,8 @@ func ConsoleReadCommand() *models.Command {
 			command.Tags = append(command.Tags, tag)
 		}
 	}
+
+	command.Selector = space.Selector.CloneForItem(command.Label)
 
 	fmt.Println()
 
@@ -44,6 +46,7 @@ func ConsoleReadSpace() *models.Space {
 		Description: console.ReadString("Description"),
 		Entries:     []*models.Command{},
 	}
+	space.Selector = models.NewSelector(models.TypeNone, "", space.Label, "")
 
 	fmt.Println()
 

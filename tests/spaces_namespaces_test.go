@@ -10,10 +10,10 @@ func TestSpaceCreationNoCloudLogin(t *testing.T) {
 	cboxInstance := initializeCBox()
 
 	space := models.Space{
-		// Namespace:   "",
 		Label:       randString(8),
 		Description: randString(15),
 	}
+	space.Selector = models.NewSelector(models.TypeNone, "", space.Label, "")
 
 	err := cboxInstance.SpaceCreate(&space)
 	if err != nil {
@@ -22,7 +22,7 @@ func TestSpaceCreationNoCloudLogin(t *testing.T) {
 
 	cboxInstance = reloadCBox(cboxInstance)
 
-	s, err := cboxInstance.SpaceFind("", space.Label)
+	s, err := cboxInstance.SpaceFind(models.TypeNone, "", space.Label)
 	if err != nil {
 		t.Fatalf("could not find space: %v", err)
 	}
@@ -41,7 +41,7 @@ func TestSpaceCreationWithCloudLogin(t *testing.T) {
 
 	cboxInstance = reloadCBox(cboxInstance)
 
-	s, err := cboxInstance.SpaceFind(space.Namespace, space.Label)
+	s, err := cboxInstance.SpaceFind(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
 	if err != nil {
 		t.Fatalf("could not find space: %v", err)
 	}
@@ -59,9 +59,9 @@ func TestSpaceCreationSameLabelDifferentNamespace(t *testing.T) {
 	space1 := createSpace(t, cboxInstance)
 
 	space2 := models.Space{
-		Namespace: "diff-" + space1.Namespace,
-		Label:     space1.Label,
+		Label: space1.Label,
 	}
+	space2.Selector = models.NewSelector(space1.Selector.NamespaceType, "diff-"+space1.Selector.Namespace, space2.Label, "")
 
 	err := cboxInstance.SpaceCreate(&space2)
 	if err != nil {
@@ -70,7 +70,7 @@ func TestSpaceCreationSameLabelDifferentNamespace(t *testing.T) {
 
 	cboxInstance = reloadCBox(cboxInstance)
 
-	s1, err := cboxInstance.SpaceFind(space1.Namespace, space1.Label)
+	s1, err := cboxInstance.SpaceFind(space1.Selector.NamespaceType, space1.Selector.Namespace, space1.Label)
 	if err != nil {
 		t.Fatalf("could not find space: %v", err)
 	}
@@ -79,7 +79,7 @@ func TestSpaceCreationSameLabelDifferentNamespace(t *testing.T) {
 		t.Errorf("created space and reloaded space don't match: %s - %s", s1.String(), space1.String())
 	}
 
-	s2, err := cboxInstance.SpaceFind(space2.Namespace, space2.Label)
+	s2, err := cboxInstance.SpaceFind(space2.Selector.NamespaceType, space2.Selector.Namespace, space2.Label)
 	if err != nil {
 		t.Fatalf("could not find space: %v", err)
 	}

@@ -36,7 +36,7 @@ func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 
 	fmt.Printf("Creating new command...\n")
 
-	command := tools.ConsoleReadCommand()
+	command := tools.ConsoleReadCommand(space)
 
 	err = space.CommandAdd(command)
 	for err != nil {
@@ -76,6 +76,7 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 	for err != nil {
 		console.PrintError(fmt.Sprintf("Label '%s' already found in space. Try a different one", command.Label))
 		command.Label = strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
+		command.Selector.Item = command.Label
 		err = space.CommandEdit(command, previousCommandLabel)
 	}
 
