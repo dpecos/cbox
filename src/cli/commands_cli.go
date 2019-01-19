@@ -6,9 +6,8 @@ import (
 )
 
 var (
-	viewSnippet bool
-	filterTag   string
-	sourceOnly  bool
+	filterTag  string
+	sourceOnly bool
 )
 
 var commandsCmd = &cobra.Command{
@@ -82,6 +81,6 @@ func init() {
 	commandsCmd.AddCommand(tagCmd)
 	commandsCmd.AddCommand(untagCmd)
 
-	commandsCmd.Flags().BoolVarP(&viewSnippet, "view", "v", false, "Show all details about commands")
+	commandsCmd.Flags().BoolVarP(&showCommandsSource, "view", "v", false, "Show all details about commands")
 	viewCmd.Flags().BoolVarP(&sourceOnly, "src", "s", false, "view only code snippet source code")
 }

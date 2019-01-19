@@ -22,7 +22,7 @@ func (ctrl *CLIController) CloudCommandList(cmd *cobra.Command, args []string) {
 		log.Fatalf("cloud: list commands: %v", err)
 	}
 
-	tools.PrintCommandList(selector.String(), commands, viewSnippet, false)
+	tools.PrintCommandList(selector.String(), commands, showCommandsSource, false)
 }
 
 func (ctrl *CLIController) CloudCommandCopy(cmd *cobra.Command, args []string) {

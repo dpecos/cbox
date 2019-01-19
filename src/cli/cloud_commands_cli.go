@@ -34,4 +34,7 @@ func init() {
 	cloudCmd.AddCommand(cloudCommandsCmd)
 	cloudCommandsCmd.AddCommand(cloudCommandsListCmd)
 	cloudCommandsCmd.AddCommand(cloudCopyCmd)
+
+	cloudCommandsListCmd.Flags().BoolVarP(&showCommandsSource, "view", "v", false, "Show all details about commands")
+
 }

@@ -30,6 +30,4 @@ func init() {
 	rootCmd.AddCommand(cloudCmd)
 	cloudCmd.AddCommand(cloudLoginCmd)
 	cloudCmd.AddCommand(cloudLogoutCmd)
-
-	cloudCommandsCmd.Flags().BoolVarP(&viewSnippet, "view", "v", false, "Show all details about commands")
 }

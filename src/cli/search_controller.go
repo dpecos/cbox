@@ -50,9 +50,9 @@ func (ctrl *CLIController) SearchCommands(cmd *cobra.Command, args []string) {
 	}
 
 	if selector.Item != "" {
-		tools.PrintCommandList(fmt.Sprintf("Results for \"%s\" (within tag: %s)", criteria, selector.Item), commands, viewSnippet, false)
+		tools.PrintCommandList(fmt.Sprintf("Results for \"%s\" (within tag: %s)", criteria, selector.Item), commands, showCommandsSource, false)
 	} else {
-		tools.PrintCommandList(fmt.Sprintf("Results for \"%s\"", criteria), commands, viewSnippet, false)
+		tools.PrintCommandList(fmt.Sprintf("Results for \"%s\"", criteria), commands, showCommandsSource, false)
 	}
 
 }

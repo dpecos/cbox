@@ -3,7 +3,16 @@ package cli
 import (
 	"log"
 
+	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/models"
+)
+
+var (
+	cboxInstance *models.CBox
+	cloud        *core.Cloud
+
+	skipQuestions      bool
+	showCommandsSource bool
 )
 
 type CLIController struct {

@@ -17,5 +17,5 @@ var searchCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(searchCmd)
 
-	searchCmd.Flags().BoolVarP(&viewSnippet, "view", "v", false, "Show all details about commands")
+	searchCmd.Flags().BoolVarP(&showCommandsSource, "view", "v", false, "Show all details about commands")
 }

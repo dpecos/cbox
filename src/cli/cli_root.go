@@ -5,17 +5,10 @@ import (
 	"strings"
 
 	"github.com/dplabs/cbox/src/core"
-	"github.com/dplabs/cbox/src/models"
 	"github.com/dplabs/cbox/src/tools"
 	"github.com/dplabs/cbox/src/tools/console"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-)
-
-var (
-	cboxInstance  *models.CBox
-	cloud         *core.Cloud
-	skipQuestions bool
 )
 
 var rootCmd = &cobra.Command{
