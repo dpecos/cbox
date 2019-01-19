@@ -39,7 +39,7 @@ func ReadString(label string, opts ...bitflag.Flag) string {
 	} else if flags.Isset(NOT_EMPTY_VALUES) && strings.TrimSpace(value) == "" {
 		PrintError(MSG_EMPTY_NOT_ALLOWED)
 		value = ReadString(label, opts...)
-	} else if flags.Isset(ONLY_VALID_CHARS) && !checkValidChars(value) {
+	} else if flags.Isset(ONLY_VALID_CHARS) && !CheckValidChars(value) {
 		PrintError(MSG_NOT_VALID_CHARS)
 		value = ReadString(label, opts...)
 	}
@@ -59,7 +59,7 @@ func EditString(label string, previousValue string, opts ...bitflag.Flag) string
 	} else if flags.Isset(NOT_EMPTY_VALUES) && strings.TrimSpace(value) == "" {
 		PrintError(MSG_EMPTY_NOT_ALLOWED)
 		value = EditString(label, previousValue, opts...)
-	} else if flags.Isset(ONLY_VALID_CHARS) && !checkValidChars(value) {
+	} else if flags.Isset(ONLY_VALID_CHARS) && !CheckValidChars(value) {
 		PrintError(MSG_NOT_VALID_CHARS)
 		value = EditString(label, previousValue, opts...)
 	}
@@ -105,17 +105,13 @@ func readStringDetails(label string, previousValue string, flags bitflag.Flag) (
 	return value, aborted
 }
 
-func checkValidChars(str string) bool {
+func CheckValidChars(str string) bool {
 	validCharsRegexp, err := regexp.Compile("^[a-z0-9-]*$")
 	if err != nil {
 		log.Fatalf("valid chars: could not compile regexp: %v", err)
 	}
 
-	if !validCharsRegexp.MatchString(str) {
-		return false
-	}
-
-	return true
+	return validCharsRegexp.MatchString(str)
 }
 
 func resolveEditionValue(previousValue string, newValue string, aborted bool) string {

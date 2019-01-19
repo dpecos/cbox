@@ -48,6 +48,9 @@ func (ctrl *CLIController) TagsAdd(cmd *cobra.Command, args []string) {
 
 	for _, tag := range args[1:] {
 		if tag != "" {
+			if !console.CheckValidChars(tag) {
+				log.Fatalf("add tags: invalid characters in tag '%s'", tag)
+			}
 			command.TagAdd(strings.ToLower(tag))
 		}
 	}

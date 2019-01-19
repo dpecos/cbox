@@ -92,3 +92,12 @@ func assertSliceEqual(a, b []string) bool {
 
 	return true
 }
+
+func assertSliceContains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}

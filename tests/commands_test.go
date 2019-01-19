@@ -130,3 +130,22 @@ func TestCommandLabelUniquenessOnEdition(t *testing.T) {
 		t.Fatalf("labels have to be unique within an space after editing a command")
 	}
 }
+
+func TestCommandTagging(t *testing.T) {
+	cboxInstance := initializeCBox()
+
+	space := createSpace(t, cboxInstance)
+	c1 := createCommand(t, space)
+
+	c1.TagAdd("tag-ok")
+
+	if !assertSliceContains(c1.Tags, "tag-ok") {
+		t.Errorf("Added tag not found")
+	}
+
+	c1.TagAdd("tag-ok")
+
+	if !assertSliceContains(c1.Tags, "tag-ok") {
+		t.Errorf("Removed tag still found")
+	}
+}

@@ -17,7 +17,7 @@ func ConsoleReadCommand(space *models.Space) *models.Command {
 		Tags:        []string{},
 	}
 
-	tags := console.ReadString("Tags (separated by space)")
+	tags := console.ReadString("Tags (separated by space)", console.ONLY_VALID_CHARS)
 	for _, tag := range strings.Split(tags, " ") {
 		if tag != "" {
 			command.Tags = append(command.Tags, tag)
