@@ -14,6 +14,8 @@ type Command struct {
 func (command *Command) TagAdd(tag string) {
 	found := false
 
+	tag = strings.ToLower(tag)
+
 	for _, t := range command.Tags {
 		if t == tag {
 			found = true

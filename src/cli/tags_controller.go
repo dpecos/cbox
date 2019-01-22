@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"sort"
-	"strings"
 
 	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/models"
@@ -51,7 +50,7 @@ func (ctrl *CLIController) TagsAdd(cmd *cobra.Command, args []string) {
 			if !console.CheckValidChars(tag) {
 				log.Fatalf("add tags: invalid characters in tag '%s'", tag)
 			}
-			command.TagAdd(strings.ToLower(tag))
+			command.TagAdd(tag)
 		}
 	}
 

@@ -8,6 +8,20 @@ import (
 	"github.com/dplabs/cbox/src/tools/console"
 )
 
+func readTags() ([]string, error) {
+	tags := console.ReadString("Tags (separated by space)")
+	tagList := strings.Split(tags, " ")
+	for _, tag := range tagList {
+		if tag != "" {
+			if !console.CheckValidChars(tag) {
+				console.PrintError(console.MSG_NOT_VALID_CHARS)
+				return nil, fmt.Errorf(console.MSG_NOT_VALID_CHARS)
+			}
+		}
+	}
+	return tagList, nil
+}
+
 func ConsoleReadCommand(space *models.Space) *models.Command {
 	command := models.Command{
 		Label:       strings.ToLower(console.ReadString("Label", console.ONLY_VALID_CHARS, console.NOT_EMPTY_VALUES)),
@@ -17,11 +31,16 @@ func ConsoleReadCommand(space *models.Space) *models.Command {
 		Tags:        []string{},
 	}
 
-	tags := console.ReadString("Tags (separated by space)", console.ONLY_VALID_CHARS)
-	for _, tag := range strings.Split(tags, " ") {
-		if tag != "" {
-			command.Tags = append(command.Tags, tag)
+	var tags []string
+	for tags == nil {
+		var err error
+		tags, err = readTags()
+		if err != nil {
+			tags = nil
 		}
+	}
+	for _, tag := range tags {
+		command.TagAdd(tag)
 	}
 
 	command.Selector = space.Selector.CloneForItem(command.Label)
