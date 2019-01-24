@@ -41,8 +41,13 @@ func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) 
 		log.Fatalf("cloud: publish space: %v", err)
 	}
 
-	space.Selector.NamespaceType = models.TypeUser
-	space.Selector.Namespace = cloud.Login
+	if space.Selector.Namespace == "" {
+		space.Selector.NamespaceType = models.TypeUser
+		space.Selector.Namespace = cloud.Login
+	}
+
+	previousSpace := space.Selector.Namespace
+
 	if organization != "" {
 		space.Selector.NamespaceType = models.TypeOrganization
 		space.Selector.Namespace = organization
@@ -60,6 +65,10 @@ func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) 
 	}
 
 	// tools.PrintCommandList("Containing these commands", space.Entries, false, false)
+
+	if organization != "" && previousSpace != organization {
+		console.PrintWarning(fmt.Sprintf("You're about to publish workspace '%s' under a different organization '%s'\n", space.String(), organization))
+	}
 
 	if skipQuestions || console.Confirm("Publish?") {
 		fmt.Printf("Publishing space '%s'...\n", space.String())
