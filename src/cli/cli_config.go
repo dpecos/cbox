@@ -16,14 +16,14 @@ var setConfigCmd = &cobra.Command{
 	Use:   "set",
 	Args:  cobra.ExactArgs(2),
 	Short: "Set the value for a config setting",
-	Run:   ctrl.ConfigSet,
+	Run:   func(cmd *cobra.Command, args []string) { ctrl.ConfigSet(args) },
 }
 
 var getConfigCmd = &cobra.Command{
 	Use:   "get",
 	Args:  cobra.ExactArgs(1),
 	Short: "Get the value for a config setting",
-	Run:   ctrl.ConfigGet,
+	Run:   func(cmd *cobra.Command, args []string) { ctrl.ConfigGet(args) },
 }
 
 func init() {

@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"github.com/dplabs/cbox/src/controllers"
 	"github.com/dplabs/cbox/src/tools"
 	"github.com/spf13/cobra"
 )
@@ -19,7 +20,7 @@ var cloudCommandsListCmd = &cobra.Command{
 	Args:    cobra.ExactArgs(1),
 	Short:   "List the content of a space from cbox cloud",
 	Long:    tools.Logo,
-	Run:     ctrl.CloudCommandList,
+	Run:     func(cmd *cobra.Command, args []string) { ctrl.CloudCommandList(args) },
 }
 
 var cloudCopyCmd = &cobra.Command{
@@ -27,7 +28,7 @@ var cloudCopyCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(2),
 	Short: "Copy a remote command into a local space",
 	Long:  tools.Logo,
-	Run:   ctrl.CloudCommandCopy,
+	Run:   func(cmd *cobra.Command, args []string) { ctrl.CloudCommandCopy(args) },
 }
 
 func init() {
@@ -35,6 +36,6 @@ func init() {
 	cloudCommandsCmd.AddCommand(cloudCommandsListCmd)
 	cloudCommandsCmd.AddCommand(cloudCopyCmd)
 
-	cloudCommandsListCmd.Flags().BoolVarP(&showCommandsSource, "view", "v", false, "Show all details about commands")
+	cloudCommandsListCmd.Flags().BoolVarP(&controllers.ShowCommandsSourceFlag, "view", "v", false, "Show all details about commands")
 
 }

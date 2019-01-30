@@ -1,4 +1,4 @@
-package cli
+package controllers
 
 import (
 	"log"
@@ -8,36 +8,35 @@ import (
 	"github.com/dplabs/cbox/src/models"
 	"github.com/dplabs/cbox/src/tools"
 	"github.com/dplabs/cbox/src/tools/console"
-	"github.com/spf13/cobra"
 )
 
-func (ctrl *CLIController) SpacesList(cmd *cobra.Command, args []string) {
-	for _, space := range cboxInstance.Spaces {
+func (ctrl *CLIController) SpacesList(args []string) {
+	for _, space := range ctrl.cbox.Spaces {
 		tools.PrintSpace("", space)
 	}
 }
 
-func (ctrl *CLIController) SpacesCreate(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) SpacesCreate(args []string) {
 	console.PrintAction("Creating new space")
 
 	space := tools.ConsoleReadSpace()
 
-	err := cboxInstance.SpaceCreate(space)
+	err := ctrl.cbox.SpaceCreate(space)
 	for err != nil {
 		console.PrintError("Space already found in your cbox. Try a different one")
 		space.Label = strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
 		space.Selector.Space = space.Label
-		err = cboxInstance.SpaceCreate(space)
+		err = ctrl.cbox.SpaceCreate(space)
 	}
 
-	core.Save(cboxInstance)
+	core.Save(ctrl.cbox)
 
 	tools.PrintSpace("New space", space)
 
 	console.PrintSuccess("Space successfully created!")
 }
 
-func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) SpacesEdit(args []string) {
 	console.PrintAction("Editing an space")
 
 	selector, err := models.ParseSelectorMandatorySpace(args[0])
@@ -45,7 +44,7 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 		log.Fatalf("edit space: %v", err)
 	}
 
-	space, err := findSpace(selector)
+	space, err := ctrl.findSpace(selector)
 	if err != nil {
 		log.Fatalf("edit space: %v", err)
 	}
@@ -56,18 +55,18 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 
 	tools.PrintSpace("Space after edition", space)
 
-	if skipQuestions || console.Confirm("Update?") {
+	if SkipQuestionsFlag || console.Confirm("Update?") {
 
-		err := cboxInstance.SpaceEdit(space, selector.Namespace, selector.Space)
+		err := ctrl.cbox.SpaceEdit(space, selector.Namespace, selector.Space)
 		for err != nil {
 			console.PrintError("Label already found in your cbox. Try a different one")
 			space.Label = strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
-			err = cboxInstance.SpaceEdit(space, selector.Namespace, selector.Space)
+			err = ctrl.cbox.SpaceEdit(space, selector.Namespace, selector.Space)
 		}
 
-		cleanOldSpaceFile(space, selector)
+		ctrl.cleanOldSpaceFile(space, selector)
 
-		core.Save(cboxInstance)
+		core.Save(ctrl.cbox)
 
 		console.PrintSuccess("Space updated successfully!")
 	} else {
@@ -75,7 +74,7 @@ func (ctrl *CLIController) SpacesEdit(cmd *cobra.Command, args []string) {
 	}
 }
 
-func (ctrl *CLIController) SpacesDestroy(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) SpacesDestroy(args []string) {
 	console.PrintAction("Destroying an space")
 
 	selector, err := models.ParseSelectorMandatorySpace(args[0])
@@ -83,15 +82,15 @@ func (ctrl *CLIController) SpacesDestroy(cmd *cobra.Command, args []string) {
 		log.Fatalf("destroy space: %v", err)
 	}
 
-	space, err := findSpace(selector)
+	space, err := ctrl.findSpace(selector)
 	if err != nil {
 		log.Fatalf("destroy space: %v", err)
 	}
 
 	tools.PrintSpace("Space to destroy", space)
 
-	if skipQuestions || console.Confirm("Are you sure you want to destroy this space?") {
-		err = cboxInstance.SpaceDestroy(space)
+	if SkipQuestionsFlag || console.Confirm("Are you sure you want to destroy this space?") {
+		err = ctrl.cbox.SpaceDestroy(space)
 		if err != nil {
 			log.Fatalf("destroy space: %v", err)
 		}

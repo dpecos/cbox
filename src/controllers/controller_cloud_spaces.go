@@ -1,4 +1,4 @@
-package cli
+package controllers
 
 import (
 	"fmt"
@@ -9,48 +9,47 @@ import (
 	"github.com/dplabs/cbox/src/models"
 	"github.com/dplabs/cbox/src/tools"
 	"github.com/dplabs/cbox/src/tools/console"
-	"github.com/spf13/cobra"
 )
 
-func (ctrl *CLIController) CloudSpaceInfo(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) CloudSpaceInfo(args []string) {
 	console.PrintAction("Retrieving info of an space")
 
 	selector, err := models.ParseSelectorForCloud(args[0])
 	if err != nil {
-		log.Fatalf("cloud: space info: %v", err)
+		log.Fatalf("ctrl.cloud: space info: %v", err)
 	}
 
-	space, err := cloud.SpaceFind(selector)
+	space, err := ctrl.cloud.SpaceFind(selector)
 	if err != nil {
-		log.Fatalf("cloud: space info: %v", err)
+		log.Fatalf("ctrl.cloud: space info: %v", err)
 	}
 
 	tools.PrintSpace(selector.String(), space)
 }
 
-func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) CloudSpacePublish(args []string) {
 	console.PrintAction("Publishing an space")
 
 	selector, err := models.ParseSelectorMandatorySpace(args[0])
 	if err != nil {
-		log.Fatalf("cloud: publish space: %v", err)
+		log.Fatalf("ctrl.cloud: publish space: %v", err)
 	}
 
-	space, err := findSpace(selector)
+	space, err := ctrl.findSpace(selector)
 	if err != nil {
-		log.Fatalf("cloud: publish space: %v", err)
+		log.Fatalf("ctrl.cloud: publish space: %v", err)
 	}
 
 	if space.Selector.Namespace == "" {
 		space.Selector.NamespaceType = models.TypeUser
-		space.Selector.Namespace = cloud.Login
+		space.Selector.Namespace = ctrl.cloud.Login
 	}
 
 	previousSpace := space.Selector.Namespace
 
-	if organization != "" {
+	if OrganizationOption != "" {
 		space.Selector.NamespaceType = models.TypeOrganization
-		space.Selector.Namespace = organization
+		space.Selector.Namespace = OrganizationOption
 	}
 
 	tools.PrintSpace("Space to publish", space)
@@ -58,7 +57,7 @@ func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) 
 	if selector.Item != "" {
 		commands := space.CommandList(selector.Item)
 		if len(commands) == 0 {
-			log.Fatalf("cloud: no local commands matched selector: %s", selector)
+			log.Fatalf("ctrl.cloud: no local commands matched selector: %s", selector)
 		}
 
 		space.Entries = commands
@@ -66,21 +65,21 @@ func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) 
 
 	// tools.PrintCommandList("Containing these commands", space.Entries, false, false)
 
-	if organization != "" && previousSpace != organization {
-		console.PrintWarning(fmt.Sprintf("You're about to publish workspace '%s' under a different organization '%s'\n", space.String(), organization))
+	if OrganizationOption != "" && previousSpace != OrganizationOption {
+		console.PrintWarning(fmt.Sprintf("You're about to publish workspace '%s' under a different organization '%s'\n", space.String(), OrganizationOption))
 	}
 
-	if skipQuestions || console.Confirm("Publish?") {
+	if SkipQuestionsFlag || console.Confirm("Publish?") {
 		fmt.Printf("Publishing space '%s'...\n", space.String())
 
-		err = cloud.SpacePublish(space)
+		err = ctrl.cloud.SpacePublish(space)
 		if err != nil {
-			log.Fatalf("cloud: publish space: %v", err)
+			log.Fatalf("ctrl.cloud: publish space: %v", err)
 		}
 
-		cleanOldSpaceFile(space, selector)
+		ctrl.cleanOldSpaceFile(space, selector)
 
-		core.Save(cboxInstance) // to store space's new namespace
+		core.Save(ctrl.cbox) // to store space's new namespace
 
 		console.PrintSuccess("Space published successfully!")
 	} else {
@@ -88,29 +87,29 @@ func (ctrl *CLIController) CloudSpacePublish(cmd *cobra.Command, args []string) 
 	}
 }
 
-func (ctrl *CLIController) CloudSpaceUnpublish(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) CloudSpaceUnpublish(args []string) {
 	console.PrintAction("Unpublishing an space")
 
 	selector, err := models.ParseSelectorForCloud(args[0])
 	if err != nil {
-		log.Fatalf("cloud: unpublish space: %v", err)
+		log.Fatalf("ctrl.cloud: unpublish space: %v", err)
 	}
 
 	tools.PrintSelector("Space to unpublish", selector)
 
-	_, err = findSpace(selector)
+	_, err = ctrl.findSpace(selector)
 	if err == nil {
 		console.PrintInfo("Local copy won't be deleted")
 	} else {
 		console.PrintWarning("You don't have a local copy of the space")
 	}
 
-	if skipQuestions || console.Confirm("Unpublish?") {
+	if SkipQuestionsFlag || console.Confirm("Unpublish?") {
 		fmt.Printf("Unpublishing space '%s'...\n", selector.String())
 
-		err = cloud.SpaceUnpublish(selector)
+		err = ctrl.cloud.SpaceUnpublish(selector)
 		if err != nil {
-			log.Fatalf("cloud: unpublish space: %v", err)
+			log.Fatalf("ctrl.cloud: unpublish space: %v", err)
 		}
 
 		console.PrintSuccess("Space unpublished successfully!")
@@ -119,22 +118,22 @@ func (ctrl *CLIController) CloudSpaceUnpublish(cmd *cobra.Command, args []string
 	}
 }
 
-func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) CloudSpaceClone(args []string) {
 	console.PrintAction("Cloning an space")
 
 	selector, err := models.ParseSelectorForCloud(args[0])
 	if err != nil {
-		log.Fatalf("cloud: clone space: invalid cloud selector: %v", err)
+		log.Fatalf("ctrl.cloud: clone space: invalid ctrl.cloud selector: %v", err)
 	}
 
-	space, err := cloud.SpaceFind(selector)
+	space, err := ctrl.cloud.SpaceFind(selector)
 	if err != nil {
-		log.Fatalf("cloud: clone space: %v", err)
+		log.Fatalf("ctrl.cloud: clone space: %v", err)
 	}
 
-	commands, err := cloud.CommandList(selector)
+	commands, err := ctrl.cloud.CommandList(selector)
 	if err != nil {
-		log.Fatalf("cloud: list commands: %v", err)
+		log.Fatalf("ctrl.cloud: list commands: %v", err)
 	}
 
 	space.Entries = commands
@@ -142,15 +141,15 @@ func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
 	tools.PrintSpace("Space to clone", space)
 	tools.PrintCommandList("Containing these commands", space.Entries, false, false)
 
-	if skipQuestions || console.Confirm("Clone?") {
-		err := cboxInstance.SpaceCreate(space)
+	if SkipQuestionsFlag || console.Confirm("Clone?") {
+		err := ctrl.cbox.SpaceCreate(space)
 		for err != nil {
 			console.PrintError("Space already found in your cbox. Try a different one")
 			space.Label = strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
-			err = cboxInstance.SpaceCreate(space)
+			err = ctrl.cbox.SpaceCreate(space)
 		}
 
-		core.Save(cboxInstance)
+		core.Save(ctrl.cbox)
 
 		console.PrintSuccess("Space cloned successfully!")
 	} else {
@@ -159,27 +158,27 @@ func (ctrl *CLIController) CloudSpaceClone(cmd *cobra.Command, args []string) {
 }
 
 // TODO: needed?
-func (ctrl *CLIController) CloudSpacePull(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) CloudSpacePull(args []string) {
 	console.PrintAction("Pulling latest changes of an space")
 
 	selector, err := models.ParseSelectorMandatorySpace(args[0])
 	if err != nil {
-		log.Fatalf("cloud: pull space: invalid cloud selector: %v", err)
+		log.Fatalf("ctrl.cloud: pull space: invalid ctrl.cloud selector: %v", err)
 	}
 
-	space, err := findSpace(selector)
+	space, err := ctrl.findSpace(selector)
 	if err != nil {
-		log.Fatalf("cloud: pull space: %v", err)
+		log.Fatalf("ctrl.cloud: pull space: %v", err)
 	}
 
-	spaceCloud, err := cloud.SpaceFind(selector)
+	spaceCloud, err := ctrl.cloud.SpaceFind(selector)
 	if err != nil {
-		log.Fatalf("cloud: pull space: %v", err)
+		log.Fatalf("ctrl.cloud: pull space: %v", err)
 	}
 
-	commands, err := cloud.CommandList(selector)
+	commands, err := ctrl.cloud.CommandList(selector)
 	if err != nil {
-		log.Fatalf("cloud: list commands: %v", err)
+		log.Fatalf("ctrl.cloud: list commands: %v", err)
 	}
 
 	// Note: Label is not overwritten because user can renamed his local copy of the space
@@ -187,7 +186,7 @@ func (ctrl *CLIController) CloudSpacePull(cmd *cobra.Command, args []string) {
 	space.UpdatedAt = spaceCloud.UpdatedAt
 	space.Description = spaceCloud.Description
 
-	core.Save(cboxInstance)
+	core.Save(ctrl.cbox)
 
 	tools.PrintSpace("Pulled space", space)
 

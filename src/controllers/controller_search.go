@@ -1,4 +1,4 @@
-package cli
+package controllers
 
 import (
 	"fmt"
@@ -7,10 +7,9 @@ import (
 
 	"github.com/dplabs/cbox/src/models"
 	"github.com/dplabs/cbox/src/tools"
-	"github.com/spf13/cobra"
 )
 
-func (ctrl *CLIController) SearchCommands(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) SearchCommands(args []string) {
 	var sel, criteria string
 
 	if len(args) == 2 {
@@ -30,13 +29,13 @@ func (ctrl *CLIController) SearchCommands(cmd *cobra.Command, args []string) {
 
 	var spaces []*models.Space = []*models.Space{}
 	if sel != "" {
-		space, err := findSpace(selector)
+		space, err := ctrl.findSpace(selector)
 		if err != nil {
 			log.Fatalf("search: %v", err)
 		}
 		spaces = append(spaces, space)
 	} else {
-		spaces = cboxInstance.Spaces
+		spaces = ctrl.cbox.Spaces
 	}
 
 	var commands []*models.Command = []*models.Command{}
@@ -50,9 +49,9 @@ func (ctrl *CLIController) SearchCommands(cmd *cobra.Command, args []string) {
 	}
 
 	if selector.Item != "" {
-		tools.PrintCommandList(fmt.Sprintf("Results for \"%s\" (within tag: %s)", criteria, selector.Item), commands, showCommandsSource, false)
+		tools.PrintCommandList(fmt.Sprintf("Results for \"%s\" (within tag: %s)", criteria, selector.Item), commands, ShowCommandsSourceFlag, false)
 	} else {
-		tools.PrintCommandList(fmt.Sprintf("Results for \"%s\"", criteria), commands, showCommandsSource, false)
+		tools.PrintCommandList(fmt.Sprintf("Results for \"%s\"", criteria), commands, ShowCommandsSourceFlag, false)
 	}
 
 }

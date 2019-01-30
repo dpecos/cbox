@@ -1,4 +1,4 @@
-package cli
+package controllers
 
 import (
 	"fmt"
@@ -6,10 +6,9 @@ import (
 	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/tools"
 	"github.com/dplabs/cbox/src/tools/console"
-	"github.com/spf13/cobra"
 )
 
-func (ctrl *CLIController) Version(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) Version(args []string) {
 	fmt.Printf("%s\n", tools.Logo)
 	fmt.Printf("%s %s\n", console.ColorBoldBlack("Version:"), core.Version)
 	fmt.Printf("%s %s\n", console.ColorBoldBlack("Build:"), core.Build)

@@ -9,7 +9,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Args:  cobra.ExactArgs(0),
 	Short: "Display current cbox version",
-	Run:   ctrl.Version,
+	Run:   func(cmd *cobra.Command, args []string) { ctrl.Version(args) },
 	Long:  tools.Logo,
 }
 

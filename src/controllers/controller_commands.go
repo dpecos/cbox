@@ -1,4 +1,4 @@
-package cli
+package controllers
 
 import (
 	"fmt"
@@ -8,28 +8,27 @@ import (
 	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/tools"
 	"github.com/dplabs/cbox/src/tools/console"
-	"github.com/spf13/cobra"
 )
 
-func (ctrl *CLIController) CommandList(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) CommandList(args []string) {
 	selector := ctrl.parseSelectorAllowEmpty(args)
 
-	space, err := findSpace(selector)
+	space, err := ctrl.findSpace(selector)
 	if err != nil {
 		log.Fatalf("list commands: %v", err)
 	}
 
 	commands := space.CommandList(selector.Item)
 
-	tools.PrintCommandList(selector.String(), commands, showCommandsSource, false)
+	tools.PrintCommandList(selector.String(), commands, ShowCommandsSourceFlag, false)
 }
 
-func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) CommandAdd(args []string) {
 	console.PrintAction("Adding a new commands")
 
 	selector := ctrl.parseSelectorAllowEmpty(args)
 
-	space, err := findSpace(selector)
+	space, err := ctrl.findSpace(selector)
 	if err != nil {
 		log.Fatalf("add command: %v", err)
 	}
@@ -44,19 +43,19 @@ func (ctrl *CLIController) CommandAdd(cmd *cobra.Command, args []string) {
 		command.Label = strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
 		err = space.CommandAdd(command)
 	}
-	core.Save(cboxInstance)
+	core.Save(ctrl.cbox)
 
 	tools.PrintCommand("New command", command, true, false)
 
 	console.PrintSuccess("Command stored successfully!")
 }
 
-func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) CommandEdit(args []string) {
 	console.PrintAction("Editing a command")
 
 	selector := ctrl.parseSelector(args)
 
-	space, err := findSpace(selector)
+	space, err := ctrl.findSpace(selector)
 	if err != nil {
 		log.Fatalf("edit command: %v", err)
 	}
@@ -82,20 +81,20 @@ func (ctrl *CLIController) CommandEdit(cmd *cobra.Command, args []string) {
 
 	tools.PrintCommand("Command after edition", command, true, false)
 
-	if skipQuestions || console.Confirm("Update?") {
-		core.Save(cboxInstance)
+	if SkipQuestionsFlag || console.Confirm("Update?") {
+		core.Save(ctrl.cbox)
 		console.PrintSuccess("Command updated successfully!")
 	} else {
 		console.PrintError("Edition cancelled")
 	}
 }
 
-func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) CommandDelete(args []string) {
 	console.PrintAction("Deleting a command")
 
 	selector := ctrl.parseSelector(args)
 
-	space, err := findSpace(selector)
+	space, err := ctrl.findSpace(selector)
 	if err != nil {
 		log.Fatalf("delete command: %v", err)
 	}
@@ -107,19 +106,19 @@ func (ctrl *CLIController) CommandDelete(cmd *cobra.Command, args []string) {
 
 	tools.PrintCommand("Command to delete ", command, true, false)
 
-	if skipQuestions || console.Confirm("Are you sure you want to delete this command?") {
+	if SkipQuestionsFlag || console.Confirm("Are you sure you want to delete this command?") {
 		space.CommandDelete(command)
-		core.Save(cboxInstance)
+		core.Save(ctrl.cbox)
 		console.PrintSuccess("Command deleted successfully!")
 	} else {
 		console.PrintError("Deletion cancelled")
 	}
 }
 
-func (ctrl *CLIController) CommandView(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) CommandView(args []string) {
 	selector := ctrl.parseSelector(args)
 
-	space, err := findSpace(selector)
+	space, err := ctrl.findSpace(selector)
 	if err != nil {
 		log.Fatalf("view command: %v", err)
 	}
@@ -129,5 +128,5 @@ func (ctrl *CLIController) CommandView(cmd *cobra.Command, args []string) {
 		log.Fatalf("view command: %v", err)
 	}
 
-	tools.PrintCommand("", command, true, sourceOnly)
+	tools.PrintCommand("", command, true, SourceOnlyFlag)
 }

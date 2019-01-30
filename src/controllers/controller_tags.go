@@ -1,4 +1,4 @@
-package cli
+package controllers
 
 import (
 	"fmt"
@@ -9,13 +9,12 @@ import (
 	"github.com/dplabs/cbox/src/models"
 	"github.com/dplabs/cbox/src/tools"
 	"github.com/dplabs/cbox/src/tools/console"
-	"github.com/spf13/cobra"
 )
 
-func (ctrl *CLIController) TagsList(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) TagsList(args []string) {
 	selector := ctrl.parseSelectorAllowEmpty(args)
 
-	space, err := findSpace(selector)
+	space, err := ctrl.findSpace(selector)
 	if err != nil {
 		log.Fatalf("list tags: %v", err)
 	}
@@ -28,12 +27,12 @@ func (ctrl *CLIController) TagsList(cmd *cobra.Command, args []string) {
 	}
 }
 
-func (ctrl *CLIController) TagsAdd(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) TagsAdd(args []string) {
 	console.PrintAction("Adding new tags to a command")
 
 	selector := ctrl.parseSelector(args)
 
-	space, err := findSpace(selector)
+	space, err := ctrl.findSpace(selector)
 	if err != nil {
 		log.Fatalf("add tags: %v", err)
 	}
@@ -54,19 +53,19 @@ func (ctrl *CLIController) TagsAdd(cmd *cobra.Command, args []string) {
 		}
 	}
 
-	core.Save(cboxInstance)
+	core.Save(ctrl.cbox)
 
 	tools.PrintCommand("Tagged command", command, true, false)
 
 	console.PrintSuccess("Command tagged successfully!")
 }
 
-func (ctrl *CLIController) TagsRemove(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) TagsRemove(args []string) {
 	console.PrintAction("Removing tags from a command")
 
 	selector := ctrl.parseSelector(args)
 
-	space, err := findSpace(selector)
+	space, err := ctrl.findSpace(selector)
 	if err != nil {
 		log.Fatalf("remove tags: %v", err)
 	}
@@ -84,14 +83,14 @@ func (ctrl *CLIController) TagsRemove(cmd *cobra.Command, args []string) {
 		}
 	}
 
-	core.Save(cboxInstance)
+	core.Save(ctrl.cbox)
 
 	tools.PrintCommand("Untagged command", command, true, false)
 
 	console.PrintSuccess("Command tag deleted successfully!")
 }
 
-func (ctrl *CLIController) TagsDelete(cmd *cobra.Command, args []string) {
+func (ctrl *CLIController) TagsDelete(args []string) {
 	console.PrintAction("Deleting tags from an space")
 
 	selector, err := models.ParseSelectorMandatoryItem(args[0])
@@ -99,7 +98,7 @@ func (ctrl *CLIController) TagsDelete(cmd *cobra.Command, args []string) {
 		log.Fatalf("delete tags: %v", err)
 	}
 
-	space, err := findSpace(selector)
+	space, err := ctrl.findSpace(selector)
 	if err != nil {
 		log.Fatalf("delete tags: %v", err)
 	}
@@ -117,7 +116,7 @@ func (ctrl *CLIController) TagsDelete(cmd *cobra.Command, args []string) {
 		tools.PrintCommand("Untagged command", command, false, false)
 	}
 
-	core.Save(cboxInstance)
+	core.Save(ctrl.cbox)
 
 	msg := fmt.Sprintf("\nTag '%s' successfully deleted from space '%s'!", selector.Item, selector.Space)
 	console.PrintSuccess(msg)
