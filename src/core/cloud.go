@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -73,18 +74,18 @@ func CloudLogout() {
 	viper.Set(cloudSettingsJWT, "")
 }
 
-func CloudClient() (*Cloud, error) {
+func CloudClient() *Cloud {
 	readCloudConfig()
 
 	serverURL := setupCloud()
 
 	baseUrl, err := url.Parse(serverURL)
 	if err != nil {
-		return nil, fmt.Errorf("cloud: could not parse server's URL: %v", err)
+		log.Fatalf("cloud: could not parse server's URL: %v", err)
 	}
 
 	if !viper.IsSet(cloudSettingsUserID) || !viper.IsSet(cloudSettingsUserLogin) || !viper.IsSet(cloudSettingsUserName) || !viper.IsSet(cloudSettingsJWT) {
-		return nil, fmt.Errorf("cloud: user not authenticated")
+		log.Fatalf("cloud: user not authenticated")
 	}
 
 	cloud := Cloud{
@@ -97,7 +98,7 @@ func CloudClient() (*Cloud, error) {
 		httpClient: http.DefaultClient,
 	}
 
-	return &cloud, nil
+	return &cloud
 }
 
 func (cloud *Cloud) doRequest(method string, path string, query map[string]string, body string) (string, error) {

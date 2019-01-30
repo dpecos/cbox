@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/dplabs/cbox/src/controllers"
-	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/tools"
 	"github.com/dplabs/cbox/src/tools/console"
 	"github.com/spf13/cobra"
@@ -24,17 +23,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&controllers.SkipQuestionsFlag, "yes", "", false, "Answer 'yes' to any question")
 
 	cobra.OnInitialize(func() {
-		path := ""
-		core.LoadSettings(path)
-
-		cbox := core.Load()
-
-		cloud, err := core.CloudClient()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		ctrl = controllers.InitController(cbox, cloud)
+		ctrl = controllers.InitController()
 	})
 }
 

@@ -14,7 +14,7 @@ const (
 	pathConfigFile = "config.yml"
 )
 
-func Load() *models.CBox {
+func LoadCbox() *models.CBox {
 	cbox := models.CBox{
 		Spaces: []*models.Space{},
 	}

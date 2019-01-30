@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"log"
-
 	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/models"
 )
@@ -19,13 +17,12 @@ type CLIController struct {
 	cloud *core.Cloud
 }
 
-func InitController(cbox *models.CBox, cloud *core.Cloud) *CLIController {
-	if cbox == nil {
-		log.Fatalf("cbox instance not loaded")
-	}
-	if cloud == nil {
-		log.Fatalf("cloud config not loaded")
-	}
+func InitController() *CLIController {
+
+	core.LoadSettings("")
+
+	cbox := core.LoadCbox()
+	cloud := core.CloudClient()
 
 	controller := CLIController{
 		cbox,

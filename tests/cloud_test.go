@@ -25,10 +25,7 @@ func cloudConnect(jwt string) *core.Cloud {
 		log.Fatalf("could not login: %v", err)
 	}
 
-	cloud, err := core.CloudClient()
-	if err != nil {
-		log.Fatalf("could create cloud client: %v", err)
-	}
+	cloud := core.CloudClient()
 
 	return cloud
 }

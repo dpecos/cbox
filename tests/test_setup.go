@@ -28,5 +28,5 @@ func reloadCBox(cbox *models.CBox) *models.CBox {
 		core.Save(cbox)
 	}
 
-	return core.Load()
+	return core.LoadCbox()
 }
