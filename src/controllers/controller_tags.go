@@ -7,7 +7,6 @@ import (
 
 	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/models"
-	"github.com/dplabs/cbox/src/tools"
 	"github.com/dplabs/cbox/src/tools/console"
 )
 
@@ -23,7 +22,7 @@ func (ctrl *CLIController) TagsList(args []string) {
 	sort.Strings(tags)
 
 	for _, tag := range tags {
-		tools.PrintTag(tag)
+		console.PrintTag(tag)
 	}
 }
 
@@ -55,7 +54,7 @@ func (ctrl *CLIController) TagsAdd(args []string) {
 
 	core.Save(ctrl.cbox)
 
-	tools.PrintCommand("Tagged command", command, true, false)
+	console.PrintCommand("Tagged command", command, true, false)
 
 	console.PrintSuccess("Command tagged successfully!")
 }
@@ -85,7 +84,7 @@ func (ctrl *CLIController) TagsRemove(args []string) {
 
 	core.Save(ctrl.cbox)
 
-	tools.PrintCommand("Untagged command", command, true, false)
+	console.PrintCommand("Untagged command", command, true, false)
 
 	console.PrintSuccess("Command tag deleted successfully!")
 }
@@ -113,7 +112,7 @@ func (ctrl *CLIController) TagsDelete(args []string) {
 		}
 		command.TagDelete(selector.Item)
 
-		tools.PrintCommand("Untagged command", command, false, false)
+		console.PrintCommand("Untagged command", command, false, false)
 	}
 
 	core.Save(ctrl.cbox)

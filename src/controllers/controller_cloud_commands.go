@@ -6,7 +6,6 @@ import (
 
 	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/models"
-	"github.com/dplabs/cbox/src/tools"
 	"github.com/dplabs/cbox/src/tools/console"
 )
 
@@ -21,7 +20,7 @@ func (ctrl *CLIController) CloudCommandList(args []string) {
 		log.Fatalf("ctrl.cloud: list commands: %v", err)
 	}
 
-	tools.PrintCommandList(selector.String(), commands, ShowCommandsSourceFlag, false)
+	console.PrintCommandList(selector.String(), commands, ShowCommandsSourceFlag, false)
 }
 
 func (ctrl *CLIController) CloudCommandCopy(args []string) {
@@ -51,7 +50,7 @@ func (ctrl *CLIController) CloudCommandCopy(args []string) {
 		console.PrintError(fmt.Sprintf("Command '%s' not found", cmdSelector))
 	}
 
-	tools.PrintCommandList("Commands to copy", commands, false, false)
+	console.PrintCommandList("Commands to copy", commands, false, false)
 
 	if SkipQuestionsFlag || console.Confirm(fmt.Sprintf("Copy these commands into %s?", spaceSelector)) {
 

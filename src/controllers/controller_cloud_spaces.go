@@ -7,7 +7,6 @@ import (
 
 	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/models"
-	"github.com/dplabs/cbox/src/tools"
 	"github.com/dplabs/cbox/src/tools/console"
 )
 
@@ -24,7 +23,7 @@ func (ctrl *CLIController) CloudSpaceInfo(args []string) {
 		log.Fatalf("ctrl.cloud: space info: %v", err)
 	}
 
-	tools.PrintSpace(selector.String(), space)
+	console.PrintSpace(selector.String(), space)
 }
 
 func (ctrl *CLIController) CloudSpacePublish(args []string) {
@@ -52,7 +51,7 @@ func (ctrl *CLIController) CloudSpacePublish(args []string) {
 		space.Selector.Namespace = OrganizationOption
 	}
 
-	tools.PrintSpace("Space to publish", space)
+	console.PrintSpace("Space to publish", space)
 
 	if selector.Item != "" {
 		commands := space.CommandList(selector.Item)
@@ -63,7 +62,7 @@ func (ctrl *CLIController) CloudSpacePublish(args []string) {
 		space.Entries = commands
 	}
 
-	// tools.PrintCommandList("Containing these commands", space.Entries, false, false)
+	// console.PrintCommandList("Containing these commands", space.Entries, false, false)
 
 	if OrganizationOption != "" && previousSpace != OrganizationOption {
 		console.PrintWarning(fmt.Sprintf("You're about to publish workspace '%s' under a different organization '%s'\n", space.String(), OrganizationOption))
@@ -95,7 +94,7 @@ func (ctrl *CLIController) CloudSpaceUnpublish(args []string) {
 		log.Fatalf("ctrl.cloud: unpublish space: %v", err)
 	}
 
-	tools.PrintSelector("Space to unpublish", selector)
+	console.PrintSelector("Space to unpublish", selector)
 
 	_, err = ctrl.findSpace(selector)
 	if err == nil {
@@ -138,8 +137,8 @@ func (ctrl *CLIController) CloudSpaceClone(args []string) {
 
 	space.Entries = commands
 
-	tools.PrintSpace("Space to clone", space)
-	tools.PrintCommandList("Containing these commands", space.Entries, false, false)
+	console.PrintSpace("Space to clone", space)
+	console.PrintCommandList("Containing these commands", space.Entries, false, false)
 
 	if SkipQuestionsFlag || console.Confirm("Clone?") {
 		err := ctrl.cbox.SpaceCreate(space)
@@ -188,7 +187,7 @@ func (ctrl *CLIController) CloudSpacePull(args []string) {
 
 	core.Save(ctrl.cbox)
 
-	tools.PrintSpace("Pulled space", space)
+	console.PrintSpace("Pulled space", space)
 
 	console.PrintSuccess("Space pulled successfully!")
 }

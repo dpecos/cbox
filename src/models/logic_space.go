@@ -5,13 +5,6 @@ import (
 	"log"
 )
 
-type Space struct {
-	Meta
-	Label       string     `json:"label"`
-	Description string     `json:"description"`
-	Entries     []*Command `json:"entries" dynamodbav:"-"`
-}
-
 func (space *Space) String() string {
 	return space.Selector.String()
 }

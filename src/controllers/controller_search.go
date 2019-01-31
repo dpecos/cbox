@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/dplabs/cbox/src/models"
-	"github.com/dplabs/cbox/src/tools"
+	"github.com/dplabs/cbox/src/tools/console"
 )
 
 func (ctrl *CLIController) SearchCommands(args []string) {
@@ -49,9 +49,9 @@ func (ctrl *CLIController) SearchCommands(args []string) {
 	}
 
 	if selector.Item != "" {
-		tools.PrintCommandList(fmt.Sprintf("Results for \"%s\" (within tag: %s)", criteria, selector.Item), commands, ShowCommandsSourceFlag, false)
+		console.PrintCommandList(fmt.Sprintf("Results for \"%s\" (within tag: %s)", criteria, selector.Item), commands, ShowCommandsSourceFlag, false)
 	} else {
-		tools.PrintCommandList(fmt.Sprintf("Results for \"%s\"", criteria), commands, ShowCommandsSourceFlag, false)
+		console.PrintCommandList(fmt.Sprintf("Results for \"%s\"", criteria), commands, ShowCommandsSourceFlag, false)
 	}
 
 }

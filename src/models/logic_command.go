@@ -2,15 +2,6 @@ package models
 
 import "strings"
 
-type Command struct {
-	Meta
-	Label       string   `json:"label"`
-	Code        string   `json:"code"`
-	Description string   `json:"description"`
-	URL         string   `json:"url" dynamodbav:",omitempty"`
-	Tags        []string `json:"tags" dynamodbav:",omitempty"`
-}
-
 func (command *Command) TagAdd(tag string) {
 	found := false
 

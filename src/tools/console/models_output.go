@@ -1,4 +1,4 @@
-package tools
+package console
 
 import (
 	"fmt"
@@ -7,20 +7,19 @@ import (
 	"strings"
 
 	"github.com/dplabs/cbox/src/models"
-	"github.com/dplabs/cbox/src/tools/console"
 )
 
 var (
-	spaceColor              = console.ColorBoldGreen
-	spaceSeparatorColor     = console.ColorBoldRed
-	namespaceSeparatorColor = console.ColorBoldWhite
-	labelColor              = console.ColorBoldBlue
-	tagsColor               = console.ColorRed
+	spaceColor              = ColorBoldGreen
+	spaceSeparatorColor     = ColorBoldRed
+	namespaceSeparatorColor = ColorBoldWhite
+	labelColor              = ColorBoldBlue
+	tagsColor               = ColorRed
 	descriptionColor        = fmt.Sprintf
-	dateColor               = console.ColorBoldBlack
-	urlColor                = console.ColorGreen
-	separatorColor          = console.ColorYellow
-	starColor               = console.ColorBoldBlack
+	dateColor               = ColorBoldBlack
+	urlColor                = ColorGreen
+	separatorColor          = ColorYellow
+	starColor               = ColorBoldBlack
 )
 
 func selector(selector *models.Selector) string {
@@ -119,7 +118,7 @@ func PrintSelector(header string, s *models.Selector) {
 }
 
 func PrintSetting(config string, value string) {
-	fmt.Printf("%s -> %s\n", console.ColorGreen(config), console.ColorYellow(value))
+	fmt.Printf("%s -> %s\n", ColorGreen(config), ColorYellow(value))
 }
 
 func printHeader(header string) {

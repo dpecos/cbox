@@ -4,11 +4,6 @@ import (
 	"fmt"
 )
 
-type CBox struct {
-	path   string
-	Spaces []*Space
-}
-
 func (cbox *CBox) spaceFindPositionBySelector(namespaceType int, namespace string, label string) (int, error) {
 	if label == "" {
 		return -1, fmt.Errorf("could not search by empty label")

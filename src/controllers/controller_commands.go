@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/dplabs/cbox/src/core"
-	"github.com/dplabs/cbox/src/tools"
 	"github.com/dplabs/cbox/src/tools/console"
 )
 
@@ -20,7 +19,7 @@ func (ctrl *CLIController) CommandList(args []string) {
 
 	commands := space.CommandList(selector.Item)
 
-	tools.PrintCommandList(selector.String(), commands, ShowCommandsSourceFlag, false)
+	console.PrintCommandList(selector.String(), commands, ShowCommandsSourceFlag, false)
 }
 
 func (ctrl *CLIController) CommandAdd(args []string) {
@@ -35,7 +34,7 @@ func (ctrl *CLIController) CommandAdd(args []string) {
 
 	fmt.Printf("Creating new command...\n")
 
-	command := tools.ConsoleReadCommand(space)
+	command := console.ReadCommand(space)
 
 	err = space.CommandAdd(command)
 	for err != nil {
@@ -45,7 +44,7 @@ func (ctrl *CLIController) CommandAdd(args []string) {
 	}
 	core.Save(ctrl.cbox)
 
-	tools.PrintCommand("New command", command, true, false)
+	console.PrintCommand("New command", command, true, false)
 
 	console.PrintSuccess("Command stored successfully!")
 }
@@ -67,9 +66,9 @@ func (ctrl *CLIController) CommandEdit(args []string) {
 
 	previousCommandLabel := command.Label
 
-	tools.PrintCommand("Command to edit", command, true, false)
+	console.PrintCommand("Command to edit", command, true, false)
 
-	tools.ConsoleEditCommand(command)
+	console.EditCommand(command)
 
 	err = space.CommandEdit(command, previousCommandLabel)
 	for err != nil {
@@ -79,7 +78,7 @@ func (ctrl *CLIController) CommandEdit(args []string) {
 		err = space.CommandEdit(command, previousCommandLabel)
 	}
 
-	tools.PrintCommand("Command after edition", command, true, false)
+	console.PrintCommand("Command after edition", command, true, false)
 
 	if SkipQuestionsFlag || console.Confirm("Update?") {
 		core.Save(ctrl.cbox)
@@ -104,7 +103,7 @@ func (ctrl *CLIController) CommandDelete(args []string) {
 		log.Fatalf("delete command: %v", err)
 	}
 
-	tools.PrintCommand("Command to delete ", command, true, false)
+	console.PrintCommand("Command to delete ", command, true, false)
 
 	if SkipQuestionsFlag || console.Confirm("Are you sure you want to delete this command?") {
 		space.CommandDelete(command)
@@ -128,5 +127,5 @@ func (ctrl *CLIController) CommandView(args []string) {
 		log.Fatalf("view command: %v", err)
 	}
 
-	tools.PrintCommand("", command, true, SourceOnlyFlag)
+	console.PrintCommand("", command, true, SourceOnlyFlag)
 }

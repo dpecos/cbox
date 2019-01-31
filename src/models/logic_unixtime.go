@@ -15,8 +15,6 @@ var (
 	}
 )
 
-type UnixTime time.Time
-
 func (t *UnixTime) MarshalJSON() ([]byte, error) {
 	ts := time.Time(*t).Unix()
 	stamp := fmt.Sprint(ts)

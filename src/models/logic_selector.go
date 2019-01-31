@@ -8,19 +8,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-const (
-	TypeNone = iota
-	TypeUser
-	TypeOrganization
-)
-
-type Selector struct {
-	Item          string
-	NamespaceType int
-	Namespace     string
-	Space         string
-}
-
 func (selector *Selector) String() string {
 	if selector == nil {
 		return ""
