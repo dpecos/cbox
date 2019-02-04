@@ -10,8 +10,17 @@ import (
 	"github.com/dplabs/cbox/src/tools/console"
 )
 
-func (ctrl *CLIController) TagsList(args []string) {
-	selector := ctrl.parseSelectorAllowEmpty(args)
+func (ctrl *CLIController) TagsList(spcSelectorStr *string) {
+
+	s := ""
+	if spcSelectorStr != nil {
+		s = *spcSelectorStr
+	}
+
+	selector, err := models.ParseSelector(s)
+	if err != nil {
+		log.Fatalf("list tags: %v", err)
+	}
 
 	space, err := ctrl.findSpace(selector)
 	if err != nil {
@@ -26,10 +35,13 @@ func (ctrl *CLIController) TagsList(args []string) {
 	}
 }
 
-func (ctrl *CLIController) TagsAdd(args []string) {
+func (ctrl *CLIController) TagsAdd(spcSelectorStr string, tags ...string) {
 	console.PrintAction("Adding new tags to a command")
 
-	selector := ctrl.parseSelector(args)
+	selector, err := models.ParseSelector(spcSelectorStr)
+	if err != nil {
+		log.Fatalf("add tags: %v", err)
+	}
 
 	space, err := ctrl.findSpace(selector)
 	if err != nil {
@@ -43,7 +55,7 @@ func (ctrl *CLIController) TagsAdd(args []string) {
 
 	fmt.Printf("Adding tags to command with label '%s'...\n", command.Label)
 
-	for _, tag := range args[1:] {
+	for _, tag := range tags {
 		if tag != "" {
 			if !console.CheckValidChars(tag) {
 				log.Fatalf("add tags: invalid characters in tag '%s'", tag)
@@ -59,10 +71,13 @@ func (ctrl *CLIController) TagsAdd(args []string) {
 	console.PrintSuccess("Command tagged successfully!")
 }
 
-func (ctrl *CLIController) TagsRemove(args []string) {
+func (ctrl *CLIController) TagsRemove(spcSelectorStr string, tags ...string) {
 	console.PrintAction("Removing tags from a command")
 
-	selector := ctrl.parseSelector(args)
+	selector, err := models.ParseSelector(spcSelectorStr)
+	if err != nil {
+		log.Fatalf("remove tags: %v", err)
+	}
 
 	space, err := ctrl.findSpace(selector)
 	if err != nil {
@@ -76,7 +91,7 @@ func (ctrl *CLIController) TagsRemove(args []string) {
 
 	fmt.Printf("Removing tags from command with label '%s'...\n", command.Label)
 
-	for _, tag := range args[1:] {
+	for _, tag := range tags {
 		if tag != "" {
 			command.TagDelete(tag)
 		}
@@ -89,10 +104,10 @@ func (ctrl *CLIController) TagsRemove(args []string) {
 	console.PrintSuccess("Command tag deleted successfully!")
 }
 
-func (ctrl *CLIController) TagsDelete(args []string) {
+func (ctrl *CLIController) TagsDelete(spcSelectorStr string) {
 	console.PrintAction("Deleting tags from an space")
 
-	selector, err := models.ParseSelectorMandatoryItem(args[0])
+	selector, err := models.ParseSelectorMandatoryItem(spcSelectorStr)
 	if err != nil {
 		log.Fatalf("delete tags: %v", err)
 	}

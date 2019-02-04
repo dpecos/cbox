@@ -18,7 +18,7 @@ var cloudSpaceInfoCmd = &cobra.Command{
 	Use:   "info",
 	Args:  cobra.ExactArgs(1),
 	Short: "Retrieve cloud info for an space",
-	Run:   func(cmd *cobra.Command, args []string) { ctrl.CloudSpaceInfo(args) },
+	Run:   func(cmd *cobra.Command, args []string) { ctrl.CloudSpaceInfo(args[0]) },
 }
 
 var cloudSpacePublishCmd = &cobra.Command{
@@ -26,28 +26,28 @@ var cloudSpacePublishCmd = &cobra.Command{
 	Aliases: []string{"push"},
 	Args:    cobra.ExactArgs(1),
 	Short:   "Publish a command, tag or a whole space",
-	Run:     func(cmd *cobra.Command, args []string) { ctrl.CloudSpacePublish(args) },
+	Run:     func(cmd *cobra.Command, args []string) { ctrl.CloudSpacePublish(args[0]) },
 }
 
 var cloudSpaceUnpublishCmd = &cobra.Command{
 	Use:   "unpublish",
 	Args:  cobra.ExactArgs(1),
 	Short: "Unpublish an space",
-	Run:   func(cmd *cobra.Command, args []string) { ctrl.CloudSpaceUnpublish(args) },
+	Run:   func(cmd *cobra.Command, args []string) { ctrl.CloudSpaceUnpublish(args[0]) },
 }
 
 var cloudSpacePullCmd = &cobra.Command{
 	Use:   "pull",
 	Args:  cobra.ExactArgs(1),
 	Short: "Pull latest changes of a cloud space",
-	Run:   func(cmd *cobra.Command, args []string) { ctrl.CloudSpacePull(args) },
+	Run:   func(cmd *cobra.Command, args []string) { ctrl.CloudSpacePull(args[0]) },
 }
 
 var cloudSpaceCloneCmd = &cobra.Command{
 	Use:   "clone",
 	Args:  cobra.ExactArgs(1),
 	Short: "Clone an space locally",
-	Run:   func(cmd *cobra.Command, args []string) { ctrl.CloudSpaceClone(args) },
+	Run:   func(cmd *cobra.Command, args []string) { ctrl.CloudSpaceClone(args[0]) },
 }
 
 func init() {

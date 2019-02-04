@@ -9,23 +9,25 @@ import (
 	"github.com/dplabs/cbox/src/tools/console"
 )
 
-func (ctrl *CLIController) SearchCommands(args []string) {
-	var sel, criteria string
+func (ctrl *CLIController) SearchCommands(spcSelectorStr *string, criteria string) {
 
-	if len(args) == 2 {
-		sel = args[0]
-		criteria = args[1]
-	} else if len(args) == 1 {
-		if strings.Contains(args[0], "@") {
-			log.Fatalf("search: criteria not specified - this looks like a selector")
-		}
-		sel = ""
-		criteria = args[0]
-	} else {
+	if criteria == "" {
 		log.Fatal("search: criteria not specified")
 	}
 
-	selector := ctrl.parseSelector([]string{sel})
+	if strings.Contains(criteria, "@") {
+		log.Fatalf("search: criteria not specified - this looks like a selector")
+	}
+
+	sel := ""
+	if spcSelectorStr != nil {
+		sel = *spcSelectorStr
+	}
+
+	selector, err := models.ParseSelector(sel)
+	if err != nil {
+		log.Fatalf("search: %v", err)
+	}
 
 	var spaces []*models.Space = []*models.Space{}
 	if sel != "" {

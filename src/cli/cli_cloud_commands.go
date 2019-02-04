@@ -20,7 +20,7 @@ var cloudCommandsListCmd = &cobra.Command{
 	Args:    cobra.ExactArgs(1),
 	Short:   "List the content of a space from cbox cloud",
 	Long:    tools.Logo,
-	Run:     func(cmd *cobra.Command, args []string) { ctrl.CloudCommandList(args) },
+	Run:     func(cmd *cobra.Command, args []string) { ctrl.CloudCommandList(args[0]) },
 }
 
 var cloudCopyCmd = &cobra.Command{
@@ -28,7 +28,7 @@ var cloudCopyCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(2),
 	Short: "Copy a remote command into a local space",
 	Long:  tools.Logo,
-	Run:   func(cmd *cobra.Command, args []string) { ctrl.CloudCommandCopy(args) },
+	Run:   func(cmd *cobra.Command, args []string) { ctrl.CloudCommandCopy(args[0], args[1]) },
 }
 
 func init() {

@@ -12,7 +12,7 @@ var commandsCmd = &cobra.Command{
 	Args:    cobra.MaximumNArgs(1),
 	Short:   "List the content of a space in your cbox",
 	Long:    tools.Logo,
-	Run:     func(cmd *cobra.Command, args []string) { ctrl.CommandList(args) },
+	Run:     func(cmd *cobra.Command, args []string) { ctrl.CommandList(optionalSelector(args, 0)) },
 }
 
 var addCmd = &cobra.Command{
@@ -21,7 +21,7 @@ var addCmd = &cobra.Command{
 	Args:    cobra.MaximumNArgs(1),
 	Short:   "Add a new command to your cbox",
 	Long:    tools.Logo,
-	Run:     func(cmd *cobra.Command, args []string) { ctrl.CommandAdd(args) },
+	Run:     func(cmd *cobra.Command, args []string) { ctrl.CommandAdd(optionalSelector(args, 0)) },
 }
 
 var editCmd = &cobra.Command{
@@ -30,7 +30,7 @@ var editCmd = &cobra.Command{
 	Args:    cobra.ExactArgs(1),
 	Short:   "Edit a command of your cbox",
 	Long:    tools.Logo,
-	Run:     func(cmd *cobra.Command, args []string) { ctrl.CommandEdit(args) },
+	Run:     func(cmd *cobra.Command, args []string) { ctrl.CommandEdit(args[0]) },
 }
 
 var deleteCmd = &cobra.Command{
@@ -39,7 +39,7 @@ var deleteCmd = &cobra.Command{
 	Args:    cobra.ExactArgs(1),
 	Short:   "Delete a command of your cbox",
 	Long:    tools.Logo,
-	Run:     func(cmd *cobra.Command, args []string) { ctrl.CommandDelete(args) },
+	Run:     func(cmd *cobra.Command, args []string) { ctrl.CommandDelete(args[0]) },
 }
 
 var viewCmd = &cobra.Command{
@@ -48,7 +48,7 @@ var viewCmd = &cobra.Command{
 	Args:    cobra.ExactArgs(1),
 	Short:   "View one command",
 	Long:    tools.Logo,
-	Run:     func(cmd *cobra.Command, args []string) { ctrl.CommandView(args) },
+	Run:     func(cmd *cobra.Command, args []string) { ctrl.CommandView(args[0]) },
 }
 
 var tagCmd = &cobra.Command{
@@ -57,7 +57,7 @@ var tagCmd = &cobra.Command{
 	Args:    cobra.MinimumNArgs(2),
 	Short:   "Add tags to a command",
 	Long:    tools.Logo,
-	Run:     func(cmd *cobra.Command, args []string) { ctrl.TagsAdd(args) },
+	Run:     func(cmd *cobra.Command, args []string) { ctrl.TagsAdd(args[0], args[1:]...) },
 }
 
 var untagCmd = &cobra.Command{
@@ -65,7 +65,7 @@ var untagCmd = &cobra.Command{
 	Args:  cobra.MinimumNArgs(2),
 	Short: "Removes tags from a command",
 	Long:  tools.Logo,
-	Run:   func(cmd *cobra.Command, args []string) { ctrl.TagsRemove(args) },
+	Run:   func(cmd *cobra.Command, args []string) { ctrl.TagsRemove(args[0], args[1:]...) },
 }
 
 func init() {

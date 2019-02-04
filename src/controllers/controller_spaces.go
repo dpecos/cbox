@@ -9,13 +9,13 @@ import (
 	"github.com/dplabs/cbox/src/tools/console"
 )
 
-func (ctrl *CLIController) SpacesList(args []string) {
+func (ctrl *CLIController) SpacesList() {
 	for _, space := range ctrl.cbox.Spaces {
 		console.PrintSpace("", space)
 	}
 }
 
-func (ctrl *CLIController) SpacesCreate(args []string) {
+func (ctrl *CLIController) SpacesCreate() {
 	console.PrintAction("Creating new space")
 
 	space := console.ReadSpace()
@@ -35,10 +35,10 @@ func (ctrl *CLIController) SpacesCreate(args []string) {
 	console.PrintSuccess("Space successfully created!")
 }
 
-func (ctrl *CLIController) SpacesEdit(args []string) {
+func (ctrl *CLIController) SpacesEdit(spcSelectorStr string) {
 	console.PrintAction("Editing an space")
 
-	selector, err := models.ParseSelectorMandatorySpace(args[0])
+	selector, err := models.ParseSelectorMandatorySpace(spcSelectorStr)
 	if err != nil {
 		log.Fatalf("edit space: %v", err)
 	}
@@ -73,10 +73,10 @@ func (ctrl *CLIController) SpacesEdit(args []string) {
 	}
 }
 
-func (ctrl *CLIController) SpacesDestroy(args []string) {
+func (ctrl *CLIController) SpacesDestroy(spcSelectorStr string) {
 	console.PrintAction("Destroying an space")
 
-	selector, err := models.ParseSelectorMandatorySpace(args[0])
+	selector, err := models.ParseSelectorMandatorySpace(spcSelectorStr)
 	if err != nil {
 		log.Fatalf("destroy space: %v", err)
 	}

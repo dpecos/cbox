@@ -11,7 +11,7 @@ var spacesCmd = &cobra.Command{
 	Args:    cobra.ExactArgs(0),
 	Short:   "Show available spaces in your cbox",
 	Long:    tools.Logo,
-	Run:     func(cmd *cobra.Command, args []string) { ctrl.SpacesList(args) },
+	Run:     func(cmd *cobra.Command, args []string) { ctrl.SpacesList() },
 }
 
 var spacesCreateCmd = &cobra.Command{
@@ -19,7 +19,7 @@ var spacesCreateCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(0),
 	Short: "Creates a new space to your cbox",
 	Long:  tools.Logo,
-	Run:   func(cmd *cobra.Command, args []string) { ctrl.SpacesCreate(args) },
+	Run:   func(cmd *cobra.Command, args []string) { ctrl.SpacesCreate() },
 }
 
 var spacesEditCmd = &cobra.Command{
@@ -27,7 +27,7 @@ var spacesEditCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Short: "Edit an space from your cbox",
 	Long:  tools.Logo,
-	Run:   func(cmd *cobra.Command, args []string) { ctrl.SpacesEdit(args) },
+	Run:   func(cmd *cobra.Command, args []string) { ctrl.SpacesEdit(args[0]) },
 }
 
 var spacesDestroyCmd = &cobra.Command{
@@ -35,7 +35,7 @@ var spacesDestroyCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Short: "Destroys a space from your cbox",
 	Long:  tools.Logo,
-	Run:   func(cmd *cobra.Command, args []string) { ctrl.SpacesDestroy(args) },
+	Run:   func(cmd *cobra.Command, args []string) { ctrl.SpacesDestroy(args[0]) },
 }
 
 func init() {

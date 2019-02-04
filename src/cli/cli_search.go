@@ -12,7 +12,13 @@ var searchCmd = &cobra.Command{
 	Args:    cobra.MaximumNArgs(2),
 	Short:   "Search for commands in a given space",
 	Long:    tools.Logo,
-	Run:     func(cmd *cobra.Command, args []string) { ctrl.SearchCommands(args) },
+	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 1 {
+			ctrl.SearchCommands(nil, args[0])
+		} else {
+			ctrl.SearchCommands(&args[0], args[1])
+		}
+	},
 }
 
 func init() {

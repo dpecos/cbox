@@ -6,11 +6,20 @@ import (
 	"strings"
 
 	"github.com/dplabs/cbox/src/core"
+	"github.com/dplabs/cbox/src/models"
 	"github.com/dplabs/cbox/src/tools/console"
 )
 
-func (ctrl *CLIController) CommandList(args []string) {
-	selector := ctrl.parseSelectorAllowEmpty(args)
+func (ctrl *CLIController) CommandList(spcSelectorStr *string) {
+	s := ""
+	if spcSelectorStr != nil {
+		s = *spcSelectorStr
+	}
+
+	selector, err := models.ParseSelector(s)
+	if err != nil {
+		log.Fatalf("list commands: %v", err)
+	}
 
 	space, err := ctrl.findSpace(selector)
 	if err != nil {
@@ -22,10 +31,18 @@ func (ctrl *CLIController) CommandList(args []string) {
 	console.PrintCommandList(selector.String(), commands, ShowCommandsSourceFlag, false)
 }
 
-func (ctrl *CLIController) CommandAdd(args []string) {
+func (ctrl *CLIController) CommandAdd(spcSelectorStr *string) {
 	console.PrintAction("Adding a new commands")
 
-	selector := ctrl.parseSelectorAllowEmpty(args)
+	s := ""
+	if spcSelectorStr != nil {
+		s = *spcSelectorStr
+	}
+
+	selector, err := models.ParseSelector(s)
+	if err != nil {
+		log.Fatalf("add command: %v", err)
+	}
 
 	space, err := ctrl.findSpace(selector)
 	if err != nil {
@@ -49,10 +66,13 @@ func (ctrl *CLIController) CommandAdd(args []string) {
 	console.PrintSuccess("Command stored successfully!")
 }
 
-func (ctrl *CLIController) CommandEdit(args []string) {
+func (ctrl *CLIController) CommandEdit(spcSelectorStr string) {
 	console.PrintAction("Editing a command")
 
-	selector := ctrl.parseSelector(args)
+	selector, err := models.ParseSelector(spcSelectorStr)
+	if err != nil {
+		log.Fatalf("edit command: %v", err)
+	}
 
 	space, err := ctrl.findSpace(selector)
 	if err != nil {
@@ -88,10 +108,13 @@ func (ctrl *CLIController) CommandEdit(args []string) {
 	}
 }
 
-func (ctrl *CLIController) CommandDelete(args []string) {
+func (ctrl *CLIController) CommandDelete(spcSelectorStr string) {
 	console.PrintAction("Deleting a command")
 
-	selector := ctrl.parseSelector(args)
+	selector, err := models.ParseSelector(spcSelectorStr)
+	if err != nil {
+		log.Fatalf("delete command: %v", err)
+	}
 
 	space, err := ctrl.findSpace(selector)
 	if err != nil {
@@ -114,8 +137,11 @@ func (ctrl *CLIController) CommandDelete(args []string) {
 	}
 }
 
-func (ctrl *CLIController) CommandView(args []string) {
-	selector := ctrl.parseSelector(args)
+func (ctrl *CLIController) CommandView(spcSelectorStr string) {
+	selector, err := models.ParseSelector(spcSelectorStr)
+	if err != nil {
+		log.Fatalf("view command: %v", err)
+	}
 
 	space, err := ctrl.findSpace(selector)
 	if err != nil {

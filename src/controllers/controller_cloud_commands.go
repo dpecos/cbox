@@ -9,8 +9,8 @@ import (
 	"github.com/dplabs/cbox/src/tools/console"
 )
 
-func (ctrl *CLIController) CloudCommandList(args []string) {
-	selector, err := models.ParseSelectorForCloud(args[0])
+func (ctrl *CLIController) CloudCommandList(selectorStr string) {
+	selector, err := models.ParseSelectorForCloud(selectorStr)
 	if err != nil {
 		log.Fatalf("ctrl.cloud: list commands: invalid ctrl.cloud selector: %v", err)
 	}
@@ -23,15 +23,15 @@ func (ctrl *CLIController) CloudCommandList(args []string) {
 	console.PrintCommandList(selector.String(), commands, ShowCommandsSourceFlag, false)
 }
 
-func (ctrl *CLIController) CloudCommandCopy(args []string) {
+func (ctrl *CLIController) CloudCommandCopy(cmdSelectorStr string, spcSelectorStr string) {
 	console.PrintAction("Copying ctrl.cloud commands")
 
-	cmdSelector, err := models.ParseSelectorForCloudCommand(args[0])
+	cmdSelector, err := models.ParseSelectorForCloudCommand(cmdSelectorStr)
 	if err != nil {
 		log.Fatalf("ctrl.cloud: copy command: invalid ctrl.cloud selector: %v", err)
 	}
 
-	spaceSelector, err := models.ParseSelectorMandatorySpace(args[1])
+	spaceSelector, err := models.ParseSelectorMandatorySpace(spcSelectorStr)
 	if err != nil {
 		log.Fatalf("ctrl.cloud: copy command: invalid space selector: %v", err)
 	}

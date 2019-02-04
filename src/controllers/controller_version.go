@@ -8,7 +8,7 @@ import (
 	"github.com/dplabs/cbox/src/tools/console"
 )
 
-func (ctrl *CLIController) Version(args []string) {
+func (ctrl *CLIController) Version() {
 	fmt.Printf("%s\n", tools.Logo)
 	fmt.Printf("%s %s\n", console.ColorBoldBlack("Version:"), core.Version)
 	fmt.Printf("%s %s\n", console.ColorBoldBlack("Build:"), core.Build)

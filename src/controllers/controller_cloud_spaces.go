@@ -10,10 +10,10 @@ import (
 	"github.com/dplabs/cbox/src/tools/console"
 )
 
-func (ctrl *CLIController) CloudSpaceInfo(args []string) {
+func (ctrl *CLIController) CloudSpaceInfo(spcSelectorStr string) {
 	console.PrintAction("Retrieving info of an space")
 
-	selector, err := models.ParseSelectorForCloud(args[0])
+	selector, err := models.ParseSelectorForCloud(spcSelectorStr)
 	if err != nil {
 		log.Fatalf("ctrl.cloud: space info: %v", err)
 	}
@@ -26,10 +26,10 @@ func (ctrl *CLIController) CloudSpaceInfo(args []string) {
 	console.PrintSpace(selector.String(), space)
 }
 
-func (ctrl *CLIController) CloudSpacePublish(args []string) {
+func (ctrl *CLIController) CloudSpacePublish(spcSelectorStr string) {
 	console.PrintAction("Publishing an space")
 
-	selector, err := models.ParseSelectorMandatorySpace(args[0])
+	selector, err := models.ParseSelectorMandatorySpace(spcSelectorStr)
 	if err != nil {
 		log.Fatalf("ctrl.cloud: publish space: %v", err)
 	}
@@ -86,10 +86,10 @@ func (ctrl *CLIController) CloudSpacePublish(args []string) {
 	}
 }
 
-func (ctrl *CLIController) CloudSpaceUnpublish(args []string) {
+func (ctrl *CLIController) CloudSpaceUnpublish(spcSelectorStr string) {
 	console.PrintAction("Unpublishing an space")
 
-	selector, err := models.ParseSelectorForCloud(args[0])
+	selector, err := models.ParseSelectorForCloud(spcSelectorStr)
 	if err != nil {
 		log.Fatalf("ctrl.cloud: unpublish space: %v", err)
 	}
@@ -117,10 +117,10 @@ func (ctrl *CLIController) CloudSpaceUnpublish(args []string) {
 	}
 }
 
-func (ctrl *CLIController) CloudSpaceClone(args []string) {
+func (ctrl *CLIController) CloudSpaceClone(spcSelectorStr string) {
 	console.PrintAction("Cloning an space")
 
-	selector, err := models.ParseSelectorForCloud(args[0])
+	selector, err := models.ParseSelectorForCloud(spcSelectorStr)
 	if err != nil {
 		log.Fatalf("ctrl.cloud: clone space: invalid ctrl.cloud selector: %v", err)
 	}
@@ -157,10 +157,10 @@ func (ctrl *CLIController) CloudSpaceClone(args []string) {
 }
 
 // TODO: needed?
-func (ctrl *CLIController) CloudSpacePull(args []string) {
+func (ctrl *CLIController) CloudSpacePull(spcSelectorStr string) {
 	console.PrintAction("Pulling latest changes of an space")
 
-	selector, err := models.ParseSelectorMandatorySpace(args[0])
+	selector, err := models.ParseSelectorMandatorySpace(spcSelectorStr)
 	if err != nil {
 		log.Fatalf("ctrl.cloud: pull space: invalid ctrl.cloud selector: %v", err)
 	}

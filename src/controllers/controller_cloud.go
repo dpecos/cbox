@@ -9,7 +9,7 @@ import (
 	"github.com/dplabs/cbox/src/tools/console"
 )
 
-func (ctrl *CLIController) CloudLogin(args []string) {
+func (ctrl *CLIController) CloudLogin() {
 	fmt.Println(tools.Logo)
 	url := fmt.Sprintf("%s/auth/", ctrl.cloud.URL)
 	fmt.Printf("Open this URL in a browser and follow the authentication process: \n\n%s\n\n", url)
@@ -26,7 +26,7 @@ func (ctrl *CLIController) CloudLogin(args []string) {
 	console.PrintSuccess("Hi " + name + "!")
 }
 
-func (ctrl *CLIController) CloudLogout(args []string) {
+func (ctrl *CLIController) CloudLogout() {
 	fmt.Println(tools.Logo)
 	core.CloudLogout()
 	console.PrintSuccess("Successfully logged out from cbox ctrl.cloud. See you back soon!")
