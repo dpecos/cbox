@@ -4,11 +4,11 @@ import (
 	"log"
 
 	"github.com/dplabs/cbox/src/cli"
-	"github.com/dplabs/cbox/src/tools/console"
+	"github.com/dplabs/cbox/src/tools/tty"
 )
 
 func main() {
-	log.SetPrefix(console.ColorBoldRed("\nError:") + " ")
+	log.SetPrefix(tty.ColorBoldRed("\nError:") + " ")
 	log.SetFlags(0)
 
 	cli.Execute()

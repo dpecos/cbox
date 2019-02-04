@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"net/http"
+	"net/url"
+	"time"
+)
 
 type UnixTime time.Time
 
@@ -18,8 +22,9 @@ type Selector struct {
 }
 
 type CBox struct {
-	path   string
-	Spaces []*Space
+	Spaces  []*Space
+	Version string
+	Build   string
 }
 
 type Meta struct {
@@ -43,4 +48,17 @@ type Command struct {
 	Description string   `json:"description"`
 	URL         string   `json:"url" dynamodbav:",omitempty"`
 	Tags        []string `json:"tags" dynamodbav:",omitempty"`
+}
+
+type Cloud struct {
+	Environment string
+	ServerKey   string
+	UserID      string
+	Login       string
+	Name        string
+	Token       string
+	URL         string
+	BaseURL     *url.URL
+	HttpClient  *http.Client
+	Cbox        *CBox
 }

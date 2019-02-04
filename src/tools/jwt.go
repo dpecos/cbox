@@ -7,12 +7,8 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
-var (
-	CloudJWTKey string
-)
-
-func VerifyJWT(jwtToken string) (string, string, string, error) {
-	publicKey, err := jwt.ParseRSAPublicKeyFromPEM([]byte(CloudJWTKey))
+func VerifyJWT(jwtToken string, key string) (string, string, string, error) {
+	publicKey, err := jwt.ParseRSAPublicKeyFromPEM([]byte(key))
 	if err != nil {
 		return "", "", "", err
 	}

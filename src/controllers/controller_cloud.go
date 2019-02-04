@@ -17,17 +17,18 @@ func (ctrl *CLIController) CloudLogin() {
 	jwt := console.ReadString("JWT Token", console.NOT_EMPTY_VALUES)
 	fmt.Println()
 
-	_, _, name, err := core.CloudLogin(jwt)
+	name, err := ctrl.cloud.ServerLogin(jwt)
 	if err != nil {
 		console.PrintError("Error trying to parse JWT token. Try to login again")
 		log.Fatalf("ctrl.cloud: login: %v", err)
 	}
+	core.StoreCloudSettings(ctrl.cloud)
 
 	console.PrintSuccess("Hi " + name + "!")
 }
 
 func (ctrl *CLIController) CloudLogout() {
 	fmt.Println(tools.Logo)
-	core.CloudLogout()
-	console.PrintSuccess("Successfully logged out from cbox ctrl.cloud. See you back soon!")
+	core.DeleteCloudSettings()
+	console.PrintSuccess("Successfully logged out from cbox cloud. See you back soon!")
 }

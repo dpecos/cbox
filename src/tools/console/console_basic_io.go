@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/dplabs/cbox/src/tools/tty"
 	bitflag "github.com/mvpninjas/go-bitflag"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 	surveyCore "gopkg.in/AlecAivazis/survey.v1/core"
@@ -151,25 +152,21 @@ func Confirm(label string) bool {
 }
 
 func PrintError(msg string) {
-	fmt.Printf("%s\n", ColorRed(msg))
+	fmt.Printf("%s\n", tty.ColorRed(msg))
 }
 
 func PrintSuccess(msg string) {
-	fmt.Printf("%s\n", ColorGreen(msg))
+	fmt.Printf("%s\n", tty.ColorGreen(msg))
 }
 
 func PrintInfo(msg string) {
-	fmt.Printf("%s\n", ColorCyan(msg))
+	fmt.Printf("%s\n", tty.ColorCyan(msg))
 }
 
 func PrintWarning(msg string) {
-	fmt.Printf("%s %s\n", ColorBgRed(" WARNING "), ColorMagenta(msg))
-}
-
-func Debug(msg string) {
-	fmt.Printf("%s\n", ColorBoldBlack(msg))
+	fmt.Printf("%s %s\n", tty.ColorBgRed(" WARNING "), tty.ColorMagenta(msg))
 }
 
 func PrintAction(msg string) {
-	fmt.Printf("** %s **\n\n", ColorBoldYellow(msg))
+	fmt.Printf("** %s **\n\n", tty.ColorBoldYellow(msg))
 }

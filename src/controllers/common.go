@@ -14,15 +14,12 @@ var (
 
 type CLIController struct {
 	cbox  *models.CBox
-	cloud *core.Cloud
+	cloud *models.Cloud
 }
 
 func InitController() *CLIController {
-
-	core.LoadSettings("")
-
-	cbox := core.LoadCbox()
-	cloud := core.CloudClient()
+	cbox := core.Load("")
+	cloud := core.CloudClient(cbox)
 
 	controller := CLIController{
 		cbox,

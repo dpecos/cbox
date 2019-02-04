@@ -19,8 +19,7 @@ func initializeCBox() *models.CBox {
 		log.Fatalf("could not clean cbox test directory: %v", err)
 	}
 
-	core.LoadSettings("/tmp")
-	return reloadCBox(nil)
+	return core.Load("/tmp")
 }
 
 func reloadCBox(cbox *models.CBox) *models.CBox {
@@ -28,5 +27,5 @@ func reloadCBox(cbox *models.CBox) *models.CBox {
 		core.Save(cbox)
 	}
 
-	return core.LoadCbox()
+	return core.Load("/tmp")
 }

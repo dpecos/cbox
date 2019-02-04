@@ -7,19 +7,20 @@ import (
 	"strings"
 
 	"github.com/dplabs/cbox/src/models"
+	"github.com/dplabs/cbox/src/tools/tty"
 )
 
 var (
-	spaceColor              = ColorBoldGreen
-	spaceSeparatorColor     = ColorBoldRed
-	namespaceSeparatorColor = ColorBoldWhite
-	labelColor              = ColorBoldBlue
-	tagsColor               = ColorRed
+	spaceColor              = tty.ColorBoldGreen
+	spaceSeparatorColor     = tty.ColorBoldRed
+	namespaceSeparatorColor = tty.ColorBoldWhite
+	labelColor              = tty.ColorBoldBlue
+	tagsColor               = tty.ColorRed
 	descriptionColor        = fmt.Sprintf
-	dateColor               = ColorBoldBlack
-	urlColor                = ColorGreen
-	separatorColor          = ColorYellow
-	starColor               = ColorBoldBlack
+	dateColor               = tty.ColorBoldBlack
+	urlColor                = tty.ColorGreen
+	separatorColor          = tty.ColorYellow
+	starColor               = tty.ColorBoldBlack
 )
 
 func selector(selector *models.Selector) string {
@@ -118,7 +119,7 @@ func PrintSelector(header string, s *models.Selector) {
 }
 
 func PrintSetting(config string, value string) {
-	fmt.Printf("%s -> %s\n", ColorGreen(config), ColorYellow(value))
+	fmt.Printf("%s -> %s\n", tty.ColorGreen(config), tty.ColorYellow(value))
 }
 
 func printHeader(header string) {

@@ -20,7 +20,11 @@ func (ctrl *CLIController) findSpace(selector *models.Selector) (*models.Space, 
 		return space, err
 	}
 
-	return ctrl.cbox.SpaceFind(models.TypeUser, ctrl.cloud.Login, selector.Space)
+	if ctrl.cloud != nil {
+		return ctrl.cbox.SpaceFind(models.TypeUser, ctrl.cloud.Login, selector.Space)
+	} else {
+		return nil, err
+	}
 }
 
 func (ctrl *CLIController) cleanOldSpaceFile(space *models.Space, oldSelector *models.Selector) {

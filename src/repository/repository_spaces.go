@@ -1,4 +1,4 @@
-package core
+package repository
 
 import (
 	"encoding/json"
@@ -6,34 +6,27 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
 
 	"github.com/dplabs/cbox/src/models"
+	"github.com/dplabs/cbox/src/tools"
 )
 
 const (
 	filenameSeparatorUser         = ":"
 	filenameSeparatorOrganization = "="
+
+	pathSpaces = "spaces"
 )
 
-func resolveSpaceFile(namespaceType int, namespace string, label string) string {
-	filename := label
-	if namespaceType != models.TypeNone {
-		separator := filenameSeparatorUser
-		if namespaceType == models.TypeOrganization {
-			separator = filenameSeparatorOrganization
-		}
-		filename = fmt.Sprintf("%s%s%s", namespace, separator, label)
-	}
-	filename = filename + ".json"
-	return resolveInCboxDir(path.Join(pathSpaces, filename))
-}
+func (repo *Repository) LoadSpaces() ([]*models.Space, bool) {
 
-func spacesLoad() []*models.Space {
+	isNewRepository := repo.initializeSpacesDirectory()
+
 	spaces := []*models.Space{}
-	files, err := ioutil.ReadDir(resolveInCboxDir(pathSpaces))
+
+	files, err := ioutil.ReadDir(repo.resolve(pathSpaces))
 	if err != nil {
 		log.Fatalf("repository: could not read spaces: %v", err)
 	}
@@ -55,14 +48,19 @@ func spacesLoad() []*models.Space {
 				namespace = parts[0]
 				label = parts[1]
 			}
-			spaces = append(spaces, spaceLoadFile(namespaceType, namespace, label))
+			spaces = append(spaces, repo.spaceLoadFile(namespaceType, namespace, label))
 		}
 	}
-	return spaces
+	return spaces, isNewRepository
 }
 
-func spaceLoadFile(namespaceType int, namespace string, label string) *models.Space {
-	spacePath := resolveSpaceFile(namespaceType, namespace, label)
+func (repo *Repository) initializeSpacesDirectory() bool {
+	spacesPath := repo.resolve(pathSpaces)
+	return tools.CreateDirectoryIfNotExists(spacesPath)
+}
+
+func (repo *Repository) spaceLoadFile(namespaceType int, namespace string, label string) *models.Space {
+	spacePath := repo.resolveSpaceFile(namespaceType, namespace, label)
 
 	raw, err := ioutil.ReadFile(spacePath)
 	if err != nil {
@@ -96,7 +94,20 @@ func spaceLoadFile(namespaceType int, namespace string, label string) *models.Sp
 	return &space
 }
 
-func spaceStoreFile(space *models.Space) {
+func (repo *Repository) resolveSpaceFile(namespaceType int, namespace string, label string) string {
+	filename := label
+	if namespaceType != models.TypeNone {
+		separator := filenameSeparatorUser
+		if namespaceType == models.TypeOrganization {
+			separator = filenameSeparatorOrganization
+		}
+		filename = fmt.Sprintf("%s%s%s", namespace, separator, label)
+	}
+	filename = filename + ".json"
+	return repo.resolve(pathSpaces, filename)
+}
+
+func (repo *Repository) Persist(space *models.Space) {
 
 	space.ID = space.Selector.String()
 
@@ -109,15 +120,15 @@ func spaceStoreFile(space *models.Space) {
 		log.Fatalf("repository: store space '%s': could not generate JSON: %v", space.String(), err)
 	}
 
-	file := resolveSpaceFile(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
+	file := repo.resolveSpaceFile(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
 	err = ioutil.WriteFile(file, raw, 0644)
 	if err != nil {
 		log.Fatalf("repository: store space '%s': could not write JSON file (%s): %v", space.String(), file, err)
 	}
 }
 
-func spaceDeleteFile(selector *models.Selector) {
-	file := resolveSpaceFile(selector.NamespaceType, selector.Namespace, selector.Space)
+func (repo *Repository) Delete(selector *models.Selector) {
+	file := repo.resolveSpaceFile(selector.NamespaceType, selector.Namespace, selector.Space)
 	err := os.Remove(file)
 	if err != nil {
 		log.Fatalf("repository: delete space '%s': %v", selector.String(), err)

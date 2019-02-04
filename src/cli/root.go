@@ -6,7 +6,7 @@ import (
 
 	"github.com/dplabs/cbox/src/controllers"
 	"github.com/dplabs/cbox/src/tools"
-	"github.com/dplabs/cbox/src/tools/console"
+	"github.com/dplabs/cbox/src/tools/tty"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -19,7 +19,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.PersistentFlags().BoolVarP(&console.DisableColors, "no-color", "", false, "Disable color in the output")
+	rootCmd.PersistentFlags().BoolVarP(&tty.DisableColors, "no-color", "", false, "Disable color in the output")
 	rootCmd.PersistentFlags().BoolVarP(&controllers.SkipQuestionsFlag, "yes", "", false, "Answer 'yes' to any question")
 
 	cobra.OnInitialize(func() {

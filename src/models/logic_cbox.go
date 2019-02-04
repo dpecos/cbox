@@ -13,7 +13,14 @@ func (cbox *CBox) spaceFindPositionBySelector(namespaceType int, namespace strin
 			return i, nil
 		}
 	}
-	return -1, fmt.Errorf("space '%s-%s' not found", namespace, label)
+
+	if namespaceType == TypeUser {
+		return -1, fmt.Errorf("space '%s:%s' not found", namespace, label)
+	} else if namespaceType == TypeOrganization {
+		return -1, fmt.Errorf("space '%s/%s' not found", namespace, label)
+	} else {
+		return -1, fmt.Errorf("space '%s' not found", label)
+	}
 }
 
 func (cbox *CBox) SpaceLabels() []string {
