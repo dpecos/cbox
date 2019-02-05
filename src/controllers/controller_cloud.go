@@ -20,7 +20,7 @@ func (ctrl *CLIController) CloudLogin() {
 	name, err := ctrl.cloud.ServerLogin(jwt)
 	if err != nil {
 		console.PrintError("Error trying to parse JWT token. Try to login again")
-		log.Fatalf("ctrl.cloud: login: %v", err)
+		log.Fatalf("cloud: login: %v", err)
 	}
 	core.StoreCloudSettings(ctrl.cloud)
 

@@ -12,12 +12,12 @@ import (
 func (ctrl *CLIController) CloudCommandList(selectorStr string) {
 	selector, err := models.ParseSelectorForCloud(selectorStr)
 	if err != nil {
-		log.Fatalf("ctrl.cloud: list commands: invalid ctrl.cloud selector: %v", err)
+		log.Fatalf("cloud: list commands: invalid ctrl.cloud selector: %v", err)
 	}
 
 	commands, err := ctrl.cloud.CommandList(selector)
 	if err != nil {
-		log.Fatalf("ctrl.cloud: list commands: %v", err)
+		log.Fatalf("cloud: list commands: %v", err)
 	}
 
 	console.PrintCommandList(selector.String(), commands, ShowCommandsSourceFlag, false)
@@ -28,22 +28,22 @@ func (ctrl *CLIController) CloudCommandCopy(cmdSelectorStr string, spcSelectorSt
 
 	cmdSelector, err := models.ParseSelectorForCloudCommand(cmdSelectorStr)
 	if err != nil {
-		log.Fatalf("ctrl.cloud: copy command: invalid ctrl.cloud selector: %v", err)
+		log.Fatalf("cloud: copy command: invalid ctrl.cloud selector: %v", err)
 	}
 
 	spaceSelector, err := models.ParseSelectorMandatorySpace(spcSelectorStr)
 	if err != nil {
-		log.Fatalf("ctrl.cloud: copy command: invalid space selector: %v", err)
+		log.Fatalf("cloud: copy command: invalid space selector: %v", err)
 	}
 
 	space, err := ctrl.findSpace(spaceSelector)
 	if err != nil {
-		log.Fatalf("ctrl.cloud: copy command: local space: %v", err)
+		log.Fatalf("cloud: copy command: local space: %v", err)
 	}
 
 	commands, err := ctrl.cloud.CommandList(cmdSelector)
 	if err != nil {
-		log.Fatalf("ctrl.cloud: copy command: retrieving matches: %v", err)
+		log.Fatalf("cloud: copy command: retrieving matches: %v", err)
 	}
 
 	if len(commands) == 0 {
@@ -59,7 +59,7 @@ func (ctrl *CLIController) CloudCommandCopy(cmdSelectorStr string, spcSelectorSt
 			err = space.CommandAdd(command)
 			if err != nil {
 				failures = true
-				log.Printf("ctrl.cloud: copy command: %v", err)
+				log.Printf("cloud: copy command: %v", err)
 			}
 		}
 
