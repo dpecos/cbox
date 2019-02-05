@@ -17,8 +17,8 @@ type CLIController struct {
 	cloud *models.Cloud
 }
 
-func InitController() *CLIController {
-	cbox := core.Load("")
+func InitController(path string) *CLIController {
+	cbox := core.Load(path)
 	cloud := core.CloudClient(cbox)
 
 	controller := CLIController{

@@ -24,7 +24,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&controllers.SkipQuestionsFlag, "yes", "", false, "Answer 'yes' to any question")
 
 	cobra.OnInitialize(func() {
-		ctrl = controllers.InitController()
+		ctrl = controllers.InitController("")
 	})
 }
 

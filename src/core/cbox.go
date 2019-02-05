@@ -37,7 +37,7 @@ func Load(path string) *models.CBox {
 
 	if isNewRepository {
 		createDefaultSpace(cbox)
-		console.PrintInfo("Initial setup: an empty space has been created\n")
+		console.PrintInfo("Initial setup: an empty space has been created")
 	}
 
 	for _, space := range spaces {

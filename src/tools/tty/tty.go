@@ -4,14 +4,25 @@ import (
 	"fmt"
 )
 
-var DisableOutput = false
+var (
+	DisableOutput = false
+
+	MockTTY      = false
+	MockedOutput = ""
+)
 
 func Print(format string, args ...interface{}) {
 	if !DisableOutput {
+		var nl string
 		if len(args) != 0 {
-			fmt.Printf(format, args...)
+			nl = fmt.Sprintf(format, args...)
 		} else {
-			fmt.Print(format)
+			nl = fmt.Sprintf(format)
+		}
+		if MockTTY {
+			MockedOutput = MockedOutput + nl
+		} else {
+			fmt.Print(nl)
 		}
 	}
 }
