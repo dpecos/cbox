@@ -11,16 +11,18 @@ import (
 )
 
 var (
-	spaceColor              = tty.ColorBoldGreen
-	spaceSeparatorColor     = tty.ColorBoldRed
-	namespaceSeparatorColor = tty.ColorBoldWhite
-	labelColor              = tty.ColorBoldBlue
-	tagsColor               = tty.ColorRed
-	descriptionColor        = fmt.Sprintf
-	dateColor               = tty.ColorBoldBlack
-	urlColor                = tty.ColorGreen
-	separatorColor          = tty.ColorYellow
-	starColor               = tty.ColorBoldBlack
+	spaceColor                 = tty.ColorBoldGreen
+	spaceSeparatorColor        = tty.ColorBoldRed
+	namespaceSeparatorColor    = tty.ColorBoldWhite
+	namespaceColorUser         = tty.ColorGreen
+	namespaceColorOrganization = tty.ColorYellow
+	labelColor                 = tty.ColorBoldBlue
+	tagsColor                  = tty.ColorRed
+	descriptionColor           = fmt.Sprintf
+	dateColor                  = tty.ColorBoldBlack
+	urlColor                   = tty.ColorGreen
+	separatorColor             = tty.ColorYellow
+	starColor                  = tty.ColorBoldBlack
 )
 
 func selector(selector *models.Selector) string {
@@ -41,10 +43,10 @@ func selector(selector *models.Selector) string {
 			parts = append(parts, spaceColor(selector.Space))
 		} else if selector.NamespaceType == models.TypeUser {
 			format = format + "%s%s%s"
-			parts = append(parts, spaceColor(selector.Namespace), namespaceSeparatorColor(":"), spaceColor(selector.Space))
+			parts = append(parts, namespaceColorUser(selector.Namespace), namespaceSeparatorColor(":"), spaceColor(selector.Space))
 		} else {
 			format = format + "%s%s%s"
-			parts = append(parts, spaceColor(selector.Namespace), namespaceSeparatorColor("/"), spaceColor(selector.Space))
+			parts = append(parts, namespaceColorOrganization(selector.Namespace), namespaceSeparatorColor("/"), spaceColor(selector.Space))
 		}
 	}
 	return fmt.Sprintf(format, parts...)
