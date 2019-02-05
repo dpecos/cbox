@@ -123,6 +123,8 @@ func (cloud *Cloud) SpaceFind(selector *Selector) (*Space, error) {
 		return nil, fmt.Errorf("cloud: could not parse response: %v", err)
 	}
 
+	space.Selector, _ = ParseSelector(space.ID)
+
 	return &space, err
 }
 
