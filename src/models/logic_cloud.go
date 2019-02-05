@@ -138,7 +138,7 @@ func (cloud *Cloud) CommandList(selector *Selector) ([]*Command, error) {
 		return nil, err
 	}
 
-	fmt.Println()
+	tty.Print("\n")
 	var commands []*Command
 	err = json.Unmarshal([]byte(response), &commands)
 	if err != nil {

@@ -57,27 +57,27 @@ func PrintCommand(header string, cmd *models.Command, full bool, sourceOnly bool
 	}
 
 	if sourceOnly {
-		fmt.Println(cmd.Code)
+		tty.Print(cmd.Code + "\n")
 	} else {
 
 		printHeader(header)
 
 		if !full {
-			fmt.Printf(starColor("* "))
+			tty.Print(starColor("* "))
 		}
 
 		if len(cmd.Tags) != 0 {
 			tags := strings.Join(cmd.Tags, ", ")
-			fmt.Printf("%s - %s (%s) %s\n", selector(cmd.Selector), descriptionColor(cmd.Description), tagsColor(tags), dateColor(cmd.CreatedAt.String()))
+			tty.Print("%s - %s (%s) %s\n", selector(cmd.Selector), descriptionColor(cmd.Description), tagsColor(tags), dateColor(cmd.CreatedAt.String()))
 		} else {
-			fmt.Printf("%s - %s %s\n", selector(cmd.Selector), descriptionColor(cmd.Description), dateColor(cmd.CreatedAt.String()))
+			tty.Print("%s - %s %s\n", selector(cmd.Selector), descriptionColor(cmd.Description), dateColor(cmd.CreatedAt.String()))
 		}
 
 		if full {
 			if cmd.URL != "" {
-				fmt.Printf("\n%s\n", urlColor(cmd.URL))
+				tty.Print("\n%s\n", urlColor(cmd.URL))
 			}
-			fmt.Printf("\n%s\n", cmd.Code)
+			tty.Print("\n%s\n", cmd.Code)
 		}
 
 		printFooter(header)
@@ -85,6 +85,7 @@ func PrintCommand(header string, cmd *models.Command, full bool, sourceOnly bool
 }
 
 func PrintCommandList(header string, commands []*models.Command, full bool, sourceOnly bool) {
+
 	printHeader(header)
 
 	if len(commands) != 0 {
@@ -93,7 +94,7 @@ func PrintCommandList(header string, commands []*models.Command, full bool, sour
 		for i, command := range commands {
 			PrintCommand("", command, full, sourceOnly)
 			if full && i != len(commands)-1 {
-				fmt.Printf("\n%s\n\n", separatorColor("- - - - - - - - - - - -"))
+				tty.Print("\n%s\n\n", separatorColor("- - - - - - - - - - - -"))
 			}
 		}
 	}
@@ -102,35 +103,35 @@ func PrintCommandList(header string, commands []*models.Command, full bool, sour
 }
 
 func PrintTag(tag string) {
-	fmt.Printf("%s %s\n", starColor("*"), tagsColor(tag))
+	tty.Print("%s %s\n", starColor("*"), tagsColor(tag))
 }
 
 func PrintSpace(header string, space *models.Space) {
 	printHeader(header)
 	timestamp := fmt.Sprintf("(Last updated: %s - Created: %s)", space.UpdatedAt.String(), space.CreatedAt.String())
-	fmt.Printf("%s - %s %s\n", selector(space.Selector), descriptionColor(space.Description), dateColor(timestamp))
+	tty.Print("%s - %s %s\n", selector(space.Selector), descriptionColor(space.Description), dateColor(timestamp))
 	printFooter(header)
 }
 
 func PrintSelector(header string, s *models.Selector) {
 	printHeader(header)
-	fmt.Printf("%s\n", selector(s))
+	tty.Print("%s\n", selector(s))
 	printFooter(header)
 }
 
 func PrintSetting(config string, value string) {
-	fmt.Printf("%s -> %s\n", tty.ColorGreen(config), tty.ColorYellow(value))
+	tty.Print("%s -> %s\n", tty.ColorGreen(config), tty.ColorYellow(value))
 }
 
 func printHeader(header string) {
 	if header != "" {
-		fmt.Printf(separatorColor("- - - %s - - -\n"), header)
+		tty.Print(separatorColor("- - - %s - - -\n"), header)
 	}
 }
 
 func printFooter(header string) {
 	if header != "" {
-		fmt.Printf("%s\n\n", separatorColor("- - - - - - - - - - - -"))
+		tty.Print("%s\n\n", separatorColor("- - - - - - - - - - - -"))
 	}
 }
 

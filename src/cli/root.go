@@ -20,6 +20,7 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&tty.DisableColors, "no-color", "", false, "Disable color in the output")
+	rootCmd.PersistentFlags().BoolVarP(&tty.DisableOutput, "silent", "", false, "Completely disable any output")
 	rootCmd.PersistentFlags().BoolVarP(&controllers.SkipQuestionsFlag, "yes", "", false, "Answer 'yes' to any question")
 
 	cobra.OnInitialize(func() {

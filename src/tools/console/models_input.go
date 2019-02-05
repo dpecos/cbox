@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/dplabs/cbox/src/models"
+	"github.com/dplabs/cbox/src/tools/tty"
 )
 
 func readTags() ([]string, error) {
@@ -44,7 +45,7 @@ func ReadCommand(space *models.Space) *models.Command {
 
 	command.Selector = space.Selector.CloneForItem(command.Label)
 
-	fmt.Println()
+	tty.Print("\n")
 
 	return &command
 }
@@ -55,7 +56,7 @@ func EditCommand(command *models.Command) {
 	command.URL = EditString("URL", command.URL)
 	command.Code = EditString("Code / Command", command.Code, MULTILINE, NOT_EMPTY_VALUES)
 
-	fmt.Println()
+	tty.Print("\n")
 }
 
 func ReadSpace() *models.Space {
@@ -66,7 +67,7 @@ func ReadSpace() *models.Space {
 	}
 	space.Selector = models.NewSelector(models.TypeNone, "", space.Label, "")
 
-	fmt.Println()
+	tty.Print("\n")
 
 	return &space
 }
@@ -75,5 +76,5 @@ func EditSpace(space *models.Space) {
 	space.Label = strings.ToLower(EditString("Label", space.Label, NOT_EMPTY_VALUES, ONLY_VALID_CHARS))
 	space.Description = EditString("Description", space.Description)
 
-	fmt.Println()
+	tty.Print("\n")
 }

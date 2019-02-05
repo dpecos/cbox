@@ -7,15 +7,16 @@ import (
 	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/tools"
 	"github.com/dplabs/cbox/src/tools/console"
+	"github.com/dplabs/cbox/src/tools/tty"
 )
 
 func (ctrl *CLIController) CloudLogin() {
-	fmt.Println(tools.Logo)
+	tty.Print(tools.Logo + "\n")
 	url := fmt.Sprintf("%s/auth/", ctrl.cloud.URL)
-	fmt.Printf("Open this URL in a browser and follow the authentication process: \n\n%s\n\n", url)
+	tty.Print("Open this URL in a browser and follow the authentication process: \n\n%s\n\n", url)
 
 	jwt := console.ReadString("JWT Token", console.NOT_EMPTY_VALUES)
-	fmt.Println()
+	tty.Print("\n")
 
 	name, err := ctrl.cloud.ServerLogin(jwt)
 	if err != nil {
@@ -28,7 +29,7 @@ func (ctrl *CLIController) CloudLogin() {
 }
 
 func (ctrl *CLIController) CloudLogout() {
-	fmt.Println(tools.Logo)
+	tty.Print(tools.Logo + "\n")
 	core.DeleteCloudSettings()
 	console.PrintSuccess("Successfully logged out from cbox cloud. See you back soon!")
 }

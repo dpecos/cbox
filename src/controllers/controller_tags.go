@@ -8,6 +8,7 @@ import (
 	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/models"
 	"github.com/dplabs/cbox/src/tools/console"
+	"github.com/dplabs/cbox/src/tools/tty"
 )
 
 func (ctrl *CLIController) TagsList(spcSelectorStr *string) {
@@ -53,7 +54,7 @@ func (ctrl *CLIController) TagsAdd(spcSelectorStr string, tags ...string) {
 		log.Fatalf("add tags: %v", err)
 	}
 
-	fmt.Printf("Adding tags to command with label '%s'...\n", command.Label)
+	tty.Print("Adding tags to command with label '%s'...\n", command.Label)
 
 	for _, tag := range tags {
 		if tag != "" {
@@ -89,7 +90,7 @@ func (ctrl *CLIController) TagsRemove(spcSelectorStr string, tags ...string) {
 		log.Fatalf("remove tags: %v", err)
 	}
 
-	fmt.Printf("Removing tags from command with label '%s'...\n", command.Label)
+	tty.Print("Removing tags from command with label '%s'...\n", command.Label)
 
 	for _, tag := range tags {
 		if tag != "" {
@@ -118,7 +119,7 @@ func (ctrl *CLIController) TagsDelete(spcSelectorStr string) {
 	}
 	commands := space.CommandList(selector.Item)
 
-	fmt.Printf("Deleting tags from space '%s'...\n", space.String())
+	tty.Print("Deleting tags from space '%s'...\n", space.String())
 
 	for _, cmd := range commands {
 		command, err := space.CommandFind(cmd.Label)

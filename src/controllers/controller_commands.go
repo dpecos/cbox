@@ -8,6 +8,7 @@ import (
 	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/models"
 	"github.com/dplabs/cbox/src/tools/console"
+	"github.com/dplabs/cbox/src/tools/tty"
 )
 
 func (ctrl *CLIController) CommandList(spcSelectorStr *string) {
@@ -49,7 +50,7 @@ func (ctrl *CLIController) CommandAdd(spcSelectorStr *string) {
 		log.Fatalf("add command: %v", err)
 	}
 
-	fmt.Printf("Creating new command...\n")
+	tty.Print("Creating new command...\n")
 
 	command := console.ReadCommand(space)
 

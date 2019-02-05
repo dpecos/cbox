@@ -3,9 +3,10 @@ package repository
 import (
 	"fmt"
 
+	"github.com/dplabs/cbox/src/tools/console"
+
 	"github.com/dplabs/cbox/src/models"
 
-	"github.com/dplabs/cbox/src/tools/tty"
 	"github.com/spf13/viper"
 )
 
@@ -46,10 +47,7 @@ func (repo *Repository) LoadCloudSettings(env string) (string, string, string, s
 	key := cloudJWTProd
 
 	if env != "prod" {
-		fmt.Println()
-		fmt.Println(tty.ColorBgRed("  !!! You are using a DEV version of cbox !!!   "))
-		fmt.Println()
-
+		console.PrintDevWarning()
 		key = cloudJWTDev
 	}
 

@@ -12,9 +12,11 @@ import (
 	surveyCore "gopkg.in/AlecAivazis/survey.v1/core"
 )
 
-const MSG_EDIT = "Ctrl+D to clear, Empty line to maintain"
-const MSG_EMPTY_NOT_ALLOWED = "Empty value not allowed, please try again"
-const MSG_NOT_VALID_CHARS = "Value contains not valid chars, please try again"
+const (
+	MSG_EDIT              = "Ctrl+D to clear, Empty line to maintain"
+	MSG_EMPTY_NOT_ALLOWED = "Empty value not allowed, please try again"
+	MSG_NOT_VALID_CHARS   = "Value contains not valid chars, please try again"
+)
 
 type Flag byte
 
@@ -146,27 +148,31 @@ func Confirm(label string) bool {
 	}
 	survey.AskOne(prompt, &response, nil)
 
-	fmt.Println()
+	tty.Print("\n")
 
 	return response
 }
 
 func PrintError(msg string) {
-	fmt.Printf("%s\n", tty.ColorRed(msg))
+	tty.Print("%s\n", tty.ColorRed(msg))
 }
 
 func PrintSuccess(msg string) {
-	fmt.Printf("%s\n", tty.ColorGreen(msg))
+	tty.Print("%s\n", tty.ColorGreen(msg))
 }
 
 func PrintInfo(msg string) {
-	fmt.Printf("%s\n", tty.ColorCyan(msg))
+	tty.Print("%s\n", tty.ColorCyan(msg))
 }
 
 func PrintWarning(msg string) {
-	fmt.Printf("%s %s\n", tty.ColorBgRed(" WARNING "), tty.ColorMagenta(msg))
+	tty.Print("%s %s\n", tty.ColorBgRed(" WARNING "), tty.ColorMagenta(msg))
 }
 
 func PrintAction(msg string) {
-	fmt.Printf("** %s **\n\n", tty.ColorBoldYellow(msg))
+	tty.Print("** %s **\n\n", tty.ColorBoldYellow(msg))
+}
+
+func PrintDevWarning() {
+	tty.Print("\n%s\n\n", tty.ColorBgRed("  !!! You are using a DEV version of cbox !!!   "))
 }
