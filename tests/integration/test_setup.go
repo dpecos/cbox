@@ -8,9 +8,12 @@ import (
 
 	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/models"
+	"github.com/dplabs/cbox/src/tools/tty"
 )
 
 func init() {
+	tty.DisableOutput = true
+
 	rand.Seed(time.Now().UnixNano())
 }
 

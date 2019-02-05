@@ -10,6 +10,7 @@ import (
 )
 
 func init() {
+	controllers.SkipQuestionsFlag = true
 	tty.DisableColors = true
 	tty.MockTTY = true
 }
@@ -35,4 +36,20 @@ func TestDefaultSpaceCreatedOnNewSetup(t *testing.T) {
 
 	ctrl.ConfigGet("cbox.default-space")
 	checkOutput(t, "cbox.default-space -> default", "default space setting not found")
+}
+
+func TestSpaceListingWhenNoSpace(t *testing.T) {
+	tty.MockedOutput = ""
+
+	os.RemoveAll("/tmp/.cbox")
+
+	ctrl := controllers.InitController("/tmp")
+	ctrl.SpacesDestroy("@default")
+
+	tty.MockedOutput = ""
+	ctrl.SpacesList()
+
+	if tty.MockedOutput != "" {
+		t.Errorf("there was output while listing empty space list: %s", tty.MockedOutput)
+	}
 }
