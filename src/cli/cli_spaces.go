@@ -23,11 +23,12 @@ var spacesCreateCmd = &cobra.Command{
 }
 
 var spacesEditCmd = &cobra.Command{
-	Use:   "edit",
-	Args:  cobra.ExactArgs(1),
-	Short: "Edit an space from your cbox",
-	Long:  tools.Logo,
-	Run:   func(cmd *cobra.Command, args []string) { ctrl.SpacesEdit(args[0]) },
+	Use:     "edit",
+	Aliases: []string{"e", "ed"},
+	Args:    cobra.ExactArgs(1),
+	Short:   "Edit an space from your cbox",
+	Long:    tools.Logo,
+	Run:     func(cmd *cobra.Command, args []string) { ctrl.SpacesEdit(args[0]) },
 }
 
 var spacesDestroyCmd = &cobra.Command{

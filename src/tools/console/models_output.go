@@ -12,9 +12,9 @@ import (
 
 var (
 	spaceColor                 = tty.ColorBoldGreen
-	spaceSeparatorColor        = tty.ColorBoldRed
+	atSeparatorColor           = tty.ColorBoldRed
 	namespaceSeparatorColor    = tty.ColorBoldWhite
-	namespaceColorUser         = tty.ColorGreen
+	namespaceColorUser         = tty.ColorCyan
 	namespaceColorOrganization = tty.ColorYellow
 	labelColor                 = tty.ColorBoldBlue
 	tagsColor                  = tty.ColorRed
@@ -36,7 +36,7 @@ func selector(selector *models.Selector) string {
 
 	if selector.Space != "" {
 		format = format + "%s"
-		parts = append(parts, spaceSeparatorColor("@"))
+		parts = append(parts, atSeparatorColor("@"))
 
 		if selector.NamespaceType == models.TypeNone {
 			format = format + "%s"

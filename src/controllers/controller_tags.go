@@ -133,6 +133,5 @@ func (ctrl *CLIController) TagsDelete(spcSelectorStr string) {
 
 	core.Save(ctrl.cbox)
 
-	msg := fmt.Sprintf("\nTag '%s' successfully deleted from space '%s'!", selector.Item, selector.Space)
-	console.PrintSuccess(msg)
+	console.PrintSuccess(fmt.Sprintf("\nTag '%s' successfully deleted from space '%s'!", selector.Item, selector.Space))
 }

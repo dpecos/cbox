@@ -70,7 +70,7 @@ func (ctrl *CLIController) CloudSpacePublish(spcSelectorStr string) {
 	}
 
 	if SkipQuestionsFlag || console.Confirm("Publish?") {
-		tty.Print("Publishing space '%s'...\n", space.String())
+		tty.Print("Publishing space '%s'...\n\n", space.String())
 
 		err = ctrl.cloud.SpacePublish(space)
 		if err != nil {
@@ -105,7 +105,7 @@ func (ctrl *CLIController) CloudSpaceUnpublish(spcSelectorStr string) {
 	}
 
 	if SkipQuestionsFlag || console.Confirm("Unpublish?") {
-		tty.Print("Unpublishing space '%s'...\n", selector.String())
+		tty.Print("Unpublishing space '%s'...\n\n", selector.String())
 
 		err = ctrl.cloud.SpaceUnpublish(selector)
 		if err != nil {
