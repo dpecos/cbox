@@ -1,6 +1,7 @@
 package acceptance_tests
 
 import (
+	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
@@ -22,11 +23,11 @@ func checkOutput(t *testing.T, expected string, msg string) {
 }
 
 func TestDefaultSpaceCreatedOnNewSetup(t *testing.T) {
+	dir, _ := ioutil.TempDir("", "cbox")
+	defer os.RemoveAll(dir)
+	ctrl := controllers.InitController(dir)
+
 	tty.MockedOutput = ""
-
-	os.RemoveAll("/tmp/.cbox")
-
-	ctrl := controllers.InitController("/tmp")
 	ctrl.SpacesList()
 
 	checkOutput(t, "@default - Default space to store commands", "default space not found")
@@ -39,11 +40,11 @@ func TestDefaultSpaceCreatedOnNewSetup(t *testing.T) {
 }
 
 func TestSpaceListingWhenNoSpace(t *testing.T) {
+	dir, _ := ioutil.TempDir("", "cbox")
+	defer os.RemoveAll(dir)
+	ctrl := controllers.InitController(dir)
+
 	tty.MockedOutput = ""
-
-	os.RemoveAll("/tmp/.cbox")
-
-	ctrl := controllers.InitController("/tmp")
 	ctrl.SpacesDestroy("@default")
 
 	tty.MockedOutput = ""
@@ -51,5 +52,36 @@ func TestSpaceListingWhenNoSpace(t *testing.T) {
 
 	if tty.MockedOutput != "" {
 		t.Errorf("there was output while listing empty space list: %s", tty.MockedOutput)
+	}
+}
+
+func TestSpaceActions(t *testing.T) {
+	dir, _ := ioutil.TempDir("", "cbox")
+	defer os.RemoveAll(dir)
+	ctrl := controllers.InitController(dir)
+
+	tty.MockedOutput = ""
+	tty.MockedInput = []string{"y"}
+	ctrl.SpacesDestroy("@default")
+
+	tty.MockedOutput = ""
+	tty.MockedInput = []string{"test-space", "This is a test space"}
+	ctrl.SpacesCreate()
+	checkOutput(t, "@test-space - This is a test space", "space creation failed")
+
+	tty.MockedOutput = ""
+	tty.MockedInput = []string{"test-space-renamed", "This is a renamed test space", "y"}
+	ctrl.SpacesEdit("@test-space")
+	checkOutput(t, "@test-space-renamed - This is a renamed test space", "space edition failed")
+
+	tty.MockedOutput = ""
+	tty.MockedInput = []string{"y"}
+	ctrl.SpacesDestroy("@test-space-renamed")
+	checkOutput(t, "Space destroyed successfully", "space deletion failed")
+
+	tty.MockedOutput = ""
+	ctrl.SpacesList()
+	if tty.MockedOutput != "" {
+		t.Errorf("space deletion left some spaces behind: %s", tty.MockedOutput)
 	}
 }

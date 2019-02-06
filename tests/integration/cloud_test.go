@@ -18,6 +18,17 @@ const (
 
 var cloud *models.Cloud
 
+func TestMain(m *testing.M) {
+	cbox := initializeCBox()
+	cloud = cloudConnect(cbox, testUserJWTToken)
+
+	if !strings.Contains(cloud.URL, "dev") {
+		panic("cloud dev environment not set properly")
+	}
+
+	os.Exit(m.Run())
+}
+
 func cloudConnect(cbox *models.CBox, jwt string) *models.Cloud {
 
 	cloud := core.CloudClient(cbox)
@@ -30,16 +41,6 @@ func cloudConnect(cbox *models.CBox, jwt string) *models.Cloud {
 	return cloud
 }
 
-func TestMain(m *testing.M) {
-	cbox := initializeCBox()
-	cloud = cloudConnect(cbox, testUserJWTToken)
-
-	if !strings.Contains(cloud.URL, "dev") {
-		panic("cloud dev environment not set properly")
-	}
-
-	os.Exit(m.Run())
-}
 func TestCloudLogin(t *testing.T) {
 	if cloud.Login != "test" {
 		t.Errorf("login did not return a test user")

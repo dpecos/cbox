@@ -102,7 +102,7 @@ func (ctrl *CLIController) CommandEdit(spcSelectorStr string) {
 
 	console.PrintCommand("Command after edition", command, true, false)
 
-	if SkipQuestionsFlag || console.Confirm("Update?") {
+	if SkipQuestionsFlag || tty.Confirm("Update?") {
 		core.Save(ctrl.cbox)
 		console.PrintSuccess("Command updated successfully!")
 	} else {
@@ -130,7 +130,7 @@ func (ctrl *CLIController) CommandDelete(spcSelectorStr string) {
 
 	console.PrintCommand("Command to delete ", command, true, false)
 
-	if SkipQuestionsFlag || console.Confirm("Are you sure you want to delete this command?") {
+	if SkipQuestionsFlag || tty.Confirm("Are you sure you want to delete this command?") {
 		space.CommandDelete(command)
 		core.Save(ctrl.cbox)
 		console.PrintSuccess("Command deleted successfully!")

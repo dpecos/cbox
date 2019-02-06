@@ -8,6 +8,7 @@ import (
 	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/models"
 	"github.com/dplabs/cbox/src/tools/console"
+	"github.com/dplabs/cbox/src/tools/tty"
 )
 
 func (ctrl *CLIController) SpacesList() {
@@ -64,7 +65,7 @@ func (ctrl *CLIController) SpacesEdit(spcSelectorStr string) {
 
 	console.PrintSpace("Space after edition", space)
 
-	if SkipQuestionsFlag || console.Confirm("Update?") {
+	if SkipQuestionsFlag || tty.Confirm("Update?") {
 		ctrl.cleanOldSpaceFile(space, selector)
 		core.Save(ctrl.cbox)
 		console.PrintSuccess("Space updated successfully!")
@@ -88,7 +89,7 @@ func (ctrl *CLIController) SpacesDestroy(spcSelectorStr string) {
 
 	console.PrintSpace("Space to destroy", space)
 
-	if SkipQuestionsFlag || console.Confirm("Are you sure you want to destroy this space?") {
+	if SkipQuestionsFlag || tty.Confirm("Are you sure you want to destroy this space?") {
 		err = ctrl.cbox.SpaceDestroy(space)
 		if err != nil {
 			log.Fatalf("destroy space: %v", err)

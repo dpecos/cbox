@@ -8,8 +8,6 @@ import (
 
 	"github.com/dplabs/cbox/src/tools/tty"
 	bitflag "github.com/mvpninjas/go-bitflag"
-	survey "gopkg.in/AlecAivazis/survey.v1"
-	surveyCore "gopkg.in/AlecAivazis/survey.v1/core"
 )
 
 const (
@@ -25,10 +23,6 @@ const (
 	MULTILINE
 	ONLY_VALID_CHARS
 )
-
-func init() {
-	surveyCore.SetFancyIcons()
-}
 
 func ReadString(label string, opts ...bitflag.Flag) string {
 	return readString(label, false, opts...)
@@ -77,33 +71,20 @@ func editString(label string, previousValue string, dieOnAbort bool, opts ...bit
 }
 
 func readStringDetails(label string, previousValue string, flags bitflag.Flag, dieOnAbort bool) (string, bool) {
-	value := ""
 	aborted := false
 
 	if dieOnAbort {
 		PrintWarning("cbox will terminate if you press Ctrl+C once more")
 	}
 
-	var prompt survey.Prompt
-
 	help := ""
 	if !flags.Isset(NOT_EMPTY_VALUES) {
 		help = "Blank entry keeps previous value. Ctrl+C clears it"
 	}
 
-	if flags.Isset(MULTILINE) {
-		prompt = &survey.Multiline{
-			Message: label,
-			Help:    help,
-		}
-	} else {
-		prompt = &survey.Input{
-			Message: label,
-			Help:    help,
-		}
-	}
+	value, err := tty.Read(label, help, flags.Isset(MULTILINE))
 
-	if err := survey.AskOne(prompt, &value, nil); err != nil {
+	if err != nil {
 		if dieOnAbort {
 			log.Fatal("cbox killed")
 		}
@@ -138,19 +119,6 @@ func resolveEditionValue(previousValue string, newValue string, aborted bool) st
 			return newValue
 		}
 	}
-}
-
-func Confirm(label string) bool {
-	response := false
-
-	prompt := &survey.Confirm{
-		Message: label,
-	}
-	survey.AskOne(prompt, &response, nil)
-
-	tty.Print("\n")
-
-	return response
 }
 
 func PrintError(msg string) {

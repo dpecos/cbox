@@ -7,6 +7,7 @@ import (
 	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/models"
 	"github.com/dplabs/cbox/src/tools/console"
+	"github.com/dplabs/cbox/src/tools/tty"
 )
 
 func (ctrl *CLIController) CloudCommandList(selectorStr string) {
@@ -52,7 +53,7 @@ func (ctrl *CLIController) CloudCommandCopy(cmdSelectorStr string, spcSelectorSt
 
 	console.PrintCommandList("Commands to copy", commands, false, false)
 
-	if SkipQuestionsFlag || console.Confirm(fmt.Sprintf("Copy these commands into %s?", spaceSelector)) {
+	if SkipQuestionsFlag || tty.Confirm(fmt.Sprintf("Copy these commands into %s?", spaceSelector)) {
 
 		failures := false
 		for _, command := range commands {

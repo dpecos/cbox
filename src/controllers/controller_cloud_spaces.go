@@ -69,7 +69,7 @@ func (ctrl *CLIController) CloudSpacePublish(spcSelectorStr string) {
 		console.PrintWarning(fmt.Sprintf("You're about to publish workspace '%s' under a different organization '%s'\n", space.String(), OrganizationOption))
 	}
 
-	if SkipQuestionsFlag || console.Confirm("Publish?") {
+	if SkipQuestionsFlag || tty.Confirm("Publish?") {
 		tty.Print("Publishing space '%s'...\n\n", space.String())
 
 		err = ctrl.cloud.SpacePublish(space)
@@ -104,7 +104,7 @@ func (ctrl *CLIController) CloudSpaceUnpublish(spcSelectorStr string) {
 		console.PrintWarning("You don't have a local copy of the space")
 	}
 
-	if SkipQuestionsFlag || console.Confirm("Unpublish?") {
+	if SkipQuestionsFlag || tty.Confirm("Unpublish?") {
 		tty.Print("Unpublishing space '%s'...\n\n", selector.String())
 
 		err = ctrl.cloud.SpaceUnpublish(selector)
@@ -141,7 +141,7 @@ func (ctrl *CLIController) CloudSpaceClone(spcSelectorStr string) {
 	console.PrintSpace("Space to clone", space)
 	console.PrintCommandList("Containing these commands", space.Entries, false, false)
 
-	if SkipQuestionsFlag || console.Confirm("Clone?") {
+	if SkipQuestionsFlag || tty.Confirm("Clone?") {
 		err := ctrl.cbox.SpaceCreate(space)
 		for err != nil {
 			console.PrintError("Space already found in your cbox. Try a different one")
