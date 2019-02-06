@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
@@ -51,22 +52,21 @@ func (ctrl *CLIController) SpacesEdit(spcSelectorStr string) {
 	console.PrintSpace("Space to edit", space)
 
 	console.EditSpace(space)
+	space.Selector.Space = space.Label
+
+	err = ctrl.cbox.SpaceEdit(space, selector.Namespace, selector.Space)
+	for err != nil {
+		console.PrintError(fmt.Sprintf("Label '%s' already found in space. Try a different one", space.Label))
+		space.Label = strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
+		space.Selector.Space = space.Label
+		err = ctrl.cbox.SpaceEdit(space, selector.Namespace, selector.Space)
+	}
 
 	console.PrintSpace("Space after edition", space)
 
 	if SkipQuestionsFlag || console.Confirm("Update?") {
-
-		err := ctrl.cbox.SpaceEdit(space, selector.Namespace, selector.Space)
-		for err != nil {
-			console.PrintError("Label already found in your cbox. Try a different one")
-			space.Label = strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
-			err = ctrl.cbox.SpaceEdit(space, selector.Namespace, selector.Space)
-		}
-
 		ctrl.cleanOldSpaceFile(space, selector)
-
 		core.Save(ctrl.cbox)
-
 		console.PrintSuccess("Space updated successfully!")
 	} else {
 		console.PrintError("Edition cancelled")

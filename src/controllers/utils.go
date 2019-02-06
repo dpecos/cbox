@@ -29,6 +29,10 @@ func (ctrl *CLIController) findSpace(selector *models.Selector) (*models.Space, 
 
 func (ctrl *CLIController) cleanOldSpaceFile(space *models.Space, oldSelector *models.Selector) {
 	if space.Label != oldSelector.Space || (oldSelector.Namespace != "" && space.Selector.Namespace != oldSelector.Namespace) {
+		if oldSelector.NamespaceType == models.TypeNone && space.Selector.NamespaceType != models.TypeNone {
+			oldSelector.NamespaceType = space.Selector.NamespaceType
+			oldSelector.Namespace = space.Selector.Namespace
+		}
 		core.DeleteSpaceFile(oldSelector)
 	}
 }

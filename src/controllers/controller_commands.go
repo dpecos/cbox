@@ -33,7 +33,7 @@ func (ctrl *CLIController) CommandList(spcSelectorStr *string) {
 }
 
 func (ctrl *CLIController) CommandAdd(spcSelectorStr *string) {
-	console.PrintAction("Adding a new commands")
+	console.PrintAction("Adding a new command")
 
 	s := ""
 	if spcSelectorStr != nil {
@@ -50,7 +50,7 @@ func (ctrl *CLIController) CommandAdd(spcSelectorStr *string) {
 		log.Fatalf("add command: %v", err)
 	}
 
-	tty.Print("Creating new command...\n")
+	tty.Print("Data for new command:\n")
 
 	command := console.ReadCommand(space)
 
@@ -90,6 +90,7 @@ func (ctrl *CLIController) CommandEdit(spcSelectorStr string) {
 	console.PrintCommand("Command to edit", command, true, false)
 
 	console.EditCommand(command)
+	command.Selector.Item = command.Label
 
 	err = space.CommandEdit(command, previousCommandLabel)
 	for err != nil {

@@ -112,6 +112,10 @@ func (repo *Repository) Persist(space *models.Space) {
 	space.ID = space.Selector.String()
 
 	for _, command := range space.Entries {
+		command.Selector.NamespaceType = space.Selector.NamespaceType
+		command.Selector.Namespace = space.Selector.Namespace
+		command.Selector.Space = space.Label
+
 		command.ID = command.Selector.String()
 	}
 
