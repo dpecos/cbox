@@ -34,13 +34,18 @@ func (cloud *Cloud) doRequest(method string, path string, query map[string]strin
 
 	var jsonStr = []byte(body)
 
+	version := cloud.Cbox.Version
+	if version == "development" {
+		version = "0.0.0"
+	}
+
 	req, err := http.NewRequest(method, url.String(), bytes.NewBuffer(jsonStr))
 	if err != nil {
 		return "", err
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Authorization", "Bearer "+cloud.Token)
-	req.Header.Set("cbox-version", cloud.Cbox.Version)
+	req.Header.Set("cbox-version", version)
 
 	if len(query) != 0 {
 		q := req.URL.Query()
@@ -51,8 +56,6 @@ func (cloud *Cloud) doRequest(method string, path string, query map[string]strin
 	}
 
 	if cloud.Environment == "dev" {
-		req.Header.Set("cbox-version", "0.0.0")
-
 		strReq, _ := httputil.DumpRequest(req, true)
 		tty.Debug(fmt.Sprintf("---\n\n%s\n\n~~~\n", string(strReq)))
 	}
