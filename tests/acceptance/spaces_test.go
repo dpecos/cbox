@@ -3,24 +3,11 @@ package acceptance_tests
 import (
 	"io/ioutil"
 	"os"
-	"strings"
 	"testing"
 
 	"github.com/dplabs/cbox/src/controllers"
 	"github.com/dplabs/cbox/src/tools/tty"
 )
-
-func init() {
-	controllers.SkipQuestionsFlag = true
-	tty.DisableColors = true
-	tty.MockTTY = true
-}
-
-func checkOutput(t *testing.T, expected string, msg string) {
-	if !strings.Contains(tty.MockedOutput, expected) {
-		t.Errorf("%s: %s", msg, tty.MockedOutput)
-	}
-}
 
 func TestDefaultSpaceCreatedOnNewSetup(t *testing.T) {
 	dir, _ := ioutil.TempDir("", "cbox")
@@ -55,7 +42,7 @@ func TestSpaceListingWhenNoSpace(t *testing.T) {
 	}
 }
 
-func TestSpaceActions(t *testing.T) {
+func TestCreateEditDestroySpaces(t *testing.T) {
 	dir, _ := ioutil.TempDir("", "cbox")
 	defer os.RemoveAll(dir)
 	ctrl := controllers.InitController(dir)

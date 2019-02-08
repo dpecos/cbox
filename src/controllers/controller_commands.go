@@ -67,10 +67,10 @@ func (ctrl *CLIController) CommandAdd(spcSelectorStr *string) {
 	console.PrintSuccess("Command stored successfully!")
 }
 
-func (ctrl *CLIController) CommandEdit(spcSelectorStr string) {
+func (ctrl *CLIController) CommandEdit(cmdSelectorStr string) {
 	console.PrintAction("Editing a command")
 
-	selector, err := models.ParseSelector(spcSelectorStr)
+	selector, err := models.ParseSelector(cmdSelectorStr)
 	if err != nil {
 		log.Fatalf("edit command: %v", err)
 	}
@@ -110,10 +110,10 @@ func (ctrl *CLIController) CommandEdit(spcSelectorStr string) {
 	}
 }
 
-func (ctrl *CLIController) CommandDelete(spcSelectorStr string) {
+func (ctrl *CLIController) CommandDelete(cmdSelectorStr string) {
 	console.PrintAction("Deleting a command")
 
-	selector, err := models.ParseSelector(spcSelectorStr)
+	selector, err := models.ParseSelector(cmdSelectorStr)
 	if err != nil {
 		log.Fatalf("delete command: %v", err)
 	}
@@ -139,8 +139,8 @@ func (ctrl *CLIController) CommandDelete(spcSelectorStr string) {
 	}
 }
 
-func (ctrl *CLIController) CommandView(spcSelectorStr string) {
-	selector, err := models.ParseSelector(spcSelectorStr)
+func (ctrl *CLIController) CommandView(cmdSelectorStr string) {
+	selector, err := models.ParseSelector(cmdSelectorStr)
 	if err != nil {
 		log.Fatalf("view command: %v", err)
 	}

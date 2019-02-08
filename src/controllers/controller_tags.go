@@ -36,10 +36,10 @@ func (ctrl *CLIController) TagsList(spcSelectorStr *string) {
 	}
 }
 
-func (ctrl *CLIController) TagsAdd(spcSelectorStr string, tags ...string) {
+func (ctrl *CLIController) TagsAdd(cmdSelectorStr string, tags ...string) {
 	console.PrintAction("Adding new tags to a command")
 
-	selector, err := models.ParseSelector(spcSelectorStr)
+	selector, err := models.ParseSelector(cmdSelectorStr)
 	if err != nil {
 		log.Fatalf("add tags: %v", err)
 	}
@@ -72,10 +72,10 @@ func (ctrl *CLIController) TagsAdd(spcSelectorStr string, tags ...string) {
 	console.PrintSuccess("Command tagged successfully!")
 }
 
-func (ctrl *CLIController) TagsRemove(spcSelectorStr string, tags ...string) {
+func (ctrl *CLIController) TagsRemove(cmdSelectorStr string, tags ...string) {
 	console.PrintAction("Removing tags from a command")
 
-	selector, err := models.ParseSelector(spcSelectorStr)
+	selector, err := models.ParseSelector(cmdSelectorStr)
 	if err != nil {
 		log.Fatalf("remove tags: %v", err)
 	}
@@ -105,21 +105,21 @@ func (ctrl *CLIController) TagsRemove(spcSelectorStr string, tags ...string) {
 	console.PrintSuccess("Command tag deleted successfully!")
 }
 
-func (ctrl *CLIController) TagsDelete(spcSelectorStr string) {
+func (ctrl *CLIController) TagsDelete(tagSelectorStr string) {
 	console.PrintAction("Deleting tags from an space")
 
-	selector, err := models.ParseSelectorMandatoryItem(spcSelectorStr)
+	selector, err := models.ParseSelectorMandatoryItem(tagSelectorStr)
 	if err != nil {
-		log.Fatalf("delete tags: %v", err)
+		log.Fatalf("delete tag: %v", err)
 	}
 
 	space, err := ctrl.findSpace(selector)
 	if err != nil {
-		log.Fatalf("delete tags: %v", err)
+		log.Fatalf("delete tag: %v", err)
 	}
 	commands := space.CommandList(selector.Item)
 
-	tty.Print("Deleting tags from space '%s'...\n", space.String())
+	tty.Print("Deleting tag from space '%s'...\n", space.String())
 
 	for _, cmd := range commands {
 		command, err := space.CommandFind(cmd.Label)
