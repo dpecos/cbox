@@ -55,7 +55,7 @@ func (cloud *Cloud) doRequest(method string, path string, query map[string]strin
 		req.URL.RawQuery = q.Encode()
 	}
 
-	if cloud.Environment == "dev" {
+	if cloud.Environment == "test" {
 		strReq, _ := httputil.DumpRequest(req, true)
 		tty.Debug(fmt.Sprintf("---\n\n%s\n\n~~~\n", string(strReq)))
 	}
@@ -72,7 +72,7 @@ func (cloud *Cloud) doRequest(method string, path string, query map[string]strin
 	}
 	bodyString := string(bodyBytes)
 
-	if cloud.Environment == "dev" {
+	if cloud.Environment == "test" {
 		tty.Debug(fmt.Sprintf("%s\n\n---\n", bodyString))
 	}
 

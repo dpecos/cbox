@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	cloudJWTDev = `-----BEGIN PUBLIC KEY-----
+	cloudJWTTest = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3PqZEDzJ2E8le5aFs8Tw
 Um0tcUrc+614d9fseI6pmVOTKcNWTgktNX9rTz/B4JTCws3/8erqMVkwuz1vhH6S
 iY+BUyn24g44/szZtVc0RgZVqLnZ87nsWvL2C+M1L4AiIgAwyElOFY5MCuknXMxD
@@ -41,22 +41,24 @@ var (
 	cloudSettingsJWT       string
 )
 
-func (repo *Repository) LoadCloudSettings(env string) (string, string, string, string, string, string) {
+func (repo *Repository) LoadCloudSettings() (string, string, string, string, string, string) {
+
+	env := repo.GetEnv()
 
 	url := fmt.Sprintf(cloudServerURL, env)
 	key := cloudJWTProd
 
 	if env != "prod" {
 		console.PrintDevWarning()
-		key = cloudJWTDev
+		key = cloudJWTTest
 	}
 
-	if env != "" && env != "prod" {
-		env = "_" + env
-	}
 	if env == "prod" {
 		env = ""
+	} else {
+		env = "_" + env
 	}
+
 	cloudSettingsUserID = fmt.Sprintf("cloud%s.auth.user.id", env)
 	cloudSettingsUserLogin = fmt.Sprintf("cloud%s.auth.user.login", env)
 	cloudSettingsUserName = fmt.Sprintf("cloud%s.auth.user.name", env)

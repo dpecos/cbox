@@ -8,13 +8,9 @@ import (
 	"github.com/dplabs/cbox/src/models"
 )
 
-var (
-	Env = "dev"
-)
-
 func CloudClient(cbox *models.CBox) *models.Cloud {
 
-	serverURL, serverKey, userID, login, name, token := repo.LoadCloudSettings(Env)
+	serverURL, serverKey, userID, login, name, token := repo.LoadCloudSettings()
 
 	baseUrl, err := url.Parse(serverURL)
 	if err != nil {
@@ -22,7 +18,7 @@ func CloudClient(cbox *models.CBox) *models.Cloud {
 	}
 
 	cloud := models.Cloud{
-		Environment: Env,
+		Environment: repo.GetEnv(),
 		ServerKey:   serverKey,
 		UserID:      userID,
 		Login:       login,

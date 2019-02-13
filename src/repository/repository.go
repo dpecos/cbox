@@ -33,6 +33,8 @@ func InitRepository(repoPath string) *Repository {
 		Path: repoPath,
 	}
 
+	repo.loadSettings()
+
 	return &repo
 }
 

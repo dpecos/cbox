@@ -20,7 +20,7 @@ func TestDefaultSpaceCreatedOnNewSetup(t *testing.T) {
 	checkOutput(t, "@default - Default space to store commands", "default space not found")
 
 	ctrl.ConfigGet("cbox.environment")
-	checkOutput(t, "cbox.environment -> dev", "environment setting not found")
+	checkOutput(t, "cbox.environment -> test", "environment setting not found")
 
 	ctrl.ConfigGet("cbox.default-space")
 	checkOutput(t, "cbox.default-space -> default", "default space setting not found")

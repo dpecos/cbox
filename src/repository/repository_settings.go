@@ -2,6 +2,7 @@ package repository
 
 import (
 	"log"
+	"os"
 
 	"github.com/dplabs/cbox/src/tools"
 	"github.com/spf13/viper"
@@ -12,7 +13,29 @@ const (
 	configFilePath = configFileName + ".yml"
 )
 
-func (repo *Repository) LoadSettings(env string) string {
+func (repo *Repository) GetEnv() string {
+	var env string
+
+	if viper.IsSet("cbox.environment") {
+		env = viper.GetString("cbox.environment")
+	} else {
+		env = "prod"
+	}
+
+	if os.Getenv("CBOX_ENV") != "" {
+		env = os.Getenv("CBOX_ENV")
+		if env != "test" && env != "prod" {
+			log.Fatalf("unknown env value '%s' (from CBOX_ENV)", env)
+		}
+	}
+
+	return env
+}
+
+func (repo *Repository) loadSettings() {
+
+	env := repo.GetEnv()
+
 	configFile := repo.resolve(configFilePath)
 	tools.CreateFileIfNotExists(configFile)
 
@@ -23,18 +46,10 @@ func (repo *Repository) LoadSettings(env string) string {
 		log.Fatal(err)
 	}
 
-	env = defaultSettings(env)
-
-	return env
+	defaultSettings(env)
 }
 
-func defaultSettings(env string) string {
+func defaultSettings(env string) {
 	viper.SetDefault("cbox.default-space", "default")
 	viper.SetDefault("cbox.environment", env)
-
-	if viper.IsSet("cbox.environment") {
-		env = viper.GetString("cbox.environment")
-	}
-
-	return env
 }

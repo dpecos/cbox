@@ -12,6 +12,7 @@ import (
 )
 
 func init() {
+	os.Setenv("CBOX_ENV", "test")
 	tty.DisableOutput = true
 
 	rand.Seed(time.Now().UnixNano())

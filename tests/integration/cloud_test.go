@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	// testUserJWTToken for user 'test' in dev
+	// testUserJWTToken for user 'test' in test env
 	testUserJWTToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3OTkxNDgyMjEsImp0aSI6InRlc3QtS0RXU0ciLCJpYXQiOjE1Mzk5NDgyMjEsIm5iZiI6MTUzOTk0ODIyMSwic3ViIjoiLTEiLCJsb2dpbiI6InRlc3QiLCJuYW1lIjoiVGVzdCB1c2VyIn0.w4qpDwWZUjS0NZBmMbYqgg3mE7iucJPpRzAsgSF_936laPBiXe8Lti8r-NvI6jPPQlJCq43JMWg5XersOLRLiJRq4U7HHQdovShcT7U862ZJnWBhJq9famNAJqe7qpuC2BqZWX6bU8QAZhZ_We60_KBsDi7Y2CnK0bWK-MUW8FVgBsGZts-vHxBoon_6W0hFqRL57ncZAS9jua3uGElEW84Ukpgc3ZxFo2oNrrgjFz1WaHxYTMzQx3lOlWFyHEMb6Njslo6nWov-uKcY0eVvOx5mQkLAd33NJk9B0eV8FAXKvn5K2rIIECIfGB6f77teRvQxoN28QNv_OOqKpTAoYA"
 )
 
@@ -22,8 +22,8 @@ func TestMain(m *testing.M) {
 	cbox := initializeCBox()
 	cloud = cloudConnect(cbox, testUserJWTToken)
 
-	if !strings.Contains(cloud.URL, "dev") {
-		panic("cloud dev environment not set properly")
+	if !strings.Contains(cloud.URL, "test") {
+		panic("test setup: cloud test environment not set properly")
 	}
 
 	os.Exit(m.Run())
@@ -35,7 +35,7 @@ func cloudConnect(cbox *models.CBox, jwt string) *models.Cloud {
 
 	_, err := cloud.ServerLogin(jwt)
 	if err != nil {
-		log.Fatalf("could not login: %v", err)
+		log.Fatalf("test setup: could not login: %v", err)
 	}
 
 	return cloud

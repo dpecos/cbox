@@ -1,6 +1,7 @@
 package acceptance_tests
 
 import (
+	"os"
 	"strings"
 	"testing"
 
@@ -9,6 +10,8 @@ import (
 )
 
 func init() {
+	os.Setenv("CBOX_ENV", "test")
+
 	controllers.SkipQuestionsFlag = true
 	tty.DisableColors = true
 	tty.MockTTY = true

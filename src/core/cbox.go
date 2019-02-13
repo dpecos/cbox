@@ -26,7 +26,6 @@ func Load(path string) *models.CBox {
 
 	repo = repository.InitRepository(path)
 
-	Env = repo.LoadSettings(Env)
 	spaces, isNewRepository := repo.LoadSpaces()
 
 	cbox := &models.CBox{

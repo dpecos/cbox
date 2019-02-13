@@ -142,5 +142,5 @@ func PrintAction(msg string) {
 }
 
 func PrintDevWarning() {
-	tty.Print("\n%s\n\n", tty.ColorBgRed("  !!! You are using a DEV version of cbox !!!   "))
+	tty.Print("\n%s\n\n", tty.ColorBgRed("  !!! You are using cbox's TEST cloud !!!   "))
 }
