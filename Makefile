@@ -3,17 +3,17 @@ COMMIT=$(shell git rev-parse HEAD)
 TAG=$(shell git describe --tags 2> /dev/null)
 BUILD=$(shell date +%FT%T%z)
 
-build-dev: version
-	sh ./scripts/compile.sh build $(VERSION) $(BRANCH)-$(COMMIT)@$(BUILD) dev
-
-build-prod: version
+build: version
 	sh ./scripts/compile.sh build $(VERSION) $(BRANCH)-$(COMMIT)@$(BUILD) prod
 
-install-dev: version
-	sh ./scripts/compile.sh install $(VERSION) $(BRANCH)-$(COMMIT)@$(BUILD) dev
+build-test: version
+	sh ./scripts/compile.sh build $(VERSION) $(BRANCH)-$(COMMIT)@$(BUILD) test
 
-install-prod: version
+install: version
 	sh ./scripts/compile.sh install $(VERSION) $(BRANCH)-$(COMMIT)@$(BUILD) prod
+
+install-test: version
+	sh ./scripts/compile.sh install $(VERSION) $(BRANCH)-$(COMMIT)@$(BUILD) test
 
 version:
   VERSION := $(if $(TAG),$(TAG),0.0.0)
