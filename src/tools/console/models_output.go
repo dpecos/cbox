@@ -2,7 +2,10 @@ package console
 
 import (
 	"fmt"
+	"io"
 	"log"
+	"os"
+	"os/exec"
 	"sort"
 	"strings"
 
@@ -52,7 +55,16 @@ func selector(selector *models.Selector) string {
 	return fmt.Sprintf(format, parts...)
 }
 
-func PrintCommand(header string, cmd *models.Command, full bool, sourceOnly bool) {
+func commandSummary(cmd *models.Command) string {
+	if len(cmd.Tags) != 0 {
+		tags := strings.Join(cmd.Tags, ", ")
+		return fmt.Sprintf("%s - %s (%s) %s", selector(cmd.Selector), descriptionColor(cmd.Description), tagsColor(tags), dateColor(cmd.CreatedAt.String()))
+	} else {
+		return fmt.Sprintf("%s - %s %s", selector(cmd.Selector), descriptionColor(cmd.Description), dateColor(cmd.CreatedAt.String()))
+	}
+}
+
+func PrintCommand(header string, cmd *models.Command, sourceOnly bool) {
 
 	if cmd == nil {
 		log.Fatal("Trying to display a nil command")
@@ -63,45 +75,93 @@ func PrintCommand(header string, cmd *models.Command, full bool, sourceOnly bool
 	} else {
 
 		printHeader(header)
+		tty.Print("\n")
 
-		if !full {
-			tty.Print(starColor("* "))
-		}
-
-		if len(cmd.Tags) != 0 {
-			tags := strings.Join(cmd.Tags, ", ")
-			tty.Print("%s - %s (%s) %s\n", selector(cmd.Selector), descriptionColor(cmd.Description), tagsColor(tags), dateColor(cmd.CreatedAt.String()))
+		if cmd.Selector.NamespaceType == models.TypeOrganization {
+			tty.Print("  Namespace: %s (Organization)\n", namespaceColorOrganization(cmd.Selector.Namespace))
+		} else if cmd.Selector.NamespaceType == models.TypeUser {
+			tty.Print("  Namespace: %s (User)\n", namespaceColorUser(cmd.Selector.Namespace))
 		} else {
-			tty.Print("%s - %s %s\n", selector(cmd.Selector), descriptionColor(cmd.Description), dateColor(cmd.CreatedAt.String()))
+			tty.Print("  Namespace: -\n")
 		}
+		tty.Print("  Space: %s \n", spaceColor(cmd.Selector.Space))
+		tty.Print("  Label: %s \n", labelColor(cmd.Label))
+		tty.Print("  Selector: %s \n", selector(cmd.Selector))
+		tty.Print("\n")
+		tty.Print("  Description: %s\n", descriptionColor(cmd.Description))
+		tty.Print("  URL: %s\n", urlColor(cmd.URL))
+		tty.Print("  Tags: %s\n", tagsColor(strings.Join(cmd.Tags, ", ")))
+		tty.Print("\n")
+		tty.Print("  Created at: %s\n", dateColor(cmd.CreatedAt.String()))
+		tty.Print("  Updated at: %s\n", dateColor(cmd.UpdatedAt.String()))
 
-		if full {
-			if cmd.URL != "" {
-				tty.Print("\n%s\n", urlColor(cmd.URL))
-			}
-			tty.Print("\n%s\n", cmd.Code)
-		}
+		tty.Print("\n%s\n\n%s\n\n", separatorColor("- - -"), cmd.Code)
 
 		printFooter(header)
 	}
 }
 
-func PrintCommandList(header string, commands []*models.Command, full bool, sourceOnly bool) {
+func runFZFList(header string, commands []*models.Command) {
+	args := []string{"--ansi", "--exact", "--preview-window=down:30%:wrap", "--preview", "echo {} | cut -f1 -d' ' | xargs cbox command view"}
+	if header != "" {
+		args = append(args, "--header="+header)
+	}
+	fzfProcess := exec.Command("fzf", args...)
+	stdin, err := fzfProcess.StdinPipe()
+	if err != nil {
+		log.Fatalf("console: interactive mode: failed to spawn process and get its stdin: %v", err)
+	}
 
+	fzfProcess.Stderr = os.Stderr
+
+	for _, cmd := range commands {
+		io.WriteString(stdin, commandSummary(cmd))
+		io.WriteString(stdin, "\n")
+	}
+
+	stdin.Close()
+
+	out, err := fzfProcess.Output()
+	if err != nil {
+		exitCode := fzfProcess.ProcessState.ExitCode()
+		if exitCode == -1 {
+			log.Fatalf("console: interactive mode: 'fzf' failed to start: %v", err)
+		} else if exitCode == 2 {
+			log.Fatalf("console: interactive mode: 'fzf' returned an internal error: %v", err)
+		}
+		return
+	}
+
+	selector := strings.Split(string(out), " ")[0]
+
+	for _, cmd := range commands {
+		if cmd.ID == selector {
+			PrintCommand(selector, cmd, false)
+			break
+		}
+	}
+}
+
+func staticCommandList(header string, commands []*models.Command) {
 	printHeader(header)
 
 	if len(commands) != 0 {
 		sortCommands(commands)
 
-		for i, command := range commands {
-			PrintCommand("", command, full, sourceOnly)
-			if full && i != len(commands)-1 {
-				tty.Print("\n%s\n\n", separatorColor("- - - - - - - - - - - -"))
-			}
+		for _, command := range commands {
+			tty.Print(" * %s\n", commandSummary(command))
 		}
 	}
 
 	printFooter(header)
+}
+
+func PrintCommandList(header string, commands []*models.Command, interactive bool) {
+	if interactive {
+		runFZFList(header, commands)
+	} else {
+		staticCommandList(header, commands)
+	}
 }
 
 func PrintTag(tag string) {

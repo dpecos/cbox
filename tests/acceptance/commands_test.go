@@ -16,10 +16,10 @@ func TestAddDeleteCommand(t *testing.T) {
 	ctrl := controllers.InitController(dir)
 
 	tty.MockedOutput = ""
-	tty.MockedInput = []string{"test-command", "This is a test command", "URL", "CODE", "test-tag"}
+	tty.MockedInput = []string{"test-command", "This is a test command", "url", "CODE", "test-tag"}
 	ctrl.CommandAdd(nil)
-	checkOutput(t, "test-command@default - This is a test command (test-tag)", "failed to add a command")
-	checkOutput(t, "URL", "could not display the command (url) in the default space")
+	checkOutput(t, "Selector: test-command@default", "failed to add a command")
+	checkOutput(t, "url", "could not display the command (url) in the default space")
 	checkOutput(t, "CODE", "could not display the command (code) in the default space")
 
 	tty.MockedOutput = ""
@@ -41,26 +41,26 @@ func TestEditViewCommand(t *testing.T) {
 	defer os.RemoveAll(dir)
 	ctrl := controllers.InitController(dir)
 
-	tty.MockedInput = []string{"test-command", "This is a test command", "URL", "CODE", "test-tag"}
+	tty.MockedInput = []string{"test-command", "This is a test command", "url", "CODE", "test-tag"}
 	ctrl.CommandAdd(nil)
 
 	tty.MockedOutput = ""
 	ctrl.CommandView("test-command@default")
-	checkOutput(t, "test-command@default - This is a test command (test-tag)", "could not display the command in the default space")
-	checkOutput(t, "URL", "could not display the command (url) in the default space")
+	checkOutput(t, "Selector: test-command@default", "could not display the command in the default space")
+	checkOutput(t, "url", "could not display the command (url) in the default space")
 	checkOutput(t, "CODE", "could not display the command (code) in the default space")
 
 	tty.MockedOutput = ""
-	tty.MockedInput = []string{"test-command-edited", "This is a test command - edited", "URL-edited", "CODE-edited"}
+	tty.MockedInput = []string{"test-command-edited", "This is a test command - edited", "url-edited", "CODE-edited"}
 	ctrl.CommandEdit("test-command@default")
-	checkOutput(t, "test-command-edited@default - This is a test command - edited (test-tag)", "failed to edit a command")
-	checkOutput(t, "URL-edited", "failed to edit the command (url) in the default space")
+	checkOutput(t, "Selector: test-command-edited@default", "failed to edit a command")
+	checkOutput(t, "url-edited", "failed to edit the command (url) in the default space")
 	checkOutput(t, "CODE-edited", "failed to edit the command (code) in the default space")
 
 	tty.MockedOutput = ""
 	ctrl.CommandView("test-command-edited@default")
-	checkOutput(t, "test-command-edited@default - This is a test command - edited (test-tag)", "could not display the command in the default space")
-	checkOutput(t, "URL-edited", "could not display the command (url) in the default space")
+	checkOutput(t, "Selector: test-command-edited@default", "could not display the command in the default space")
+	checkOutput(t, "url-edited", "could not display the command (url) in the default space")
 	checkOutput(t, "CODE-edited", "could not display the command (code) in the default space")
 }
 
@@ -69,16 +69,16 @@ func TestTagCommand(t *testing.T) {
 	defer os.RemoveAll(dir)
 	ctrl := controllers.InitController(dir)
 
-	tty.MockedInput = []string{"test-command", "This is a test command", "URL", "CODE", "test-tag"}
+	tty.MockedInput = []string{"test-command", "This is a test command", "url", "CODE", "test-tag"}
 	ctrl.CommandAdd(nil)
 
 	tty.MockedOutput = ""
 	ctrl.TagsAdd("test-command@default", "t1", "t2", "t3")
-	checkOutput(t, "test-command@default - This is a test command (test-tag, t1, t2, t3)", "failed to add tags to command")
+	checkOutput(t, "Tags: test-tag, t1, t2, t3", "failed to add tags to command")
 
 	tty.MockedOutput = ""
 	ctrl.TagsRemove("test-command@default", "t1", "t2")
-	checkOutput(t, "test-command@default - This is a test command (test-tag, t3)", "failed to remove tags from a command")
+	checkOutput(t, "Tags: test-tag, t3", "failed to remove tags from a command")
 
 	tty.MockedOutput = ""
 	ctrl.TagsList(nil)
@@ -97,5 +97,5 @@ func TestTagCommand(t *testing.T) {
 
 	tty.MockedOutput = ""
 	ctrl.CommandView("test-command@default")
-	checkOutput(t, "test-command@default - This is a test command (test-tag)", "could not display the command in the default space")
+	checkOutput(t, "Selector: test-command@default", "could not display the command in the default space")
 }

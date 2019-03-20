@@ -139,7 +139,7 @@ func (ctrl *CLIController) CloudSpaceClone(spcSelectorStr string) {
 	space.Entries = commands
 
 	console.PrintSpace("Space to clone", space)
-	console.PrintCommandList("Containing these commands", space.Entries, false, false)
+	console.PrintCommandList("Containing these commands", space.Entries, false)
 
 	if SkipQuestionsFlag || tty.Confirm("Clone?") {
 		err := ctrl.cbox.SpaceCreate(space)

@@ -22,6 +22,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&tty.DisableColors, "no-color", "", false, "Disable color in the output")
 	rootCmd.PersistentFlags().BoolVarP(&tty.DisableOutput, "silent", "", false, "Completely disable any output")
 	rootCmd.PersistentFlags().BoolVarP(&controllers.SkipQuestionsFlag, "yes", "", false, "Answer 'yes' to any question")
+	rootCmd.PersistentFlags().BoolVarP(&controllers.InteractiveListingFlag, "interactive", "i", false, "Use 'fzf' to interact with command listings")
 
 	cobra.OnInitialize(func() {
 		ctrl = controllers.InitController("")

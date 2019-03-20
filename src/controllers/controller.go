@@ -9,6 +9,7 @@ var (
 	SkipQuestionsFlag      bool
 	ShowCommandsSourceFlag bool
 	SourceOnlyFlag         bool
+	InteractiveListingFlag bool
 	OrganizationOption     string
 )
 

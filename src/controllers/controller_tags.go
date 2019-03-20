@@ -67,7 +67,7 @@ func (ctrl *CLIController) TagsAdd(cmdSelectorStr string, tags ...string) {
 
 	core.Save(ctrl.cbox)
 
-	console.PrintCommand("Tagged command", command, true, false)
+	console.PrintCommand("Tagged command", command, false)
 
 	console.PrintSuccess("Command tagged successfully!")
 }
@@ -100,7 +100,7 @@ func (ctrl *CLIController) TagsRemove(cmdSelectorStr string, tags ...string) {
 
 	core.Save(ctrl.cbox)
 
-	console.PrintCommand("Untagged command", command, true, false)
+	console.PrintCommand("Untagged command", command, false)
 
 	console.PrintSuccess("Command tag deleted successfully!")
 }
@@ -128,7 +128,7 @@ func (ctrl *CLIController) TagsDelete(tagSelectorStr string) {
 		}
 		command.TagDelete(selector.Item)
 
-		console.PrintCommand("Untagged command", command, false, false)
+		console.PrintCommand("Untagged command", command, false)
 	}
 
 	core.Save(ctrl.cbox)

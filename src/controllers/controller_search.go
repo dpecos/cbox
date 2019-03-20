@@ -50,10 +50,10 @@ func (ctrl *CLIController) SearchCommands(spcSelectorStr *string, criteria strin
 		commands = append(commands, cs...)
 	}
 
+	header := fmt.Sprintf("Results for \"%s\"", criteria)
 	if selector.Item != "" {
-		console.PrintCommandList(fmt.Sprintf("Results for \"%s\" (within tag: %s)", criteria, selector.Item), commands, ShowCommandsSourceFlag, false)
-	} else {
-		console.PrintCommandList(fmt.Sprintf("Results for \"%s\"", criteria), commands, ShowCommandsSourceFlag, false)
+		header = fmt.Sprintf("Results for \"%s\" (within tag: %s)", criteria, selector.Item)
 	}
+	console.PrintCommandList(header, commands, InteractiveListingFlag)
 
 }

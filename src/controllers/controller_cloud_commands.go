@@ -21,7 +21,7 @@ func (ctrl *CLIController) CloudCommandList(selectorStr string) {
 		log.Fatalf("cloud: list commands: %v", err)
 	}
 
-	console.PrintCommandList(selector.String(), commands, ShowCommandsSourceFlag, false)
+	console.PrintCommandList(selector.String(), commands, InteractiveListingFlag)
 }
 
 func (ctrl *CLIController) CloudCommandCopy(cmdSelectorStr string, spcSelectorStr string) {
@@ -51,7 +51,7 @@ func (ctrl *CLIController) CloudCommandCopy(cmdSelectorStr string, spcSelectorSt
 		console.PrintError(fmt.Sprintf("Command '%s' not found", cmdSelector))
 	}
 
-	console.PrintCommandList("Commands to copy", commands, false, false)
+	console.PrintCommandList("Commands to copy", commands, false)
 
 	if SkipQuestionsFlag || tty.Confirm(fmt.Sprintf("Copy these commands into %s?", spaceSelector)) {
 

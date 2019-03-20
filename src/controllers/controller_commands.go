@@ -29,7 +29,7 @@ func (ctrl *CLIController) CommandList(spcSelectorStr *string) {
 
 	commands := space.CommandList(selector.Item)
 
-	console.PrintCommandList(selector.String(), commands, ShowCommandsSourceFlag, false)
+	console.PrintCommandList(selector.String(), commands, InteractiveListingFlag)
 }
 
 func (ctrl *CLIController) CommandAdd(spcSelectorStr *string) {
@@ -62,7 +62,7 @@ func (ctrl *CLIController) CommandAdd(spcSelectorStr *string) {
 	}
 	core.Save(ctrl.cbox)
 
-	console.PrintCommand("New command", command, true, false)
+	console.PrintCommand("New command", command, false)
 
 	console.PrintSuccess("Command stored successfully!")
 }
@@ -87,7 +87,7 @@ func (ctrl *CLIController) CommandEdit(cmdSelectorStr string) {
 
 	previousCommandLabel := command.Label
 
-	console.PrintCommand("Command to edit", command, true, false)
+	console.PrintCommand("Command to edit", command, false)
 
 	console.EditCommand(command)
 	command.Selector.Item = command.Label
@@ -100,7 +100,7 @@ func (ctrl *CLIController) CommandEdit(cmdSelectorStr string) {
 		err = space.CommandEdit(command, previousCommandLabel)
 	}
 
-	console.PrintCommand("Command after edition", command, true, false)
+	console.PrintCommand("Command after edition", command, false)
 
 	if SkipQuestionsFlag || tty.Confirm("Update?") {
 		core.Save(ctrl.cbox)
@@ -128,7 +128,7 @@ func (ctrl *CLIController) CommandDelete(cmdSelectorStr string) {
 		log.Fatalf("delete command: %v", err)
 	}
 
-	console.PrintCommand("Command to delete ", command, true, false)
+	console.PrintCommand("Command to delete ", command, false)
 
 	if SkipQuestionsFlag || tty.Confirm("Are you sure you want to delete this command?") {
 		space.CommandDelete(command)
@@ -155,5 +155,5 @@ func (ctrl *CLIController) CommandView(cmdSelectorStr string) {
 		log.Fatalf("view command: %v", err)
 	}
 
-	console.PrintCommand("", command, true, SourceOnlyFlag)
+	console.PrintCommand(command.Selector.String(), command, SourceOnlyFlag)
 }
