@@ -54,6 +54,6 @@ func (ctrl *CLIController) SearchCommands(spcSelectorStr *string, criteria strin
 	if selector.Item != "" {
 		header = fmt.Sprintf("Results for \"%s\" (within tag: %s)", criteria, selector.Item)
 	}
-	console.PrintCommandList(header, commands, InteractiveListingFlag)
+	console.PrintCommandList(header, commands, ListingsModeOption, ListingsSortOption)
 
 }

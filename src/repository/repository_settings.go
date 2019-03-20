@@ -52,5 +52,6 @@ func (repo *Repository) loadSettings() {
 func defaultSettings(env string) {
 	viper.SetDefault("cbox.default-space", "default")
 	viper.SetDefault("cbox.environment", env)
-	viper.SetDefault("cbox.interactive", false)
+	viper.SetDefault("cbox.results.mode", "interactive")
+	viper.SetDefault("cbox.results.sort", "name")
 }

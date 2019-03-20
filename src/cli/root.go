@@ -27,15 +27,19 @@ func init() {
 }
 
 func setupParameters() {
-	rootCmd.PersistentFlags().BoolVarP(&tty.DisableColors, "no-color", "", false, "Disable color in the output")
-	rootCmd.PersistentFlags().BoolVarP(&tty.DisableOutput, "silent", "", false, "Completely disable any output")
-	rootCmd.PersistentFlags().BoolVarP(&controllers.SkipQuestionsFlag, "yes", "", false, "Answer 'yes' to any question")
-	rootCmd.PersistentFlags().BoolVarP(&controllers.InteractiveListingFlag, "interactive", "i", false, "Use 'fzf' to interact with command listings")
+	rootCmd.PersistentFlags().BoolVar(&tty.DisableColors, "no-color", false, "Disable color in the output")
+	rootCmd.PersistentFlags().BoolVar(&tty.DisableOutput, "silent", false, "Completely disable any output")
+	rootCmd.PersistentFlags().BoolVar(&controllers.SkipQuestionsFlag, "yes", false, "Answer 'yes' to any question")
+	rootCmd.PersistentFlags().StringVarP(&controllers.ListingsModeOption, "listings-mode", "m", "", "Use 'fzf' (interactive) to interact with commands listings or just print them as an static list (static)")
+	rootCmd.PersistentFlags().StringVarP(&controllers.ListingsSortOption, "listings-sort", "s", "", "Sort commands listings by name (default) or date")
 }
 
 func loadParameterValuesFromConfig() {
-	if !controllers.InteractiveListingFlag {
-		controllers.InteractiveListingFlag = viper.GetBool("cbox.interactive")
+	if controllers.ListingsModeOption == "" {
+		controllers.ListingsModeOption = viper.GetString("cbox.results.mode")
+	}
+	if controllers.ListingsSortOption == "" {
+		controllers.ListingsSortOption = viper.GetString("cbox.results.sort")
 	}
 }
 

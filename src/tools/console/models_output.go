@@ -28,6 +28,10 @@ var (
 	starColor                  = tty.ColorBoldBlack
 )
 
+const (
+	timestampFormat = "(Updated: %s - Created: %s)"
+)
+
 func selector(selector *models.Selector) string {
 	format := ""
 	parts := []interface{}{}
@@ -56,11 +60,12 @@ func selector(selector *models.Selector) string {
 }
 
 func commandSummary(cmd *models.Command) string {
+	timestamp := fmt.Sprintf(timestampFormat, cmd.UpdatedAt.String(), cmd.CreatedAt.String())
 	if len(cmd.Tags) != 0 {
 		tags := strings.Join(cmd.Tags, ", ")
-		return fmt.Sprintf("%s - %s (%s) %s", selector(cmd.Selector), descriptionColor(cmd.Description), tagsColor(tags), dateColor(cmd.CreatedAt.String()))
+		return fmt.Sprintf("%s - %s (%s) %s", selector(cmd.Selector), descriptionColor(cmd.Description), tagsColor(tags), dateColor(timestamp))
 	} else {
-		return fmt.Sprintf("%s - %s %s", selector(cmd.Selector), descriptionColor(cmd.Description), dateColor(cmd.CreatedAt.String()))
+		return fmt.Sprintf("%s - %s %s", selector(cmd.Selector), descriptionColor(cmd.Description), dateColor(timestamp))
 	}
 }
 
@@ -101,10 +106,13 @@ func PrintCommand(header string, cmd *models.Command, sourceOnly bool) {
 	}
 }
 
-func runFZFList(header string, commands []*models.Command) {
+func runFZFList(header string, commands []*models.Command, listingSort string) {
 	args := []string{"--ansi", "--exact", "--preview-window=down:30%:wrap", "--preview", "echo {} | cut -f1 -d' ' | xargs cbox command view"}
 	if header != "" {
 		args = append(args, "--header="+header)
+	}
+	if listingSort == "date" {
+		args = append(args, "--tac")
 	}
 	fzfProcess := exec.Command("fzf", args...)
 	stdin, err := fzfProcess.StdinPipe()
@@ -145,20 +153,20 @@ func runFZFList(header string, commands []*models.Command) {
 func staticCommandList(header string, commands []*models.Command) {
 	printHeader(header)
 
-	if len(commands) != 0 {
-		sortCommands(commands)
-
-		for _, command := range commands {
-			tty.Print(" * %s\n", commandSummary(command))
-		}
+	for _, command := range commands {
+		tty.Print(" * %s\n", commandSummary(command))
 	}
 
 	printFooter(header)
 }
 
-func PrintCommandList(header string, commands []*models.Command, interactive bool) {
-	if interactive {
-		runFZFList(header, commands)
+func PrintCommandList(header string, commands []*models.Command, listingMode string, listingSort string) {
+	if len(commands) != 0 {
+		sortCommands(commands, listingSort)
+	}
+
+	if listingMode == "interactive" {
+		runFZFList(header, commands, listingSort)
 	} else {
 		staticCommandList(header, commands)
 	}
@@ -170,7 +178,7 @@ func PrintTag(tag string) {
 
 func PrintSpace(header string, space *models.Space) {
 	printHeader(header)
-	timestamp := fmt.Sprintf("(Last updated: %s - Created: %s)", space.UpdatedAt.String(), space.CreatedAt.String())
+	timestamp := fmt.Sprintf(timestampFormat, space.UpdatedAt.String(), space.CreatedAt.String())
 	tty.Print("%s - %s %s\n", selector(space.Selector), descriptionColor(space.Description), dateColor(timestamp))
 	printFooter(header)
 }
@@ -197,11 +205,16 @@ func printFooter(header string) {
 	}
 }
 
-func sortCommands(commands []*models.Command) {
+func sortCommands(commands []*models.Command, listingSort string) {
 	sort.Slice(commands, func(i, j int) bool {
 		if commands[i] == nil || commands[j] == nil {
 			log.Fatal("Trying to sort a list of commands with nil entries")
 		}
-		return strings.Compare(commands[i].Label, commands[j].Label) == -1
+		if listingSort == "name" {
+			return strings.Compare(commands[i].Label, commands[j].Label) == -1
+		} else if listingSort == "date" {
+			return !commands[i].UpdatedAt.After(commands[j].UpdatedAt)
+		}
+		return false
 	})
 }

@@ -29,7 +29,7 @@ func (ctrl *CLIController) CommandList(spcSelectorStr *string) {
 
 	commands := space.CommandList(selector.Item)
 
-	console.PrintCommandList(selector.String(), commands, InteractiveListingFlag)
+	console.PrintCommandList(selector.String(), commands, ListingsModeOption, ListingsSortOption)
 }
 
 func (ctrl *CLIController) CommandAdd(spcSelectorStr *string) {
