@@ -57,7 +57,7 @@ func (ctrl *CLIController) CloudSpacePublish(spcSelectorStr string) {
 	if selector.Item != "" {
 		commands := space.CommandList(selector.Item)
 		if len(commands) == 0 {
-			log.Fatalf("cloud: no local commands matched selector: %s", selector)
+			log.Fatalf("cloud: publish space: no local commands matched selector: %s", selector)
 		}
 
 		space.Entries = commands
@@ -123,7 +123,7 @@ func (ctrl *CLIController) CloudSpaceClone(spcSelectorStr string) {
 
 	selector, err := models.ParseSelectorForCloud(spcSelectorStr)
 	if err != nil {
-		log.Fatalf("cloud: clone space: invalid ctrl.cloud selector: %v", err)
+		log.Fatalf("cloud: clone space: invalid cloud selector: %v", err)
 	}
 
 	space, err := ctrl.cloud.SpaceFind(selector)
@@ -133,7 +133,7 @@ func (ctrl *CLIController) CloudSpaceClone(spcSelectorStr string) {
 
 	commands, err := ctrl.cloud.CommandList(selector)
 	if err != nil {
-		log.Fatalf("cloud: list commands: %v", err)
+		log.Fatalf("cloud: clone space: %v", err)
 	}
 
 	space.Entries = commands
@@ -163,7 +163,7 @@ func (ctrl *CLIController) CloudSpacePull(spcSelectorStr string) {
 
 	selector, err := models.ParseSelectorMandatorySpace(spcSelectorStr)
 	if err != nil {
-		log.Fatalf("cloud: pull space: invalid ctrl.cloud selector: %v", err)
+		log.Fatalf("cloud: pull space: invalid cloud selector: %v", err)
 	}
 
 	space, err := ctrl.findSpace(selector)
@@ -178,7 +178,7 @@ func (ctrl *CLIController) CloudSpacePull(spcSelectorStr string) {
 
 	commands, err := ctrl.cloud.CommandList(selector)
 	if err != nil {
-		log.Fatalf("cloud: list commands: %v", err)
+		log.Fatalf("cloud: pull space: %v", err)
 	}
 
 	// Note: Label is not overwritten because user can renamed his local copy of the space

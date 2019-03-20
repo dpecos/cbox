@@ -13,7 +13,7 @@ import (
 func (ctrl *CLIController) CloudCommandList(selectorStr string) {
 	selector, err := models.ParseSelectorForCloud(selectorStr)
 	if err != nil {
-		log.Fatalf("cloud: list commands: invalid ctrl.cloud selector: %v", err)
+		log.Fatalf("cloud: list commands: invalid cloud selector: %v", err)
 	}
 
 	commands, err := ctrl.cloud.CommandList(selector)
@@ -25,11 +25,11 @@ func (ctrl *CLIController) CloudCommandList(selectorStr string) {
 }
 
 func (ctrl *CLIController) CloudCommandCopy(cmdSelectorStr string, spcSelectorStr string) {
-	console.PrintAction("Copying ctrl.cloud commands")
+	console.PrintAction("Copying cloud commands")
 
 	cmdSelector, err := models.ParseSelectorForCloudCommand(cmdSelectorStr)
 	if err != nil {
-		log.Fatalf("cloud: copy command: invalid ctrl.cloud selector: %v", err)
+		log.Fatalf("cloud: copy command: invalid cloud selector: %v", err)
 	}
 
 	spaceSelector, err := models.ParseSelectorMandatorySpace(spcSelectorStr)

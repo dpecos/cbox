@@ -48,7 +48,6 @@ func TestCreateEditDestroySpaces(t *testing.T) {
 	ctrl := controllers.InitController(dir)
 
 	tty.MockedOutput = ""
-	tty.MockedInput = []string{"y"}
 	ctrl.SpacesDestroy("@default")
 
 	tty.MockedOutput = ""
@@ -62,7 +61,6 @@ func TestCreateEditDestroySpaces(t *testing.T) {
 	checkOutput(t, "@test-space-renamed - This is a renamed test space", "space edition failed")
 
 	tty.MockedOutput = ""
-	tty.MockedInput = []string{"y"}
 	ctrl.SpacesDestroy("@test-space-renamed")
 	checkOutput(t, "Space destroyed successfully", "space deletion failed")
 
