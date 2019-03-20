@@ -78,5 +78,5 @@ func init() {
 	commandsCmd.AddCommand(untagCmd)
 
 	commandsCmd.Flags().BoolVarP(&controllers.ShowCommandsSourceFlag, "view", "v", false, "Show all details about commands")
-	viewCmd.Flags().BoolVarP(&controllers.SourceOnlyFlag, "src", "s", false, "view only code snippet source code")
+	viewCmd.Flags().BoolVar(&controllers.SourceOnlyFlag, "src", false, "view only code snippet source code")
 }
