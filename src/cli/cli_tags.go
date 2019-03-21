@@ -9,7 +9,7 @@ var tagsCmd = &cobra.Command{
 	Use:     "tags",
 	Aliases: []string{"tag"},
 	Args:    cobra.MaximumNArgs(1),
-	Short:   "List the tags available in your cbox",
+	Short:   "List all the tags in use within your cbox",
 	Long:    tools.Logo,
 	Run:     func(cmd *cobra.Command, args []string) { ctrl.TagsList(optionalSelector(args, 0)) },
 }
@@ -17,7 +17,7 @@ var tagsCmd = &cobra.Command{
 var tagsDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Args:  cobra.ExactArgs(1),
-	Short: "Delete specified tag",
+	Short: "Remove an specific tag from an space",
 	Long:  tools.Logo,
 	Run:   func(cmd *cobra.Command, args []string) { ctrl.TagsDelete(args[0]) },
 }

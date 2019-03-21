@@ -7,11 +7,10 @@ import (
 )
 
 var searchCmd = &cobra.Command{
-	Use:     "search",
-	Aliases: []string{"s"},
-	Args:    cobra.MaximumNArgs(2),
-	Short:   "Search for commands in a given space",
-	Long:    tools.Logo,
+	Use:   "search",
+	Args:  cobra.MaximumNArgs(2),
+	Short: "Search commands matching a criteria in a given local space",
+	Long:  tools.Logo,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 1 {
 			ctrl.SearchCommands(nil, args[0])

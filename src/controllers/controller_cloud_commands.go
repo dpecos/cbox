@@ -21,6 +21,9 @@ func (ctrl *CLIController) CloudCommandList(selectorStr string) {
 		log.Fatalf("cloud: list commands: %v", err)
 	}
 
+	if ListingsModeOption == "interactive" {
+		ListingsModeOption = "interactive-remote"
+	}
 	console.PrintCommandList(selector.String(), commands, ListingsModeOption, ListingsSortOption)
 }
 
@@ -74,4 +77,22 @@ func (ctrl *CLIController) CloudCommandCopy(cmdSelectorStr string, spcSelectorSt
 	} else {
 		console.PrintError("Copy cancelled")
 	}
+}
+
+func (ctrl *CLIController) CloudCommandView(selectorStr string) {
+	selector, err := models.ParseSelectorForCloud(selectorStr)
+	if err != nil {
+		log.Fatalf("cloud: view command: invalid cloud selector: %v", err)
+	}
+
+	if selector.Item == "" {
+		log.Fatalf("cloud: view command: command's label not specified")
+	}
+
+	command, err := ctrl.cloud.CommandFind(selector)
+	if err != nil {
+		log.Fatalf("cloud: view command: %v", err)
+	}
+
+	console.PrintCommand(selector.String(), command, false)
 }

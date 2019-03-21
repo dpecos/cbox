@@ -145,7 +145,7 @@ func (cloud *Cloud) CommandList(selector *Selector) ([]*Command, error) {
 	var commands []*Command
 	err = json.Unmarshal([]byte(response), &commands)
 	if err != nil {
-		return nil, fmt.Errorf("cloud: could not parse response: %v", err)
+		return nil, fmt.Errorf("cloud: list commands: could not parse response: %v", err)
 	}
 
 	for _, command := range commands {
@@ -154,4 +154,22 @@ func (cloud *Cloud) CommandList(selector *Selector) ([]*Command, error) {
 	}
 
 	return commands, nil
+}
+
+func (cloud *Cloud) CommandFind(selector *Selector) (*Command, error) {
+
+	commands, err := cloud.CommandList(selector)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(commands) == 0 {
+		return nil, fmt.Errorf("cloud: view command: selector '%s' did not match any command", selector.String())
+	}
+
+	if len(commands) > 1 {
+		return nil, fmt.Errorf("cloud: view command: selector '%s' match multiple commands instead of a single one", selector.String())
+	}
+
+	return commands[0], nil
 }

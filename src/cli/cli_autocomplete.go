@@ -12,7 +12,7 @@ import (
 
 var autocompleteCmd = &cobra.Command{
 	Use:   "autocomplete",
-	Short: "Generates shell completion scripts",
+	Short: "Generate an auto-completion script for your shell",
 	Args:  cobra.ExactArgs(1),
 	Long:  tools.Logo,
 	Run: func(cmd *cobra.Command, args []string) {

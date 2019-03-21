@@ -106,8 +106,17 @@ func PrintCommand(header string, cmd *models.Command, sourceOnly bool) {
 	}
 }
 
+func runFZFRemoteList(header string, commands []*models.Command, listingSort string) {
+	args := []string{"--ansi", "--exact", "--preview-window=down:30%:wrap", "--preview", "echo {} | cut -f1 -d' ' | xargs cbox cloud view"}
+	runFZF(header, commands, listingSort, args)
+}
+
 func runFZFList(header string, commands []*models.Command, listingSort string) {
 	args := []string{"--ansi", "--exact", "--preview-window=down:30%:wrap", "--preview", "echo {} | cut -f1 -d' ' | xargs cbox command view"}
+	runFZF(header, commands, listingSort, args)
+}
+
+func runFZF(header string, commands []*models.Command, listingSort string, args []string) {
 	if header != "" {
 		args = append(args, "--header="+header)
 	}
@@ -167,6 +176,8 @@ func PrintCommandList(header string, commands []*models.Command, listingMode str
 
 	if listingMode == "interactive" {
 		runFZFList(header, commands, listingSort)
+	} else if listingMode == "interactive-remote" {
+		runFZFRemoteList(header, commands, listingSort)
 	} else {
 		staticCommandList(header, commands)
 	}

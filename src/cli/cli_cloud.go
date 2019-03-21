@@ -8,21 +8,21 @@ import (
 var cloudCmd = &cobra.Command{
 	Use:   "cloud",
 	Args:  cobra.ExactArgs(0),
-	Short: "Login & sync your spaces to the cloud",
+	Short: "Discover and share usefull commands with cbox's community",
 	Long:  tools.Logo,
 }
 
 var cloudLoginCmd = &cobra.Command{
 	Use:   "login",
 	Args:  cobra.ExactArgs(0),
-	Short: "Login to cbox cloud using your Github account",
+	Short: "Login to the cloud using your Github account",
 	Run:   func(cmd *cobra.Command, args []string) { ctrl.CloudLogin() },
 }
 
 var cloudLogoutCmd = &cobra.Command{
 	Use:   "logout",
 	Args:  cobra.ExactArgs(0),
-	Short: "Logout from cbox cloud",
+	Short: "Logout from the cloud - we'll miss you :'(",
 	Run:   func(cmd *cobra.Command, args []string) { ctrl.CloudLogout() },
 }
 

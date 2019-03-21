@@ -8,7 +8,7 @@ import (
 var configCmd = &cobra.Command{
 	Use:   "config",
 	Args:  cobra.ExactArgs(0),
-	Short: "Manage cbox settings",
+	Short: "Change cbox default settings",
 	Long:  tools.Logo,
 }
 
@@ -22,7 +22,7 @@ var setConfigCmd = &cobra.Command{
 var getConfigCmd = &cobra.Command{
 	Use:   "get",
 	Args:  cobra.ExactArgs(1),
-	Short: "Get the value for a config setting",
+	Short: "Get the current value for a config setting",
 	Run:   func(cmd *cobra.Command, args []string) { ctrl.ConfigGet(args[0]) },
 }
 
