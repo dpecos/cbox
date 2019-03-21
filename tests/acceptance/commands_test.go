@@ -99,3 +99,62 @@ func TestTagCommand(t *testing.T) {
 	ctrl.CommandView("test-command@default")
 	checkOutput(t, "Selector: test-command@default", "could not display the command in the default space")
 }
+
+func TestCopyCommand(t *testing.T) {
+	dir, _ := ioutil.TempDir("", "cbox")
+	defer os.RemoveAll(dir)
+	ctrl := controllers.InitController(dir)
+
+	tty.MockedInput = []string{"test-command", "This is a test command", "url", "CODE", "test-tag"}
+	ctrl.CommandAdd(nil)
+
+	tty.MockedOutput = ""
+	tty.MockedInput = []string{"test-space", "This is a test space"}
+	ctrl.SpacesCreate()
+
+	// specifying both origin and target
+	targetSpace := "@test-space"
+	tty.MockedOutput = ""
+	ctrl.CommandCopy("test-command@default", &targetSpace)
+	checkOutput(t, "Command copied successfully!", "could not copy command to @test-space")
+
+	tty.MockedOutput = ""
+	ctrl.CommandView("test-command@test-space")
+	checkOutput(t, "Selector: test-command@test-space", "could not display the command in @test-space")
+
+	tty.MockedOutput = ""
+	ctrl.CommandView("test-command@default")
+	checkOutput(t, "Selector: test-command@default", "could not display the command in @default")
+
+	tty.MockedOutput = ""
+	ctrl.CommandDelete("test-command@test-space")
+
+	// specifying both origin (without space) and target
+	tty.MockedOutput = ""
+	ctrl.CommandCopy("test-command", &targetSpace)
+	checkOutput(t, "Command copied successfully!", "could not copy command to @test-space (origin space not specified)")
+
+	tty.MockedOutput = ""
+	ctrl.CommandView("test-command@test-space")
+	checkOutput(t, "Selector: test-command@test-space", "could not display the command in @test-space (origin space not specified)")
+
+	tty.MockedOutput = ""
+	ctrl.CommandView("test-command@default")
+	checkOutput(t, "Selector: test-command@default", "could not display the command in @default (origin space not specified)")
+
+	tty.MockedOutput = ""
+	ctrl.CommandDelete("test-command@default")
+
+	// specifying only origin (without space)
+	tty.MockedOutput = ""
+	ctrl.CommandCopy("test-command@test-space", nil)
+	checkOutput(t, "Command copied successfully!", "could not copy command to @default (default as target space)")
+
+	tty.MockedOutput = ""
+	ctrl.CommandView("test-command@default")
+	checkOutput(t, "Selector: test-command@default", "could not display the command in @default (default as target space)")
+
+	tty.MockedOutput = ""
+	ctrl.CommandView("test-command@test-space")
+	checkOutput(t, "Selector: test-command@test-space", "could not display the command in @test-space (default as target space)")
+}

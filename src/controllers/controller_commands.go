@@ -9,6 +9,7 @@ import (
 	"github.com/dplabs/cbox/src/models"
 	"github.com/dplabs/cbox/src/tools/console"
 	"github.com/dplabs/cbox/src/tools/tty"
+	"github.com/mitchellh/copystructure"
 )
 
 func (ctrl *CLIController) CommandList(spcSelectorStr *string) {
@@ -156,4 +157,59 @@ func (ctrl *CLIController) CommandView(cmdSelectorStr string) {
 	}
 
 	console.PrintCommand(command.Selector.String(), command, SourceOnlyFlag)
+}
+
+func copyCommand(command models.Command) models.Command {
+	return command
+}
+
+func (ctrl *CLIController) CommandCopy(cmdSelectorStr string, spcSelectorStr *string) {
+	console.PrintAction("Copying a command")
+
+	selector, err := models.ParseSelector(cmdSelectorStr)
+	if err != nil {
+		log.Fatalf("copy command: %v", err)
+	}
+
+	space, err := ctrl.findSpace(selector)
+	if err != nil {
+		log.Fatalf("copy command: %v", err)
+	}
+
+	command, err := space.CommandFind(selector.Item)
+	if err != nil {
+		log.Fatalf("copy command: %v", err)
+	}
+
+	s := ""
+	if spcSelectorStr != nil {
+		s = *spcSelectorStr
+	}
+
+	selector, err = models.ParseSelector(s)
+	if err != nil {
+		log.Fatalf("copy command: %v", err)
+	}
+
+	space, err = ctrl.findSpace(selector)
+	if err != nil {
+		log.Fatalf("copy command: %v", err)
+	}
+
+	console.PrintCommand("Command to copy to space", command, false)
+
+	if SkipQuestionsFlag || tty.Confirm(fmt.Sprintf("Are you sure you want to copy this command to space '%s'?", space.Selector.String())) {
+		copy, err := copystructure.Copy(*command)
+		commandCopy := copy.(models.Command)
+
+		err = space.CommandAdd(&commandCopy)
+		if err != nil {
+			log.Fatalf("copy command: %v", err)
+		}
+
+		core.Save(ctrl.cbox)
+		console.PrintSuccess("Command copied successfully!")
+	} else {
+		console.PrintError("Copy cancelled")
+	}
 }

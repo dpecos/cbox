@@ -18,11 +18,13 @@ func (space *Space) CommandAdd(command *Command) error {
 	if commandPresentInSpace(space, command.Label) {
 		return fmt.Errorf("add command: label '%s' already in use", command.Label)
 	}
+
 	now := UnixTimeNow()
 	if command.CreatedAt == NilUnixTime {
 		command.CreatedAt = now
 		command.UpdatedAt = now
 	}
+
 	space.UpdatedAt = now
 	space.Entries = append(space.Entries, command)
 

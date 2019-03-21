@@ -68,6 +68,14 @@ var untagCmd = &cobra.Command{
 	Run:   func(cmd *cobra.Command, args []string) { ctrl.TagsRemove(args[0], args[1:]...) },
 }
 
+var copyCmd = &cobra.Command{
+	Use:   "copy",
+	Args:  cobra.MinimumNArgs(1),
+	Short: "Copy a command into a space",
+	Long:  tools.Logo,
+	Run:   func(cmd *cobra.Command, args []string) { ctrl.CommandCopy(args[0], optionalSelector(args, 1)) },
+}
+
 func init() {
 	rootCmd.AddCommand(commandsCmd)
 	commandsCmd.AddCommand(addCmd)
@@ -76,6 +84,7 @@ func init() {
 	commandsCmd.AddCommand(viewCmd)
 	commandsCmd.AddCommand(tagCmd)
 	commandsCmd.AddCommand(untagCmd)
+	commandsCmd.AddCommand(copyCmd)
 
 	commandsCmd.Flags().BoolVarP(&controllers.ShowCommandsSourceFlag, "view", "v", false, "Show all details about commands")
 	viewCmd.Flags().BoolVar(&controllers.SourceOnlyFlag, "src", false, "view only code snippet source code")
