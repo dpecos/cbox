@@ -44,12 +44,7 @@ func (ctrl *CLIController) TagsAdd(cmdSelectorStr string, tags ...string) {
 		log.Fatalf("add tags: %v", err)
 	}
 
-	space, err := ctrl.findSpace(selector)
-	if err != nil {
-		log.Fatalf("add tags: %v", err)
-	}
-
-	command, err := space.CommandFind(selector.Item)
+	_, command, err := ctrl.findSpaceAndCommand(selector)
 	if err != nil {
 		log.Fatalf("add tags: %v", err)
 	}
@@ -80,12 +75,7 @@ func (ctrl *CLIController) TagsRemove(cmdSelectorStr string, tags ...string) {
 		log.Fatalf("remove tags: %v", err)
 	}
 
-	space, err := ctrl.findSpace(selector)
-	if err != nil {
-		log.Fatalf("remove tags: %v", err)
-	}
-
-	command, err := space.CommandFind(selector.Item)
+	_, command, err := ctrl.findSpaceAndCommand(selector)
 	if err != nil {
 		log.Fatalf("remove tags: %v", err)
 	}

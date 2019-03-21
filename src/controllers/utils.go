@@ -27,6 +27,20 @@ func (ctrl *CLIController) findSpace(selector *models.Selector) (*models.Space, 
 	}
 }
 
+func (ctrl *CLIController) findSpaceAndCommand(selector *models.Selector) (*models.Space, *models.Command, error) {
+	space, err := ctrl.findSpace(selector)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	command, err := space.CommandFind(selector.Item)
+	if err != nil {
+		return space, nil, err
+	}
+
+	return space, command, nil
+}
+
 func (ctrl *CLIController) cleanOldSpaceFile(space *models.Space, oldSelector *models.Selector) {
 	if space.Label != oldSelector.Space || (oldSelector.Namespace != "" && space.Selector.Namespace != oldSelector.Namespace) {
 		if oldSelector.NamespaceType == models.TypeNone && space.Selector.NamespaceType != models.TypeNone {

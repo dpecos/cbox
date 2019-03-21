@@ -76,12 +76,7 @@ func (ctrl *CLIController) CommandEdit(cmdSelectorStr string) {
 		log.Fatalf("edit command: %v", err)
 	}
 
-	space, err := ctrl.findSpace(selector)
-	if err != nil {
-		log.Fatalf("edit command: %v", err)
-	}
-
-	command, err := space.CommandFind(selector.Item)
+	space, command, err := ctrl.findSpaceAndCommand(selector)
 	if err != nil {
 		log.Fatalf("edit command: %v", err)
 	}
@@ -119,12 +114,7 @@ func (ctrl *CLIController) CommandDelete(cmdSelectorStr string) {
 		log.Fatalf("delete command: %v", err)
 	}
 
-	space, err := ctrl.findSpace(selector)
-	if err != nil {
-		log.Fatalf("delete command: %v", err)
-	}
-
-	command, err := space.CommandFind(selector.Item)
+	space, command, err := ctrl.findSpaceAndCommand(selector)
 	if err != nil {
 		log.Fatalf("delete command: %v", err)
 	}
@@ -146,21 +136,12 @@ func (ctrl *CLIController) CommandView(cmdSelectorStr string) {
 		log.Fatalf("view command: %v", err)
 	}
 
-	space, err := ctrl.findSpace(selector)
-	if err != nil {
-		log.Fatalf("view command: %v", err)
-	}
-
-	command, err := space.CommandFind(selector.Item)
+	_, command, err := ctrl.findSpaceAndCommand(selector)
 	if err != nil {
 		log.Fatalf("view command: %v", err)
 	}
 
 	console.PrintCommand(command.Selector.String(), command, SourceOnlyFlag)
-}
-
-func copyCommand(command models.Command) models.Command {
-	return command
 }
 
 func (ctrl *CLIController) CommandCopy(cmdSelectorStr string, spcSelectorStr *string) {
@@ -171,12 +152,7 @@ func (ctrl *CLIController) CommandCopy(cmdSelectorStr string, spcSelectorStr *st
 		log.Fatalf("copy command: %v", err)
 	}
 
-	space, err := ctrl.findSpace(selector)
-	if err != nil {
-		log.Fatalf("copy command: %v", err)
-	}
-
-	command, err := space.CommandFind(selector.Item)
+	space, command, err := ctrl.findSpaceAndCommand(selector)
 	if err != nil {
 		log.Fatalf("copy command: %v", err)
 	}
