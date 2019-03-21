@@ -43,7 +43,7 @@ func Read(label string, help string, multiline bool) (string, error) {
 			MockedInput = MockedInput[1:]
 			return value, nil
 		}
-		log.Fatalf("input mocked but not enough values provided for input")
+		log.Fatalf("input mocked but not enough values provided for input - Mocked output until this moment: \n %s", MockedOutput)
 	}
 
 	var prompt survey.Prompt

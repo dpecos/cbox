@@ -16,7 +16,7 @@ func createCommand(t *testing.T, space *models.Space) *models.Command {
 	}
 	command.Selector = space.Selector.CloneForItem(command.Label)
 
-	space.CommandAdd(&command)
+	space.CommandAdd(&command, false)
 
 	return &command
 }
@@ -109,7 +109,7 @@ func TestCommandLabelUniquenessOnCreation(t *testing.T) {
 		Tags:        []string{"test"},
 	}
 
-	err := space.CommandAdd(&c2)
+	err := space.CommandAdd(&c2, false)
 	if err == nil {
 		t.Fatalf("labels have to be unique within an space after adding a command")
 	}

@@ -87,3 +87,51 @@ func TestViewingCloudCommands(t *testing.T) {
 	ctrl.CloudSpaceUnpublish("@test:default")
 	checkOutput(t, "Space unpublished successfully!", "failed to unpublish space")
 }
+
+func TestCopyingCloudCommands(t *testing.T) {
+	dir, _ := ioutil.TempDir("", "cbox")
+	defer os.RemoveAll(dir)
+	ctrl := controllers.InitController(dir)
+
+	ctrl.ConfigSet("cbox.environment", "test")
+
+	tty.MockedInput = []string{testUserJWTToken}
+	ctrl.CloudLogin()
+
+	tty.MockedInput = []string{"test-command", "This is a test command", "URL", "CODE", "test-tag"}
+	ctrl.CommandAdd(nil)
+
+	tty.MockedOutput = ""
+	ctrl.CloudSpacePublish("@default")
+
+	// clone a remote space
+	ctrl.SpacesDestroy("@default")
+
+	tty.MockedOutput = ""
+	ctrl.CloudCopy("@test:default", nil)
+	checkOutput(t, "Space cloned successfully into '@default'!", "failed to clone space")
+
+	// clone with clashing space
+	tty.MockedInput = []string{"clashed"}
+	tty.MockedOutput = ""
+	ctrl.CloudCopy("@test:default", nil)
+	checkOutput(t, "Space cloned successfully into '@clashed'!", "failed to clone space")
+
+	// copy remote commands overwriting local ones
+	controllers.ForceFlag = true
+
+	tty.MockedOutput = ""
+	targetSpace := "@default"
+	ctrl.CloudCopy("@test:default", &targetSpace)
+	checkOutput(t, "Commands copied successfully into '@default'!", "failed to clone space (clashing)")
+
+	// copy single remote command overwriting local ones not specifying target space == @default
+	tty.MockedOutput = ""
+	ctrl.CloudCopy("test-command@test:default", nil)
+	checkOutput(t, "Commands copied successfully into '@default'!", "failed to clone space (clashing)")
+
+	// cleanup
+	tty.MockedOutput = ""
+	ctrl.CloudSpaceUnpublish("@test:default")
+	checkOutput(t, "Space unpublished successfully!", "failed to unpublish space")
+}

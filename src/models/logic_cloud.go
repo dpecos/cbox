@@ -57,7 +57,7 @@ func (cloud *Cloud) doRequest(method string, path string, query map[string]strin
 
 	if cloud.Environment == "test" {
 		strReq, _ := httputil.DumpRequest(req, true)
-		tty.Debug(fmt.Sprintf("---\n\n%s\n\n~~~\n", string(strReq)))
+		tty.Debug(fmt.Sprintf("---\n\n%s~~~\n", string(strReq)))
 	}
 
 	resp, err := cloud.HttpClient.Do(req)
@@ -141,7 +141,6 @@ func (cloud *Cloud) CommandList(selector *Selector) ([]*Command, error) {
 		return nil, err
 	}
 
-	tty.Print("\n")
 	var commands []*Command
 	err = json.Unmarshal([]byte(response), &commands)
 	if err != nil {

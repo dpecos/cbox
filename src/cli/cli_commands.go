@@ -88,4 +88,6 @@ func init() {
 
 	commandsCmd.Flags().BoolVarP(&controllers.ShowCommandsSourceFlag, "view", "v", false, "Show all details about commands")
 	viewCmd.Flags().BoolVar(&controllers.SourceOnlyFlag, "src", false, "view only code snippet source code")
+	copyCmd.Flags().BoolVarP(&controllers.ForceFlag, "force", "f", false, "Force copying commands in case of label clashing with existing ones")
+
 }

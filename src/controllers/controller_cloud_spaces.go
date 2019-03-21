@@ -100,7 +100,7 @@ func (ctrl *CLIController) CloudSpaceUnpublish(spcSelectorStr string) {
 	if err == nil {
 		console.PrintInfo("Local copy won't be deleted")
 	} else {
-		console.PrintWarning("You don't have a local copy of the space")
+		console.PrintWarning("You don't have a local copy of the space\n")
 	}
 
 	if SkipQuestionsFlag || tty.Confirm("Unpublish?") {
@@ -116,78 +116,3 @@ func (ctrl *CLIController) CloudSpaceUnpublish(spcSelectorStr string) {
 		console.PrintError("Unpublishing cancelled")
 	}
 }
-
-// func (ctrl *CLIController) CloudSpaceClone(spcSelectorStr string) {
-// 	console.PrintAction("Cloning an space")
-
-// 	selector, err := models.ParseSelectorForCloud(spcSelectorStr)
-// 	if err != nil {
-// 		log.Fatalf("cloud: clone space: invalid cloud selector: %v", err)
-// 	}
-
-// 	space, err := ctrl.cloud.SpaceFind(selector)
-// 	if err != nil {
-// 		log.Fatalf("cloud: clone space: %v", err)
-// 	}
-
-// 	commands, err := ctrl.cloud.CommandList(selector)
-// 	if err != nil {
-// 		log.Fatalf("cloud: clone space: %v", err)
-// 	}
-
-// 	space.Entries = commands
-
-// 	console.PrintSpace("Space to clone", space)
-// 	console.PrintCommandList("Containing these commands", space.Entries, "static", ListingsSortOption)
-
-// 	if SkipQuestionsFlag || tty.Confirm("Clone?") {
-// 		err := ctrl.cbox.SpaceCreate(space)
-// 		for err != nil {
-// 			console.PrintError("Space already found in your cbox. Try a different one")
-// 			space.Label = strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
-// 			err = ctrl.cbox.SpaceCreate(space)
-// 		}
-
-// 		core.Save(ctrl.cbox)
-
-// 		console.PrintSuccess("Space cloned successfully!")
-// 	} else {
-// 		console.PrintError("Clone cancelled")
-// 	}
-// }
-
-// // TODO: needed?
-// func (ctrl *CLIController) CloudSpacePull(spcSelectorStr string) {
-// 	console.PrintAction("Pulling latest changes of an space")
-
-// 	selector, err := models.ParseSelectorMandatorySpace(spcSelectorStr)
-// 	if err != nil {
-// 		log.Fatalf("cloud: pull space: invalid cloud selector: %v", err)
-// 	}
-
-// 	space, err := ctrl.findSpace(selector)
-// 	if err != nil {
-// 		log.Fatalf("cloud: pull space: %v", err)
-// 	}
-
-// 	spaceCloud, err := ctrl.cloud.SpaceFind(selector)
-// 	if err != nil {
-// 		log.Fatalf("cloud: pull space: %v", err)
-// 	}
-
-// 	commands, err := ctrl.cloud.CommandList(selector)
-// 	if err != nil {
-// 		log.Fatalf("cloud: pull space: %v", err)
-// 	}
-
-// 	// Note: Label is not overwritten because user can renamed his local copy of the space
-// 	space.Entries = commands
-// 	space.UpdatedAt = spaceCloud.UpdatedAt
-// 	space.Description = spaceCloud.Description
-
-// 	core.Save(ctrl.cbox)
-
-// 	console.PrintSpace("Pulled space", space)
-
-// 	console.PrintSuccess("Space pulled successfully!")
-// }

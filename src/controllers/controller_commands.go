@@ -55,11 +55,11 @@ func (ctrl *CLIController) CommandAdd(spcSelectorStr *string) {
 
 	command := console.ReadCommand(space)
 
-	err = space.CommandAdd(command)
+	err = space.CommandAdd(command, false)
 	for err != nil {
 		console.PrintError(fmt.Sprintf("Label '%s' already found in space. Try a different one", command.Label))
 		command.Label = strings.ToLower(console.ReadString("Label", console.NOT_EMPTY_VALUES, console.ONLY_VALID_CHARS))
-		err = space.CommandAdd(command)
+		err = space.CommandAdd(command, false)
 	}
 	core.Save(ctrl.cbox)
 
@@ -178,7 +178,7 @@ func (ctrl *CLIController) CommandCopy(cmdSelectorStr string, spcSelectorStr *st
 		copy, err := copystructure.Copy(*command)
 		commandCopy := copy.(models.Command)
 
-		err = space.CommandAdd(&commandCopy)
+		err = space.CommandAdd(&commandCopy, ForceFlag)
 		if err != nil {
 			log.Fatalf("copy command: %v", err)
 		}

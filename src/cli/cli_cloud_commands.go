@@ -17,10 +17,10 @@ var cloudCommandsListCmd = &cobra.Command{
 
 var cloudCopyCmd = &cobra.Command{
 	Use:   "copy",
-	Args:  cobra.ExactArgs(2),
+	Args:  cobra.MinimumNArgs(1),
 	Short: "Create a local copy of the commands retrieved from the cloud",
 	Long:  tools.Logo,
-	Run:   func(cmd *cobra.Command, args []string) { ctrl.CloudCommandCopy(args[0], args[1]) },
+	Run:   func(cmd *cobra.Command, args []string) { ctrl.CloudCopy(args[0], optionalSelector(args, 1)) },
 }
 
 var cloudViewCmd = &cobra.Command{
@@ -38,5 +38,6 @@ func init() {
 	cloudCmd.AddCommand(cloudViewCmd)
 
 	cloudCommandsListCmd.Flags().BoolVarP(&controllers.ShowCommandsSourceFlag, "view", "v", false, "Show all details about commands")
+	cloudCopyCmd.Flags().BoolVarP(&controllers.ForceFlag, "force", "f", false, "Force copying commands in case of label clashing with existing ones")
 
 }

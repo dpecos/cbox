@@ -14,9 +14,12 @@ func commandPresentInSpace(space *Space, commandLabel string) bool {
 	return err == nil
 }
 
-func (space *Space) CommandAdd(command *Command) error {
+func (space *Space) CommandAdd(command *Command, overwrite bool) error {
 	if commandPresentInSpace(space, command.Label) {
-		return fmt.Errorf("add command: label '%s' already in use", command.Label)
+		if !overwrite {
+			return fmt.Errorf("add command: label '%s' already in use", command.Label)
+		}
+		space.deleteCommandByLabel(command.Label)
 	}
 
 	now := UnixTimeNow()
@@ -90,7 +93,11 @@ func (space *Space) CommandFind(label string) (*Command, error) {
 }
 
 func (space *Space) CommandDelete(command *Command) {
-	pos, err := space.commandFindPositionByLabel(command.Label)
+	space.deleteCommandByLabel(command.Label)
+}
+
+func (space *Space) deleteCommandByLabel(label string) {
+	pos, err := space.commandFindPositionByLabel(label)
 	if err != nil {
 		log.Fatalf("delete command: %v", err)
 	}

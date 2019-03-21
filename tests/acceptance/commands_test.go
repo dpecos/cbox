@@ -158,3 +158,31 @@ func TestCopyCommand(t *testing.T) {
 	ctrl.CommandView("test-command@test-space")
 	checkOutput(t, "Selector: test-command@test-space", "could not display the command in @test-space (default as target space)")
 }
+
+func TestCopyCommandClashing(t *testing.T) {
+	dir, _ := ioutil.TempDir("", "cbox")
+	defer os.RemoveAll(dir)
+	ctrl := controllers.InitController(dir)
+
+	tty.MockedInput = []string{"test-command", "This is a test command", "url", "CODE", "test-tag"}
+	ctrl.CommandAdd(nil)
+
+	tty.MockedOutput = ""
+	tty.MockedInput = []string{"test-space", "This is a test space"}
+	ctrl.SpacesCreate()
+
+	targetSpace := "@test-space"
+	tty.MockedOutput = ""
+	ctrl.CommandCopy("test-command@default", &targetSpace)
+
+	controllers.ForceFlag = true
+	tty.MockedOutput = ""
+	ctrl.CommandCopy("test-command@default", &targetSpace)
+	checkOutput(t, "Command copied successfully!", "could not copy command to @test-space")
+
+	// TODO: check for error thrown
+	// controllers.ForceFlag = false
+	// tty.MockedOutput = ""
+	// ctrl.CommandCopy("test-command@default", &targetSpace)
+	// checkOutput(t, "Command copied successfully!", "could not copy command to @test-space")
+}
