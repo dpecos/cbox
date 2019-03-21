@@ -98,7 +98,7 @@ func (ctrl *CLIController) CloudSpaceUnpublish(spcSelectorStr string) {
 
 	_, err = ctrl.findSpace(selector)
 	if err == nil {
-		console.PrintInfo("Local copy won't be deleted")
+		console.PrintInfo("Local copy won't be deleted\n")
 	} else {
 		console.PrintWarning("You don't have a local copy of the space\n")
 	}
