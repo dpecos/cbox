@@ -1,0 +1,110 @@
+env_files:
+  github_token: ~/.config/gorelaser/github_token
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+      - GO111MODULE=on
+      # - BRANCH=$(git rev-parse --abbrev-ref HEAD)
+      # - COMMIT=$(git rev-parse HEAD)
+      # - BUILD=$BRANCH-$COMMIT@$(date +%FT%T%z)
+      # - TAG=$(git describe --tags 2> /dev/null)
+      # - ENV=prod
+    ldflags:
+      - -X github.com/dplabs/cbox/src/core.Version={{ .Env.TAG }} -X github.com/dplabs/cbox/src/core.Build={{.Env.BUILD}} -X github.com/dplabs/cbox/src/core.Env={{.Env.ENV}}
+    goos:
+      - darwin
+      - windows
+      - linux
+      - freebsd
+    goarch:
+      - amd64
+      - 386
+      - arm
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: 386
+      - goos: windows
+        goarch: arm
+      - goos: darwin
+        goarch: 386
+      - goos: darwin
+        goarch: arm
+      - goos: darwin
+        goarch: arm64
+      - goos: freebsd
+        goarch: arm
+
+archive:
+  format_overrides:
+    - goos: windows
+      format: zip
+  files:
+    - none*
+  replacements:
+    darwin: macosx
+    386: i386
+    amd64: x86_64
+
+checksum:
+  name_template: "checksums.txt"
+
+# sign:
+#   artifacts: checksum
+
+snapshot:
+  name_template: "{{ .Tag }}-snapshot"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+release:
+  github:
+    owner: dplabs
+    name: cbox
+
+# nfpm:
+#   name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+#   vendor: dplabs
+#   homepage: https://cbox.dplabs.io
+#   maintainer: Daniel Pecos Martinez <me@danielpecos.com>
+#   description: Store and organize useful shell commands or code snippets and share them with your team
+#   license:
+#   formats:
+#     - deb
+#     - rpm
+#   dependencies:
+#     - fzf
+#   bindir: /usr/bin
+
+# snapcraft:
+#   name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+#   name: cbox
+#   #publish: true
+#   summary: Store and organize useful shell commands or code snippets and share them with your team
+#   description: |
+#     cbox helps you organizing and finding those useful commands you find time to time and would really love to store for future occassions.
+#   grade: devel
+#   # grade: stable
+#   plugs:
+#     personal-files:
+#       read:
+#         - $HOME/.cbox
+#       write:
+#         - $HOME/.cbox
+
+brew:
+  github:
+    owner: dplabs
+    name: homebrew-cbox
+  homepage: https://cbox.dplabs.io
+  description: Store and organize useful shell commands or code snippets and share them with your team
+  dependencies:
+    - fzf
+  test: |
+    system "#{bin}/cbox", "version"

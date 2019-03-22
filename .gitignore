@@ -1,7 +1,9 @@
 .vscode
+.idea
 
 .scannerwork
 coverage.out
 report.json
 
+dist/*
 cbox

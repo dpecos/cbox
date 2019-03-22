@@ -23,3 +23,9 @@ check:
 
 test:
 	sh ./scripts/test.sh
+
+release:
+	. ./scripts/pre-release.sh && goreleaser --rm-dist	
+
+snapshot-release:
+	. ./scripts/pre-release.sh && goreleaser --rm-dist --snapshot
