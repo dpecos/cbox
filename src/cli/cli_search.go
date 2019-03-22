@@ -8,7 +8,7 @@ import (
 
 var searchCmd = &cobra.Command{
 	Use:   "search",
-	Args:  cobra.MaximumNArgs(2),
+	Args:  cobra.MinimumNArgs(1),
 	Short: "Search commands matching a criteria in a given local space",
 	Long:  tools.Logo,
 	Run: func(cmd *cobra.Command, args []string) {
