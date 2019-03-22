@@ -10,6 +10,7 @@ import (
 
 func readTags() ([]string, error) {
 	tags := ReadString("Tags (separated by space)")
+	resultList := []string{}
 	tagList := strings.Split(tags, " ")
 	for _, tag := range tagList {
 		if tag != "" {
@@ -17,9 +18,10 @@ func readTags() ([]string, error) {
 				PrintError(MSG_NOT_VALID_CHARS)
 				return nil, fmt.Errorf(MSG_NOT_VALID_CHARS)
 			}
+			resultList = append(resultList, tag)
 		}
 	}
-	return tagList, nil
+	return resultList, nil
 }
 
 func ReadCommand(space *models.Space) *models.Command {

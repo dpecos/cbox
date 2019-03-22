@@ -3,6 +3,10 @@ package models
 import "strings"
 
 func (command *Command) TagAdd(tag string) {
+	if tag == "" {
+		return
+	}
+
 	found := false
 
 	tag = strings.ToLower(tag)
@@ -21,6 +25,10 @@ func (command *Command) TagAdd(tag string) {
 }
 
 func (command *Command) TagDelete(tag string) {
+	if tag == "" {
+		return
+	}
+
 	found := -1
 
 	for i, t := range command.Tags {
