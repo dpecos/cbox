@@ -12,15 +12,20 @@ git:
 
 install: true
 
+env:
+  - GO111MODULE=on
+
 script:
   - git fetch --unshallow --quiet
-  - env GO111MODULE=on make test
+  - make test
+  - make
   - sonar-scanner
 
 deploy:
   provider: releases
   api_key: $TRAVIS_CI_TOKEN
-  file: "cbox"
+  file:
+    - "cbox"
   skip_cleanup: true
   on:
     tags: true
