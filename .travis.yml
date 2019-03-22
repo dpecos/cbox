@@ -1,7 +1,7 @@
 language: go
 
 go:
-  - "1.11"
+  - "1.12"
 
 addons:
   sonarcloud:
@@ -14,5 +14,13 @@ install: true
 
 script:
   - git fetch --unshallow --quiet
-  - env GO111MODULE=on make test
+  - make test
   - sonar-scanner
+
+deploy:
+  provider: releases
+  api_key: $TRAVIS_CI_TOKEN
+  file: "cbox"
+  skip_cleanup: true
+  on:
+    tags: true
