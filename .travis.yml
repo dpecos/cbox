@@ -14,7 +14,7 @@ install: true
 
 script:
   - git fetch --unshallow --quiet
-  - make test
+  - env GO111MODULE=on make test
   - sonar-scanner
 
 deploy:
