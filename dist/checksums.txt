@@ -1,0 +1,8 @@
+ff5917bc8c37eccdd1a38723b82bd507ae3ec364910bf27b9de0870cabb4d605  cbox_v0.9.0-alpha.1-snapshot_linux_armv6.tar.gz
+52f5023eb3082541be4062c5002a749ea676b90a70fb662e1a0ae5d0784fa96e  cbox_v0.9.0-alpha.1-snapshot_freebsd_i386.tar.gz
+622c231b1afaa647985d0b75373d9d6252550f5a92d7c563c6d715ce5c25af27  cbox_v0.9.0-alpha.1-snapshot_windows_x86_64.zip
+e6c050bb9553bd33a79b24f647e63d1c8b608f1253b89aae0bee52786b0d35f3  cbox_v0.9.0-alpha.1-snapshot_freebsd_x86_64.tar.gz
+45a1b08cbb9da579311f2a760fca44800fe3b2afa6e78fc47e5461bec049f283  cbox_v0.9.0-alpha.1-snapshot_linux_arm64.tar.gz
+f61fca2f3b598555a12a5a516833560d3ac2ed311b0fc7f47db73ba1c7a39293  cbox_v0.9.0-alpha.1-snapshot_linux_i386.tar.gz
+cf9204901f5001cf654a90de5ebdd5f8e1b9a9fc45c43d343ebb7dbc6772042a  cbox_v0.9.0-alpha.1-snapshot_linux_x86_64.tar.gz
+47755c72645b40724750e55c4b4a4529f042e2c8acfa41812c7340801009b7d6  cbox_v0.9.0-alpha.1-snapshot_macosx_x86_64.tar.gz
