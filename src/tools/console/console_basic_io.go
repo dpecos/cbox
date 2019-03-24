@@ -122,7 +122,7 @@ func resolveEditionValue(previousValue string, newValue string, aborted bool) st
 }
 
 func PrintError(msg string) {
-	tty.Print("%s\n", tty.ColorRed(msg))
+	tty.PrintError("%s\n", tty.ColorRed(msg))
 }
 
 func PrintSuccess(msg string) {

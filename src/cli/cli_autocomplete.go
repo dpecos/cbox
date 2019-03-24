@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/dplabs/cbox/src/tools"
-	"github.com/dplabs/cbox/src/tools/console"
 	"github.com/spf13/cobra"
 )
 
@@ -28,7 +27,7 @@ var autocompleteCmd = &cobra.Command{
 				log.Fatal(err)
 			}
 		default:
-			console.PrintError(fmt.Sprintf("Shell '%s' not supported", shell))
+			log.Fatal(fmt.Sprintf("Shell '%s' not supported", shell))
 		}
 	},
 }

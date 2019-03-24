@@ -2,7 +2,9 @@ package tty
 
 import (
 	"fmt"
+	"io"
 	"log"
+	"os"
 
 	survey "gopkg.in/AlecAivazis/survey.v1"
 	surveyCore "gopkg.in/AlecAivazis/survey.v1/core"
@@ -21,6 +23,14 @@ func init() {
 }
 
 func Print(format string, args ...interface{}) {
+	print(os.Stdout, format, args...)
+}
+
+func PrintError(format string, args ...interface{}) {
+	print(os.Stderr, format, args...)
+}
+
+func print(w io.Writer, format string, args ...interface{}) {
 	if !DisableOutput {
 		var nl string
 		if len(args) != 0 {
@@ -31,7 +41,7 @@ func Print(format string, args ...interface{}) {
 		if MockTTY {
 			MockedOutput = MockedOutput + nl
 		} else {
-			fmt.Print(nl)
+			fmt.Fprintf(w, nl)
 		}
 	}
 }
