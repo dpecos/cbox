@@ -9,6 +9,7 @@ import (
 
 	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/models"
+	"github.com/dplabs/cbox/tests"
 )
 
 const (
@@ -19,7 +20,7 @@ const (
 var cloud *models.Cloud
 
 func TestMain(m *testing.M) {
-	cbox := initializeCBox()
+	cbox := tests.InitializeCBox()
 	cloud = cloudConnect(cbox, testUserJWTToken)
 
 	if !strings.Contains(cloud.URL, "test") {
@@ -48,9 +49,9 @@ func TestCloudLogin(t *testing.T) {
 }
 
 func TestSpacePublishingDoesntChangeCreateUpdateDates(t *testing.T) {
-	cboxInstance := initializeCBox()
+	cboxInstance := tests.InitializeCBox()
 
-	space := createSpace(t, cboxInstance)
+	space := tests.CreateSpace(t, cboxInstance)
 	createCommand(t, space)
 
 	core.Save(cboxInstance)
@@ -94,9 +95,9 @@ func TestSpacePublishingDoesntChangeCreateUpdateDates(t *testing.T) {
 }
 
 func TestPublishingEmptySpace(t *testing.T) {
-	cboxInstance := initializeCBox()
+	cboxInstance := tests.InitializeCBox()
 
-	space := createSpace(t, cboxInstance)
+	space := tests.CreateSpace(t, cboxInstance)
 
 	core.Save(cboxInstance)
 
@@ -117,7 +118,7 @@ func TestPublishingEmptySpace(t *testing.T) {
 }
 
 func TestUnpublishingNonExistingSpace(t *testing.T) {
-	initializeCBox()
+	tests.InitializeCBox()
 
 	selector, err := models.ParseSelectorForCloud(fmt.Sprintf("@%s:%s", "test", "this-space-doesnt-exist"))
 	if err != nil {
@@ -131,8 +132,8 @@ func TestUnpublishingNonExistingSpace(t *testing.T) {
 }
 
 func TestSpacePublishingDeletesLocallyDeletedCommands(t *testing.T) {
-	cboxInstance := initializeCBox()
-	space := createSpace(t, cboxInstance)
+	cboxInstance := tests.InitializeCBox()
+	space := tests.CreateSpace(t, cboxInstance)
 	command := createCommand(t, space)
 
 	core.Save(cboxInstance)
@@ -158,7 +159,7 @@ func TestSpacePublishingDeletesLocallyDeletedCommands(t *testing.T) {
 
 	space.CommandDelete(command)
 
-	cboxInstance = reloadCBox(cboxInstance)
+	cboxInstance = tests.ReloadCBox(cboxInstance)
 
 	err = cloud.SpacePublish(space)
 	if err != nil {

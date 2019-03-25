@@ -1,4 +1,4 @@
-package integration_tests
+package tests
 
 import (
 	"math/rand"
@@ -7,11 +7,12 @@ import (
 	"time"
 
 	"github.com/dplabs/cbox/src/models"
+	"github.com/dplabs/cbox/src/tools/tty"
 )
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-func randString(n int) string {
+func RandString(n int) string {
 	rand.Seed(time.Now().UTC().UnixNano())
 	b := make([]byte, n)
 	for i := range b {
@@ -33,14 +34,14 @@ func findSpaceFile(cboxInstance *models.CBox, space *models.Space) bool {
 	return found
 }
 
-func createSpace(t *testing.T, cboxInstance *models.CBox) *models.Space {
+func CreateSpace(t *testing.T, cboxInstance *models.CBox) *models.Space {
 	if cboxInstance == nil {
 		t.Fatal("cboxInstance not initialized")
 	}
 
 	space := models.Space{
-		Label:       randString(8),
-		Description: randString(15),
+		Label:       RandString(8),
+		Description: RandString(15),
 	}
 	space.Selector = models.NewSelector(models.TypeUser, "test", space.Label, "")
 
@@ -56,21 +57,21 @@ func createSpace(t *testing.T, cboxInstance *models.CBox) *models.Space {
 	return s
 }
 
-func assertSpaceFileExists(t *testing.T, cboxInstance *models.CBox, space *models.Space) {
+func AssertSpaceFileExists(t *testing.T, cboxInstance *models.CBox, space *models.Space) {
 	found := findSpaceFile(cboxInstance, space)
 	if !found {
 		t.Fatal("space file could not be found (and should)")
 	}
 }
 
-func assertSpaceFileNotExists(t *testing.T, cboxInstance *models.CBox, space *models.Space) {
+func AssertSpaceFileNotExists(t *testing.T, cboxInstance *models.CBox, space *models.Space) {
 	found := findSpaceFile(cboxInstance, space)
 	if found {
 		t.Fatal("new space found (and shouldn't)")
 	}
 }
 
-func assertSliceEqual(a, b []string) bool {
+func AssertSliceEqual(a, b []string) bool {
 
 	if a == nil && b == nil {
 		return true
@@ -93,11 +94,17 @@ func assertSliceEqual(a, b []string) bool {
 	return true
 }
 
-func assertSliceContains(s []string, e string) bool {
+func AssertSliceContains(s []string, e string) bool {
 	for _, a := range s {
 		if a == e {
 			return true
 		}
 	}
 	return false
+}
+
+func AssertOutputContains(t *testing.T, expected string, msg string) {
+	if !strings.Contains(tty.MockedOutput, expected) {
+		t.Errorf("%s: %s", msg, tty.MockedOutput)
+	}
 }

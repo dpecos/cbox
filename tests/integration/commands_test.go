@@ -4,14 +4,15 @@ import (
 	"testing"
 
 	"github.com/dplabs/cbox/src/models"
+	"github.com/dplabs/cbox/tests"
 )
 
 func createCommand(t *testing.T, space *models.Space) *models.Command {
 	command := models.Command{
-		Label:       randString(8),
-		Description: randString(15),
-		URL:         randString(15),
-		Code:        randString(30),
+		Label:       tests.RandString(8),
+		Description: tests.RandString(15),
+		URL:         tests.RandString(15),
+		Code:        tests.RandString(30),
 		Tags:        []string{"test"},
 	}
 	command.Selector = space.Selector.CloneForItem(command.Label)
@@ -22,12 +23,12 @@ func createCommand(t *testing.T, space *models.Space) *models.Command {
 }
 
 func TestCommandCreationDeletion(t *testing.T) {
-	cboxInstance := initializeCBox()
+	cboxInstance := tests.InitializeCBox()
 
-	space := createSpace(t, cboxInstance)
+	space := tests.CreateSpace(t, cboxInstance)
 	command := createCommand(t, space)
 
-	cboxInstance = reloadCBox(cboxInstance)
+	cboxInstance = tests.ReloadCBox(cboxInstance)
 
 	s, _ := cboxInstance.SpaceFind(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
 
@@ -46,7 +47,7 @@ func TestCommandCreationDeletion(t *testing.T) {
 
 	s.CommandDelete(c)
 
-	cboxInstance = reloadCBox(cboxInstance)
+	cboxInstance = tests.ReloadCBox(cboxInstance)
 
 	_, err = s.CommandFind(command.Label)
 	if err == nil {
@@ -57,12 +58,12 @@ func TestCommandCreationDeletion(t *testing.T) {
 }
 
 func TestCommandEdition(t *testing.T) {
-	cboxInstance := initializeCBox()
+	cboxInstance := tests.InitializeCBox()
 
-	space := createSpace(t, cboxInstance)
+	space := tests.CreateSpace(t, cboxInstance)
 	command := createCommand(t, space)
 
-	cboxInstance = reloadCBox(cboxInstance)
+	cboxInstance = tests.ReloadCBox(cboxInstance)
 
 	s, err := cboxInstance.SpaceFind(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
 	if err != nil {
@@ -74,13 +75,13 @@ func TestCommandEdition(t *testing.T) {
 	}
 
 	previousLabel := c.Label
-	newLabel := randString(8)
+	newLabel := tests.RandString(8)
 
 	c.Label = newLabel
 
 	space.CommandEdit(c, previousLabel)
 
-	cboxInstance = reloadCBox(cboxInstance)
+	cboxInstance = tests.ReloadCBox(cboxInstance)
 
 	s, _ = cboxInstance.SpaceFind(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
 
@@ -96,16 +97,16 @@ func TestCommandEdition(t *testing.T) {
 }
 
 func TestCommandLabelUniquenessOnCreation(t *testing.T) {
-	cboxInstance := initializeCBox()
+	cboxInstance := tests.InitializeCBox()
 
-	space := createSpace(t, cboxInstance)
+	space := tests.CreateSpace(t, cboxInstance)
 	c1 := createCommand(t, space)
 
 	c2 := models.Command{
 		Label:       c1.Label,
-		Description: randString(15),
-		URL:         randString(15),
-		Code:        randString(30),
+		Description: tests.RandString(15),
+		URL:         tests.RandString(15),
+		Code:        tests.RandString(30),
 		Tags:        []string{"test"},
 	}
 
@@ -116,9 +117,9 @@ func TestCommandLabelUniquenessOnCreation(t *testing.T) {
 }
 
 func TestCommandLabelUniquenessOnEdition(t *testing.T) {
-	cboxInstance := initializeCBox()
+	cboxInstance := tests.InitializeCBox()
 
-	space := createSpace(t, cboxInstance)
+	space := tests.CreateSpace(t, cboxInstance)
 	c1 := createCommand(t, space)
 	c2 := createCommand(t, space)
 
@@ -132,20 +133,20 @@ func TestCommandLabelUniquenessOnEdition(t *testing.T) {
 }
 
 func TestCommandTagging(t *testing.T) {
-	cboxInstance := initializeCBox()
+	cboxInstance := tests.InitializeCBox()
 
-	space := createSpace(t, cboxInstance)
+	space := tests.CreateSpace(t, cboxInstance)
 	c1 := createCommand(t, space)
 
 	c1.TagAdd("tag-ok")
 
-	if !assertSliceContains(c1.Tags, "tag-ok") {
+	if !tests.AssertSliceContains(c1.Tags, "tag-ok") {
 		t.Errorf("Added tag not found")
 	}
 
 	c1.TagAdd("tag-ok")
 
-	if !assertSliceContains(c1.Tags, "tag-ok") {
+	if !tests.AssertSliceContains(c1.Tags, "tag-ok") {
 		t.Errorf("Removed tag still found")
 	}
 }

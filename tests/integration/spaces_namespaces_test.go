@@ -4,14 +4,15 @@ import (
 	"testing"
 
 	"github.com/dplabs/cbox/src/models"
+	"github.com/dplabs/cbox/tests"
 )
 
 func TestSpaceCreationNoCloudLogin(t *testing.T) {
-	cboxInstance := initializeCBox()
+	cboxInstance := tests.InitializeCBox()
 
 	space := models.Space{
-		Label:       randString(8),
-		Description: randString(15),
+		Label:       tests.RandString(8),
+		Description: tests.RandString(15),
 	}
 	space.Selector = models.NewSelector(models.TypeNone, "", space.Label, "")
 
@@ -20,7 +21,7 @@ func TestSpaceCreationNoCloudLogin(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	cboxInstance = reloadCBox(cboxInstance)
+	cboxInstance = tests.ReloadCBox(cboxInstance)
 
 	s, err := cboxInstance.SpaceFind(models.TypeNone, "", space.Label)
 	if err != nil {
@@ -31,15 +32,15 @@ func TestSpaceCreationNoCloudLogin(t *testing.T) {
 		t.Errorf("created space and reloaded space don't match: %s - %s", s.String(), space.String())
 	}
 
-	assertSpaceFileExists(t, cboxInstance, &space)
+	tests.AssertSpaceFileExists(t, cboxInstance, &space)
 }
 
 func TestSpaceCreationWithCloudLogin(t *testing.T) {
-	cboxInstance := initializeCBox()
+	cboxInstance := tests.InitializeCBox()
 
-	space := createSpace(t, cboxInstance)
+	space := tests.CreateSpace(t, cboxInstance)
 
-	cboxInstance = reloadCBox(cboxInstance)
+	cboxInstance = tests.ReloadCBox(cboxInstance)
 
 	s, err := cboxInstance.SpaceFind(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
 	if err != nil {
@@ -50,13 +51,13 @@ func TestSpaceCreationWithCloudLogin(t *testing.T) {
 		t.Errorf("created space and reloaded space don't match: %s - %s", s.String(), space.String())
 	}
 
-	assertSpaceFileExists(t, cboxInstance, space)
+	tests.AssertSpaceFileExists(t, cboxInstance, space)
 }
 
 func TestSpaceCreationSameLabelDifferentNamespace(t *testing.T) {
-	cboxInstance := initializeCBox()
+	cboxInstance := tests.InitializeCBox()
 
-	space1 := createSpace(t, cboxInstance)
+	space1 := tests.CreateSpace(t, cboxInstance)
 
 	space2 := models.Space{
 		Label: space1.Label,
@@ -68,7 +69,7 @@ func TestSpaceCreationSameLabelDifferentNamespace(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	cboxInstance = reloadCBox(cboxInstance)
+	cboxInstance = tests.ReloadCBox(cboxInstance)
 
 	s1, err := cboxInstance.SpaceFind(space1.Selector.NamespaceType, space1.Selector.Namespace, space1.Label)
 	if err != nil {
@@ -88,6 +89,6 @@ func TestSpaceCreationSameLabelDifferentNamespace(t *testing.T) {
 		t.Errorf("created space and reloaded space don't match: %s - %s", s2.String(), space2.String())
 	}
 
-	assertSpaceFileExists(t, cboxInstance, space1)
-	assertSpaceFileExists(t, cboxInstance, &space2)
+	tests.AssertSpaceFileExists(t, cboxInstance, space1)
+	tests.AssertSpaceFileExists(t, cboxInstance, &space2)
 }

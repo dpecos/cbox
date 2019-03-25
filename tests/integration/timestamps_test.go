@@ -6,6 +6,7 @@ import (
 
 	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/models"
+	"github.com/dplabs/cbox/tests"
 )
 
 func setupMocks() {
@@ -20,9 +21,9 @@ func setupMocks() {
 func TestSpaceTimestamps(t *testing.T) {
 	setupMocks()
 
-	cboxInstance := initializeCBox()
+	cboxInstance := tests.InitializeCBox()
 
-	space := createSpace(t, cboxInstance)
+	space := tests.CreateSpace(t, cboxInstance)
 	tc := space.CreatedAt
 	tu := space.UpdatedAt
 
@@ -30,7 +31,7 @@ func TestSpaceTimestamps(t *testing.T) {
 		t.Fatalf("creation and update timestamsp should be the same for new spaces")
 	}
 
-	cboxInstance = reloadCBox(cboxInstance)
+	cboxInstance = tests.ReloadCBox(cboxInstance)
 	s, _ := cboxInstance.SpaceFind(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
 
 	if !tc.Equal(s.CreatedAt) {
@@ -50,7 +51,7 @@ func TestSpaceTimestamps(t *testing.T) {
 
 	core.DeleteSpaceFile(space.Selector)
 
-	cboxInstance = reloadCBox(cboxInstance)
+	cboxInstance = tests.ReloadCBox(cboxInstance)
 	s, err = cboxInstance.SpaceFind(s.Selector.NamespaceType, s.Selector.Namespace, s.Label)
 
 	if err != nil {
@@ -69,9 +70,9 @@ func TestSpaceTimestamps(t *testing.T) {
 func TestCommandTimestamps(t *testing.T) {
 	setupMocks()
 
-	cboxInstance := initializeCBox()
+	cboxInstance := tests.InitializeCBox()
 
-	space := createSpace(t, cboxInstance)
+	space := tests.CreateSpace(t, cboxInstance)
 	tsc := space.CreatedAt
 	tsu := space.UpdatedAt
 

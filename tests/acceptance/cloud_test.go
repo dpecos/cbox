@@ -1,12 +1,12 @@
 package acceptance_tests
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 
 	"github.com/dplabs/cbox/src/controllers"
 	"github.com/dplabs/cbox/src/tools/tty"
+	"github.com/dplabs/cbox/tests"
 )
 
 const (
@@ -15,28 +15,22 @@ const (
 )
 
 func TestLogInAndLogOutToCloud(t *testing.T) {
-	dir, _ := ioutil.TempDir("", "cbox")
+	ctrl, dir := tests.InitController()
 	defer os.RemoveAll(dir)
-	ctrl := controllers.InitController(dir)
-
-	ctrl.ConfigSet("cbox.environment", "test")
 
 	tty.MockedOutput = ""
 	tty.MockedInput = []string{testUserJWTToken}
 	ctrl.CloudLogin()
-	checkOutput(t, "Hi Test user!", "failed to login")
+	tests.AssertOutputContains(t, "Hi Test user!", "failed to login")
 
 	tty.MockedOutput = ""
 	ctrl.CloudLogout()
-	checkOutput(t, "Successfully logged out from cbox cloud. See you back soon!", "failed to logout")
+	tests.AssertOutputContains(t, "Successfully logged out from cbox cloud. See you back soon!", "failed to logout")
 }
 
 func TestPublishingAndUnpublishingToCloud(t *testing.T) {
-	dir, _ := ioutil.TempDir("", "cbox")
+	ctrl, dir := tests.InitController()
 	defer os.RemoveAll(dir)
-	ctrl := controllers.InitController(dir)
-
-	ctrl.ConfigSet("cbox.environment", "test")
 
 	tty.MockedInput = []string{testUserJWTToken}
 	ctrl.CloudLogin()
@@ -46,28 +40,25 @@ func TestPublishingAndUnpublishingToCloud(t *testing.T) {
 
 	tty.MockedOutput = ""
 	ctrl.CloudSpacePublish("@default")
-	checkOutput(t, "Space published successfully!", "failed to publish space")
+	tests.AssertOutputContains(t, "Space published successfully!", "failed to publish space")
 
 	tty.MockedOutput = ""
 	ctrl.CloudSpaceInfo("@test:default")
-	checkOutput(t, "@test:default - Default space to store commands", "failed to retrieve published space")
+	tests.AssertOutputContains(t, "@test:default - Default space to store commands", "failed to retrieve published space")
 
 	tty.MockedOutput = ""
 	ctrl.CloudSpaceUnpublish("@test:default")
-	checkOutput(t, "Space unpublished successfully!", "failed to unpublish space")
+	tests.AssertOutputContains(t, "Space unpublished successfully!", "failed to unpublish space")
 
 	// TODO: figure out how to catch a log.Fatalf to check that it was actually invoked
 	// tty.MockedOutput = ""
 	// ctrl.CloudSpaceInfo("@test:default")
-	// checkOutput(t, "Space '@test:default' not found: rest: request failed with '404 Not Found'", "did retrieve space info after deleting it")
+	// tests.AssertOutputContains(t, "Space '@test:default' not found: rest: request failed with '404 Not Found'", "did retrieve space info after deleting it")
 }
 
 func TestViewingCloudCommands(t *testing.T) {
-	dir, _ := ioutil.TempDir("", "cbox")
+	ctrl, dir := tests.InitController()
 	defer os.RemoveAll(dir)
-	ctrl := controllers.InitController(dir)
-
-	ctrl.ConfigSet("cbox.environment", "test")
 
 	tty.MockedInput = []string{testUserJWTToken}
 	ctrl.CloudLogin()
@@ -77,23 +68,20 @@ func TestViewingCloudCommands(t *testing.T) {
 
 	tty.MockedOutput = ""
 	ctrl.CloudSpacePublish("@default")
-	checkOutput(t, "Space published successfully!", "failed to publish space")
+	tests.AssertOutputContains(t, "Space published successfully!", "failed to publish space")
 
 	tty.MockedOutput = ""
 	ctrl.CloudCommandView("test-command@test:default")
-	checkOutput(t, "Selector: test-command@test:default", "failed to retrieve published command")
+	tests.AssertOutputContains(t, "Selector: test-command@test:default", "failed to retrieve published command")
 
 	tty.MockedOutput = ""
 	ctrl.CloudSpaceUnpublish("@test:default")
-	checkOutput(t, "Space unpublished successfully!", "failed to unpublish space")
+	tests.AssertOutputContains(t, "Space unpublished successfully!", "failed to unpublish space")
 }
 
 func TestCopyingCloudCommands(t *testing.T) {
-	dir, _ := ioutil.TempDir("", "cbox")
+	ctrl, dir := tests.InitController()
 	defer os.RemoveAll(dir)
-	ctrl := controllers.InitController(dir)
-
-	ctrl.ConfigSet("cbox.environment", "test")
 
 	tty.MockedInput = []string{testUserJWTToken}
 	ctrl.CloudLogin()
@@ -109,13 +97,13 @@ func TestCopyingCloudCommands(t *testing.T) {
 
 	tty.MockedOutput = ""
 	ctrl.CloudCopy("@test:default", nil)
-	checkOutput(t, "Space cloned successfully into '@default'!", "failed to clone space")
+	tests.AssertOutputContains(t, "Space cloned successfully into '@default'!", "failed to clone space")
 
 	// clone with clashing space
 	tty.MockedInput = []string{"clashed"}
 	tty.MockedOutput = ""
 	ctrl.CloudCopy("@test:default", nil)
-	checkOutput(t, "Space cloned successfully into '@clashed'!", "failed to clone space")
+	tests.AssertOutputContains(t, "Space cloned successfully into '@clashed'!", "failed to clone space")
 
 	// copy remote commands overwriting local ones
 	controllers.ForceFlag = true
@@ -123,15 +111,15 @@ func TestCopyingCloudCommands(t *testing.T) {
 	tty.MockedOutput = ""
 	targetSpace := "@default"
 	ctrl.CloudCopy("@test:default", &targetSpace)
-	checkOutput(t, "Commands copied successfully into '@default'!", "failed to clone space (clashing)")
+	tests.AssertOutputContains(t, "Commands copied successfully into '@default'!", "failed to clone space (clashing)")
 
 	// copy single remote command overwriting local ones not specifying target space == @default
 	tty.MockedOutput = ""
 	ctrl.CloudCopy("test-command@test:default", nil)
-	checkOutput(t, "Commands copied successfully into '@default'!", "failed to clone space (clashing)")
+	tests.AssertOutputContains(t, "Commands copied successfully into '@default'!", "failed to clone space (clashing)")
 
 	// cleanup
 	tty.MockedOutput = ""
 	ctrl.CloudSpaceUnpublish("@test:default")
-	checkOutput(t, "Space unpublished successfully!", "failed to unpublish space")
+	tests.AssertOutputContains(t, "Space unpublished successfully!", "failed to unpublish space")
 }

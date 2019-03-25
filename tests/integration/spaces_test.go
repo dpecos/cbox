@@ -6,16 +6,17 @@ import (
 
 	"github.com/dplabs/cbox/src/core"
 	"github.com/dplabs/cbox/src/models"
+	"github.com/dplabs/cbox/tests"
 )
 
 func TestSpaceCreationDeletion(t *testing.T) {
-	cboxInstance := initializeCBox()
+	cboxInstance := tests.InitializeCBox()
 
-	space := createSpace(t, cboxInstance)
+	space := tests.CreateSpace(t, cboxInstance)
 
-	cboxInstance = reloadCBox(cboxInstance)
+	cboxInstance = tests.ReloadCBox(cboxInstance)
 
-	assertSpaceFileExists(t, cboxInstance, space)
+	tests.AssertSpaceFileExists(t, cboxInstance, space)
 
 	s, err := cboxInstance.SpaceFind(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
 	if s == nil || err != nil {
@@ -28,9 +29,9 @@ func TestSpaceCreationDeletion(t *testing.T) {
 	}
 	core.DeleteSpaceFile(space.Selector)
 
-	assertSpaceFileNotExists(t, cboxInstance, space)
+	tests.AssertSpaceFileNotExists(t, cboxInstance, space)
 
-	cboxInstance = reloadCBox(cboxInstance)
+	cboxInstance = tests.ReloadCBox(cboxInstance)
 
 	_, err = cboxInstance.SpaceFind(space.Selector.NamespaceType, space.Selector.Namespace, space.Label)
 	if err == nil {
@@ -40,13 +41,13 @@ func TestSpaceCreationDeletion(t *testing.T) {
 }
 
 func TestSpaceLabelUniquenessOnCreation(t *testing.T) {
-	cboxInstance := initializeCBox()
+	cboxInstance := tests.InitializeCBox()
 
-	s1 := createSpace(t, cboxInstance)
+	s1 := tests.CreateSpace(t, cboxInstance)
 
 	s2 := models.Space{
 		Label:       s1.Label,
-		Description: randString(15),
+		Description: tests.RandString(15),
 	}
 
 	// clone the same selector
@@ -59,38 +60,38 @@ func TestSpaceLabelUniquenessOnCreation(t *testing.T) {
 }
 
 func TestDeleteSpace(t *testing.T) {
-	cboxInstance := initializeCBox()
+	cboxInstance := tests.InitializeCBox()
 
-	s1 := createSpace(t, cboxInstance)
-	s2 := createSpace(t, cboxInstance)
-	s3 := createSpace(t, cboxInstance)
+	s1 := tests.CreateSpace(t, cboxInstance)
+	s2 := tests.CreateSpace(t, cboxInstance)
+	s3 := tests.CreateSpace(t, cboxInstance)
 
-	cboxInstance = reloadCBox(cboxInstance)
+	cboxInstance = tests.ReloadCBox(cboxInstance)
 
 	expected := []string{"@default", s1.String(), s3.String()}
 
 	cboxInstance.SpaceDestroy(s2)
 	core.DeleteSpaceFile(s2.Selector)
 
-	cboxInstance = reloadCBox(cboxInstance)
+	cboxInstance = tests.ReloadCBox(cboxInstance)
 
 	result := cboxInstance.SpaceLabels()
 
 	sort.Strings(expected)
 	sort.Strings(result)
 
-	if !assertSliceEqual(expected, result) {
+	if !tests.AssertSliceEqual(expected, result) {
 		t.Errorf("space deletion did return a different result from expected: %v - %v", expected, result)
 	}
 }
 
 func TestSearch(t *testing.T) {
-	cboxInstance := initializeCBox()
+	cboxInstance := tests.InitializeCBox()
 
-	s1 := createSpace(t, cboxInstance)
+	s1 := tests.CreateSpace(t, cboxInstance)
 	c1 := createCommand(t, s1)
 
-	cboxInstance = reloadCBox(cboxInstance)
+	cboxInstance = tests.ReloadCBox(cboxInstance)
 
 	criteria := c1.Label[0:3]
 	result, err := s1.SearchCommands("", criteria)
@@ -105,12 +106,12 @@ func TestSearch(t *testing.T) {
 }
 
 func TestSearchWithinTag(t *testing.T) {
-	cboxInstance := initializeCBox()
+	cboxInstance := tests.InitializeCBox()
 
-	s1 := createSpace(t, cboxInstance)
+	s1 := tests.CreateSpace(t, cboxInstance)
 	c1 := createCommand(t, s1)
 
-	cboxInstance = reloadCBox(cboxInstance)
+	cboxInstance = tests.ReloadCBox(cboxInstance)
 
 	criteria := c1.Label[0:3]
 	result, err := s1.SearchCommands("test", criteria)
