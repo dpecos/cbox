@@ -14,18 +14,18 @@ import (
 )
 
 var (
-	spaceColor                 = tty.ColorBoldGreen
-	atSeparatorColor           = tty.ColorBoldRed
-	namespaceSeparatorColor    = tty.ColorBoldWhite
+	starColor                  = tty.ColorBoldBlack
+	labelColor                 = tty.ColorBoldBlue
+	atSeparatorColor           = tty.ColorMagenta
 	namespaceColorUser         = tty.ColorCyan
 	namespaceColorOrganization = tty.ColorYellow
-	labelColor                 = tty.ColorBoldBlue
-	tagsColor                  = tty.ColorRed
+	namespaceSeparatorColor    = tty.ColorBoldWhite
+	spaceColor                 = tty.ColorBoldGreen
 	descriptionColor           = fmt.Sprintf
+	tagsColor                  = tty.ColorRed
 	dateColor                  = tty.ColorBoldBlack
 	urlColor                   = tty.ColorGreen
 	separatorColor             = tty.ColorYellow
-	starColor                  = tty.ColorBoldBlack
 )
 
 const (
@@ -163,7 +163,7 @@ func staticCommandList(header string, commands []*models.Command) {
 	printHeader(header)
 
 	for _, command := range commands {
-		tty.Print(" * %s\n", commandSummary(command))
+		tty.Print("%s %s\n", starColor("*"), commandSummary(command))
 	}
 
 	printFooter(header)
