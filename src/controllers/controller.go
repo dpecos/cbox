@@ -6,7 +6,6 @@ import (
 )
 
 var (
-	SkipQuestionsFlag      bool
 	ShowCommandsSourceFlag bool
 	SourceOnlyFlag         bool
 	ForceFlag              bool

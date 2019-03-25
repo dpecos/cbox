@@ -120,7 +120,7 @@ func (ctrl *CLIController) CloudCopy(cloudSelectorStr string, spcSelectorStr *st
 
 	console.PrintCommandList("Commands to copy", commands, "static", ListingsSortOption)
 
-	if SkipQuestionsFlag || tty.Confirm("Continue?") {
+	if tty.Confirm("Continue?") {
 		if cloneRemoteSpace {
 			ctrl.cloneSpace(cloudSelector, commands)
 		} else {

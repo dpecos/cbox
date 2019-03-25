@@ -29,7 +29,7 @@ func init() {
 func setupParameters() {
 	rootCmd.PersistentFlags().BoolVar(&tty.DisableColors, "no-color", false, "Disable color in the output")
 	rootCmd.PersistentFlags().BoolVar(&tty.DisableOutput, "silent", false, "Completely disable any output")
-	rootCmd.PersistentFlags().BoolVar(&controllers.SkipQuestionsFlag, "yes", false, "Answer 'yes' to any question")
+	rootCmd.PersistentFlags().BoolVar(&tty.SkipQuestions, "yes", false, "Answer 'yes' to any question")
 	rootCmd.PersistentFlags().StringVarP(&controllers.ListingsModeOption, "listings-mode", "m", "", "Use 'fzf' (interactive) to interact with commands listings or just print them as an static list (static)")
 	rootCmd.PersistentFlags().StringVarP(&controllers.ListingsSortOption, "listings-sort", "s", "", "Sort commands listings by name (default) or date")
 }

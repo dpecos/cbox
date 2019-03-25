@@ -65,7 +65,7 @@ func (ctrl *CLIController) SpacesEdit(spcSelectorStr string) {
 
 	console.PrintSpace("Space after edition", space)
 
-	if SkipQuestionsFlag || tty.Confirm("Update?") {
+	if tty.Confirm("Update?") {
 		ctrl.cleanOldSpaceFile(space, selector)
 		core.Save(ctrl.cbox)
 		console.PrintSuccess("Space updated successfully!")
@@ -89,7 +89,7 @@ func (ctrl *CLIController) SpacesDestroy(spcSelectorStr string) {
 
 	console.PrintSpace("Space to destroy", space)
 
-	if SkipQuestionsFlag || tty.Confirm("Are you sure you want to destroy this space?") {
+	if tty.Confirm("Are you sure you want to destroy this space?") {
 		err = ctrl.cbox.SpaceDestroy(space)
 		if err != nil {
 			log.Fatalf("destroy space: %v", err)

@@ -98,7 +98,7 @@ func (ctrl *CLIController) CommandEdit(cmdSelectorStr string) {
 
 	console.PrintCommand("Command after edition", command, false)
 
-	if SkipQuestionsFlag || tty.Confirm("Update?") {
+	if tty.Confirm("Update?") {
 		core.Save(ctrl.cbox)
 		console.PrintSuccess("Command updated successfully!")
 	} else {
@@ -121,7 +121,7 @@ func (ctrl *CLIController) CommandDelete(cmdSelectorStr string) {
 
 	console.PrintCommand("Command to delete ", command, false)
 
-	if SkipQuestionsFlag || tty.Confirm("Are you sure you want to delete this command?") {
+	if tty.Confirm("Are you sure you want to delete this command?") {
 		space.CommandDelete(command)
 		core.Save(ctrl.cbox)
 		console.PrintSuccess("Command deleted successfully!")
@@ -174,7 +174,7 @@ func (ctrl *CLIController) CommandCopy(cmdSelectorStr string, spcSelectorStr *st
 
 	console.PrintCommand("Command to copy to space", command, false)
 
-	if SkipQuestionsFlag || tty.Confirm(fmt.Sprintf("Are you sure you want to copy this command to space '%s'?", space.Selector.String())) {
+	if tty.Confirm(fmt.Sprintf("Are you sure you want to copy this command to space '%s'?", space.Selector.String())) {
 		copy, err := copystructure.Copy(*command)
 		commandCopy := copy.(models.Command)
 

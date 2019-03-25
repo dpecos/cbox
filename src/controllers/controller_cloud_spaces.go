@@ -68,7 +68,7 @@ func (ctrl *CLIController) CloudSpacePublish(spcSelectorStr string) {
 		console.PrintWarning(fmt.Sprintf("You're about to publish workspace '%s' under a different organization '%s'\n", space.String(), OrganizationOption))
 	}
 
-	if SkipQuestionsFlag || tty.Confirm("Publish?") {
+	if tty.Confirm("Publish?") {
 		tty.Print("Publishing space '%s'...\n\n", space.String())
 
 		err = ctrl.cloud.SpacePublish(space)
@@ -103,7 +103,7 @@ func (ctrl *CLIController) CloudSpaceUnpublish(spcSelectorStr string) {
 		console.PrintWarning("You don't have a local copy of the space\n")
 	}
 
-	if SkipQuestionsFlag || tty.Confirm("Unpublish?") {
+	if tty.Confirm("Unpublish?") {
 		tty.Print("Unpublishing space '%s'...\n\n", selector.String())
 
 		err = ctrl.cloud.SpaceUnpublish(selector)

@@ -5,16 +5,15 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/dplabs/cbox/src/controllers"
 	"github.com/dplabs/cbox/src/tools/tty"
 )
 
 func init() {
 	os.Setenv("CBOX_ENV", "test")
 
-	controllers.SkipQuestionsFlag = true
 	tty.DisableColors = true
 	tty.MockTTY = true
+	tty.SkipQuestions = true
 }
 
 func checkOutput(t *testing.T, expected string, msg string) {
