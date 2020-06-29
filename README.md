@@ -31,11 +31,11 @@ TODO
 
 In order to start using **cbox** you have the following options available:
 
-#### Option 1: Homebrew
+#### Option 1: Homebrew (TODO)
 
     brew install cbox
 
-#### Option 2: Snap
+#### Option 2: Snap (TODO)
 
     snap install cbox
 
@@ -47,7 +47,7 @@ We create precompiled packages for all major platforms (RPM & DEB packages also 
 
 #### Option 3: install with `golang`'s cli
 
-    go install github.com/dplabs/cbox
+    go get github.com/dplabs/cbox
 
 #### Option 4: re-install from source
 
